@@ -28,6 +28,12 @@ export function RegistrationForm({
     if (busy || !connected) return;
     setError("");
     const fields = Object.fromEntries(new FormData(event.currentTarget));
+    const emailStr = String(fields.email || "").trim().toLowerCase();
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!emailStr || !emailRegex.test(emailStr)) {
+      setError("Please enter a valid email address.");
+      return;
+    }
     if (fields.password !== fields.confirm_password) {
       setError("The new passwords do not match.");
       return;
@@ -56,7 +62,7 @@ export function RegistrationForm({
     }
   }
   return (
-    <form className="form-body" onSubmit={submit}>
+    <form className="form-body" onSubmit={submit} noValidate>
       <div className="progressive-auth-header">
         <p className="form-intro">
           {tr("Looks like you’re new to HealthBridge. Let’s create your account.")}
@@ -99,7 +105,7 @@ export function RegistrationForm({
           type="email"
           name="email"
           defaultValue={initialEmail}
-          placeholder={tr("Enter your email ID")}
+          placeholder={tr("Enter your Email ID")}
           required
           maxLength={200}
           autoComplete="email"
@@ -133,10 +139,6 @@ export function RegistrationForm({
           />
         </label>
       )}
-      <label className="checkbox-label">
-        <input type="checkbox" required />
-        {tr("I will use synthetic information only. I understand this is a prototype.")}
-      </label>
       {error && (
         <p className="field-error" role="alert">
           {tr(error)}

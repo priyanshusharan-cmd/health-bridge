@@ -82,12 +82,12 @@ export default function App() {
     try {
       const saved = localStorage.getItem("healthbridge-locale");
       if (saved === "hi" || saved === "kn" || saved === "en") return saved;
-    } catch {}
+    } catch { }
     return "en";
   });
   const [patients, setPatients] = useState<
-      (User & { records: number; pending: number })[]
-    >([]),
+    (User & { records: number; pending: number })[]
+  >([]),
     [patientId, setPatientId] = useState("");
   const [page, setPage] = useState<Page>("overview"),
     [dialog, setDialog] = useState<DialogContext>(null);
@@ -155,7 +155,7 @@ export default function App() {
     Promise.all([
       api<User>("/me")
         .then(setUser)
-        .catch(() => {}),
+        .catch(() => { }),
       api<Health>("/health")
         .then(setHealth)
         .catch(() =>
@@ -404,7 +404,7 @@ export default function App() {
             setPreLoginLocale(lang);
             try {
               localStorage.setItem("healthbridge-locale", lang);
-            } catch {}
+            } catch { }
           }}
           onLogin={(u) => {
             setUser(u);
@@ -670,20 +670,21 @@ export default function App() {
               </div>
             ) : page === "patients" ? (
               <><div className="hospital-toolbar">
-                <button className="button secondary" disabled={refreshingPatients} onClick={async()=>{
-                  setRefreshingPatients(true);const uid=user.id;
-                  try{const rows=await api<(User & {records:number;pending:number})[]>("/patients");
-                    if(activeUser.current===uid){setPatients(rows);setPatientId(current=>rows.some(row=>row.id===current)?current:rows[0]?.id||"");}
-                  }catch(e){if(activeUser.current===uid)setErrorState({message:(e as Error).message, retry:()=>loadPatients(uid)});}finally{setRefreshingPatients(false);}
-                }}>{refreshingPatients&&<Spinner/>}{tr("Refresh patients")}</button>
-                {user.organization && <><h2>{user.organization.name}</h2><button className="button primary" onClick={()=>setDialog({ kind: "invite" })}>{tr("Invite a patient")}</button></>}
+                <button className="button secondary" disabled={refreshingPatients} onClick={async () => {
+                  setRefreshingPatients(true); const uid = user.id;
+                  try {
+                    const rows = await api<(User & { records: number; pending: number })[]>("/patients");
+                    if (activeUser.current === uid) { setPatients(rows); setPatientId(current => rows.some(row => row.id === current) ? current : rows[0]?.id || ""); }
+                  } catch (e) { if (activeUser.current === uid) setErrorState({ message: (e as Error).message, retry: () => loadPatients(uid) }); } finally { setRefreshingPatients(false); }
+                }}>{refreshingPatients && <Spinner />}{tr("Refresh patients")}</button>
+                {user.organization && <><h2>{user.organization.name}</h2><button className="button primary" onClick={() => setDialog({ kind: "invite" })}>{tr("Invite a patient")}</button></>}
               </div><PatientList
-                patients={patients}
-                open={(id) => {
-                  setPatientId(id);
-                  navigate("overview");
-                }}
-              /></>
+                  patients={patients}
+                  open={(id) => {
+                    setPatientId(id);
+                    navigate("overview");
+                  }}
+                /></>
             ) : workspace ? (
               <>
                 {page === "overview" && (
@@ -1006,8 +1007,8 @@ export function Login({
   const [retrying, setRetrying] = useState(false);
 
   const [accounts, setAccounts] = useState<
-      { email: string; name: string; role: string; password: string }[]
-    >([]),
+    { email: string; name: string; role: string; password: string }[]
+  >([]),
     [busy, setBusy] = useState(""),
     [message, setMessage] = useState(""),
     [authStep, setAuthStep] = useState<"email" | "password" | "register">("email"),
@@ -1019,7 +1020,7 @@ export function Login({
   useEffect(() => {
     api<typeof accounts>("/demo-accounts")
       .then(setAccounts)
-      .catch(() => {});
+      .catch(() => { });
   }, [connected]);
 
   useEffect(() => {
@@ -1175,20 +1176,28 @@ export function Login({
           )}
 
           {authStep === "email" && (
-            <form className="signin-form progressive-email-form" onSubmit={handleCheckEmail}>
+            <form className="signin-form progressive-email-form" onSubmit={handleCheckEmail} noValidate>
               <label>
                 {tr("Email ID")}
                 <input
                   name="email"
                   type="email"
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder={tr("Enter your email ID")}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    if (message) setMessage("");
+                  }}
+                  placeholder={tr("Enter your Email ID")}
                   required
                   autoFocus
                   autoComplete="email"
                 />
               </label>
+              {message && (
+                <p className="field-error" role="alert" style={{ margin: "2px 0 8px 0" }}>
+                  {message}
+                </p>
+              )}
               <button
                 className="button primary full"
                 type="submit"
