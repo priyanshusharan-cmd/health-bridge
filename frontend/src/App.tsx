@@ -28,6 +28,7 @@ import {
   CheckCircle2,
   AlertCircle,
   Clock3,
+  KeyRound,
 } from "lucide-react";
 import { Account, Privacy } from "./Account";
 import { ThemeToggle } from "./ThemeToggle";
@@ -1009,37 +1010,82 @@ export function Login({
     >([]),
     [busy, setBusy] = useState(""),
     [message, setMessage] = useState(""),
-    [showForm, setShowForm] = useState(true),
-    [registering,setRegistering] = useState(window.location.hash === "#register" || new URLSearchParams(window.location.search).has("invite"));
+    [authStep, setAuthStep] = useState<"email" | "password" | "register">("email"),
+    [email, setEmail] = useState(""),
+    [registeredUser, setRegisteredUser] = useState<{ name: string; role: string } | null>(null),
+    [checkingEmail, setCheckingEmail] = useState(false),
+    [showDemoAccounts, setShowDemoAccounts] = useState(false);
+
   useEffect(() => {
     api<typeof accounts>("/demo-accounts")
       .then(setAccounts)
       .catch(() => {});
   }, [connected]);
-  const login = async (email: string, password: string) => {
-    setBusy(email);
+
+  useEffect(() => {
+    if (new URLSearchParams(window.location.search).has("invite") || window.location.hash === "#register") {
+      setAuthStep("register");
+    }
+  }, []);
+
+  const login = async (loginEmail: string, password: string) => {
+    setBusy(loginEmail);
     setMessage("");
     try {
-      onLogin(await post<User>("/auth/login", { email, password }));
+      onLogin(await post<User>("/auth/login", { email: loginEmail, password }));
     } catch (e) {
       setMessage((e as Error).message);
     } finally {
       setBusy("");
     }
   };
+
+  const handleCheckEmail = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const clean = email.trim().toLowerCase();
+    if (!clean || !clean.includes("@")) {
+      setMessage(tr("Please enter a valid email address."));
+      return;
+    }
+    setCheckingEmail(true);
+    setMessage("");
+    try {
+      const res = await post<{ registered: boolean; email: string; name?: string; role?: string }>(
+        "/auth/check-email",
+        { email: clean }
+      );
+      if (res.registered) {
+        setRegisteredUser({ name: res.name || "", role: res.role || "" });
+        setAuthStep("password");
+      } else {
+        setRegisteredUser(null);
+        setAuthStep("register");
+      }
+    } catch (err) {
+      setMessage((err as Error).message);
+    } finally {
+      setCheckingEmail(false);
+    }
+  };
+
+  const handlePasswordSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const f = new FormData(e.currentTarget);
+    login(email.trim().toLowerCase(), String(f.get("password")));
+  };
+
   return (
     <div className="login-page">
       <header>
-        <Logo />
-        <LanguageSelect
-          interfaceOnly
-          value={preLoginLocale}
-          onChange={(l) => onLocaleChange?.(l as Language)}
-        />
+        <div className="login-header-left">
+          <Logo />
+          <LanguageSelect
+            interfaceOnly
+            value={preLoginLocale}
+            onChange={(l) => onLocaleChange?.(l as Language)}
+          />
+        </div>
         <ThemeToggle />
-        <span className="login-header-note">
-          <ShieldCheck size={16} /> {tr("Human-centered. Open by design.")}
-        </span>
       </header>
       <div className="login-layout">
         <section className="login-story">
@@ -1109,13 +1155,119 @@ export function Login({
               {message || error}
             </div>
           )}
-          {!connected && <button className="button secondary full" disabled={retrying} onClick={async () => {
-            setRetrying(true);
-            try { await onRetry(); } finally { setRetrying(false); }
-          }}>{retrying && <Spinner />}{tr("Retry connection")}</button>}
-          {!registering && accounts.length > 0 && (
-            <>
-              <span className="login-caption">{tr("EXPLORE THE DEMO AS")}</span>
+          {!connected && (
+            <button
+              className="button secondary full"
+              disabled={retrying}
+              onClick={async () => {
+                setRetrying(true);
+                try {
+                  await onRetry();
+                } finally {
+                  setRetrying(false);
+                }
+              }}
+            >
+              {retrying && <Spinner />}
+              {tr("Retry connection")}
+            </button>
+          )}
+
+          {authStep === "email" && (
+            <form className="signin-form progressive-email-form" onSubmit={handleCheckEmail}>
+              <label>
+                {tr("Email")}
+                <input
+                  name="email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="name@example.com"
+                  required
+                  autoFocus
+                  autoComplete="email"
+                />
+              </label>
+              <button
+                className="button primary full"
+                type="submit"
+                disabled={checkingEmail || !connected}
+              >
+                {checkingEmail && <Spinner />}
+                {tr("Continue")}
+                {!checkingEmail && <ArrowRight size={17} />}
+              </button>
+            </form>
+          )}
+
+          {authStep === "password" && (
+            <form className="signin-form progressive-password-form" onSubmit={handlePasswordSubmit}>
+              <div className="active-email-badge">
+                <span>{email}</span>
+                <button
+                  type="button"
+                  className="text-button change-email-btn"
+                  onClick={() => {
+                    setAuthStep("email");
+                    setMessage("");
+                  }}
+                >
+                  {tr("Change")}
+                </button>
+              </div>
+              {registeredUser?.name && (
+                <p className="welcome-back-note">
+                  {tr("Welcome back")}, <strong>{registeredUser.name}</strong>
+                </p>
+              )}
+              <PasswordField name="password" label={tr("Password")} autoFocus />
+              <button
+                className="button primary full"
+                type="submit"
+                disabled={!!busy || !connected}
+              >
+                {busy && <Spinner />}
+                {tr("Sign in")}
+                {!busy && <ArrowRight size={17} />}
+              </button>
+            </form>
+          )}
+
+          {authStep === "register" && (
+            <RegistrationForm
+              initialEmail={email}
+              onCreated={onLogin}
+              connected={connected}
+              onBack={() => {
+                setAuthStep("email");
+                setMessage("");
+              }}
+            />
+          )}
+
+          {accounts.length > 0 && (
+            <div className="demo-accounts-toggle-wrap">
+              <button
+                type="button"
+                className="text-button demo-toggle-btn"
+                onClick={() => setShowDemoAccounts(!showDemoAccounts)}
+              >
+                <KeyRound size={15} />
+                {tr(showDemoAccounts ? "Hide demo accounts" : "Explore with demo accounts")}
+                <ChevronDown
+                  size={14}
+                  style={{
+                    transform: showDemoAccounts ? "rotate(180deg)" : "none",
+                    transition: "transform 0.2s",
+                  }}
+                />
+              </button>
+            </div>
+          )}
+
+          {showDemoAccounts && accounts.length > 0 && (
+            <div className="demo-accounts-list">
+              <span className="login-caption">{tr("DEMO ACCOUNTS (1-CLICK)")}</span>
               {accounts.map((a) => (
                 <button
                   className="account-choice"
@@ -1133,52 +1285,15 @@ export function Login({
                       {tr(a.role === "clinician" ? "A clinician" : "A patient")}
                     </strong>
                     <small>
-                      {tr(
-                        a.role === "clinician"
-                          ? "Review the story. Guide the next step."
-                          : "Your records. Your language. Your care.",
-                      )}
+                      {a.name} ({a.email})
                     </small>
                   </span>
                   {busy === a.email ? <Spinner /> : <ArrowRight size={19} />}
                 </button>
               ))}
-            </>
+            </div>
           )}
-          <div className="onboarding-actions"><button className="text-button" onClick={()=>{setRegistering(value=>!value);setShowForm(true);}}>{tr(registering ? "Back to sign in" : "Create account")}</button></div>
-          {registering && <RegistrationForm onCreated={onLogin} connected={connected} />}
-          {!registering && <button
-            className="text-button signin-link"
-            onClick={() => setShowForm(!showForm)}
-          >
-            {tr(showForm ? "Hide sign-in form" : "Sign in with your account")}
-            <ArrowRight size={15} />
-          </button>}
-          {showForm && !registering && (
-            <form
-              className="signin-form"
-              onSubmit={(e) => {
-                e.preventDefault();
-                const f = new FormData(e.currentTarget);
-                login(String(f.get("email")), String(f.get("password")));
-              }}
-            >
-              <label>
-                {tr("Email")}
-                <input
-                  name="email"
-                  type="email"
-                  required
-                  autoComplete="username"
-                />
-              </label>
-              <PasswordField name="password" label={tr("Password")} />
-              <button className="button primary" disabled={!!busy || !connected}>
-                {tr("Sign in")}
-                {busy && <Spinner />}
-              </button>
-            </form>
-          )}
+
           <div className="login-foot">
             <ShieldCheck size={17} />
             <span>
@@ -1199,6 +1314,9 @@ export function Login({
       </div>
       <footer>
         <span>{tr("Connecting patients, providers, and care.")}</span>
+        <span className="login-footer-note">
+          <ShieldCheck size={16} /> {tr("Human-centered. Open by design.")}
+        </span>
         <span>{tr("HealthBridge")}</span>
       </footer>
     </div>

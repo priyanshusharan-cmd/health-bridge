@@ -263,3 +263,20 @@ def test_instruction_reassessment_flag_on_source_changes(isolated_db):
     inst_after = next(i for i in ws_after["instructions"] if i["id"] == inst_id)
     assert inst_after["reassessment_required"] is True
     assert "Source records or intake have changed" in inst_after["reassessment_reason"]
+
+
+def test_check_email_registered_and_unregistered(isolated_db):
+    client = TestClient(app)
+    # Registered email returns registered: True
+    res_reg = client.post("/api/auth/check-email", json={"email": "pata@test.local"})
+    assert res_reg.status_code == 200
+    data_reg = res_reg.json()
+    assert data_reg["registered"] is True
+    assert data_reg["email"] == "pata@test.local"
+
+    # Unregistered email returns registered: False
+    res_unreg = client.post("/api/auth/check-email", json={"email": "nonexistent@example.test"})
+    assert res_unreg.status_code == 200
+    data_unreg = res_unreg.json()
+    assert data_unreg["registered"] is False
+    assert data_unreg["email"] == "nonexistent@example.test"

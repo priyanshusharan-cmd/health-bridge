@@ -5,37 +5,150 @@ import { useText } from "./locale";
 import { LanguageSelect } from "./LanguageSelect";
 import { Spinner } from "./ui";
 import type { User } from "./types";
-export function RegistrationForm({onCreated,connected=true}: {onCreated:(user:User)=>void;connected?:boolean}) {
-  const tr=useText();
-  const [type,setType]=useState('patient'),[language,setLanguage]=useState('en'),[busy,setBusy]=useState(false),[error,setError]=useState('');
-  const invitation=new URLSearchParams(window.location.search).get('invite') || '';
-  async function submit(event:FormEvent<HTMLFormElement>) {
-    event.preventDefault();if(busy||!connected)return;setError('');
-    const fields=Object.fromEntries(new FormData(event.currentTarget));
-    if(fields.password!==fields.confirm_password){setError('The new passwords do not match.');return;}
-    delete fields.confirm_password;setBusy(true);
+export function RegistrationForm({
+  onCreated,
+  connected = true,
+  initialEmail = "",
+  onBack,
+}: {
+  onCreated: (user: User) => void;
+  connected?: boolean;
+  initialEmail?: string;
+  onBack?: () => void;
+}) {
+  const tr = useText();
+  const [type, setType] = useState("patient"),
+    [language, setLanguage] = useState("en"),
+    [busy, setBusy] = useState(false),
+    [error, setError] = useState("");
+  const invitation =
+    new URLSearchParams(window.location.search).get("invite") || "";
+  async function submit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (busy || !connected) return;
+    setError("");
+    const fields = Object.fromEntries(new FormData(event.currentTarget));
+    if (fields.password !== fields.confirm_password) {
+      setError("The new passwords do not match.");
+      return;
+    }
+    delete fields.confirm_password;
+    setBusy(true);
     try {
-      const user=await post<User>('/auth/register',{...fields,account_type:type,language,invitation:type==='patient'?String(fields.invitation||''):''});
+      const user = await post<User>("/auth/register", {
+        ...fields,
+        account_type: type,
+        language,
+        invitation: type === "patient" ? String(fields.invitation || "") : "",
+      });
       // Remove the invitation secret from the visible URL once consumed.
-      const hash=user.role==='clinician'?'#patients':'#overview';
-      window.history.replaceState({...window.history.state,healthbridgePath:hash},'',window.location.pathname+hash);
+      const hash = user.role === "clinician" ? "#patients" : "#overview";
+      window.history.replaceState(
+        { ...window.history.state, healthbridgePath: hash },
+        "",
+        window.location.pathname + hash,
+      );
       onCreated(user);
-    }catch(error){setError((error as Error).message);}finally{setBusy(false);}
+    } catch (error) {
+      setError((error as Error).message);
+    } finally {
+      setBusy(false);
+    }
   }
-  return <form className="form-body" onSubmit={submit}>
-    <p className="form-intro">{tr("Create your own workspace. Use fictional details in this prototype.")}</p>
-    <label>{tr("Account type")}<select value={type} onChange={e=>setType(e.target.value)} disabled={!!invitation}><option value="patient">{tr("Patient")}</option><option value="hospital">{tr("Hospital or clinic")}</option></select></label>
-    <label>{tr("Name")}<input name="name" required minLength={2} maxLength={100} autoComplete="name" /></label>
-    {type==='hospital' && <label>{tr("Hospital or clinic name")}<input name="hospital_name" required minLength={2} maxLength={160} /></label>}
-    <label>{tr("Email")}<input type="email" name="email" required maxLength={200} autoComplete="email" /></label>
-    <PasswordField name="password" label={tr("Password")} minLength={8} autoComplete="new-password" /><small>{tr("Use at least 8 characters.")}</small>
-    <PasswordField name="confirm_password" label={tr("Confirm new password")} minLength={8} autoComplete="new-password" />
-    <label>{tr("Preferred language")}<LanguageSelect interfaceOnly value={language} onChange={setLanguage} /></label>
-    {type==='patient' && <label>{tr("Hospital invitation code (optional)")}<input name="invitation" defaultValue={invitation} maxLength={200} autoComplete="off" /></label>}
-    <label className="checkbox-label"><input type="checkbox" required />{tr("I will use synthetic information only. I understand this is a prototype.")}</label>
-    {error && <p className="field-error" role="alert">{tr(error)}</p>}
-    <div className="form-footer"><button className="button primary" disabled={busy||!connected}>{busy&&<Spinner />}{tr("Create account")}</button></div>
-  </form>;
+  return (
+    <form className="form-body" onSubmit={submit}>
+      <div className="progressive-auth-header">
+        <p className="form-intro">
+          {tr("Looks like you’re new to HealthBridge. Let’s create your account.")}
+        </p>
+        {onBack && (
+          <button type="button" className="text-button change-email-btn" onClick={onBack}>
+            ← {tr("Change email")}
+          </button>
+        )}
+      </div>
+      <label>
+        {tr("Account type")}
+        <select
+          value={type}
+          onChange={(e) => setType(e.target.value)}
+          disabled={!!invitation}
+        >
+          <option value="patient">{tr("Patient")}</option>
+          <option value="hospital">{tr("Hospital or clinic")}</option>
+        </select>
+      </label>
+      <label>
+        {tr("Name")}
+        <input name="name" required minLength={2} maxLength={100} autoComplete="name" />
+      </label>
+      {type === "hospital" && (
+        <label>
+          {tr("Hospital or clinic name")}
+          <input
+            name="hospital_name"
+            required
+            minLength={2}
+            maxLength={160}
+          />
+        </label>
+      )}
+      <label>
+        {tr("Email")}
+        <input
+          type="email"
+          name="email"
+          defaultValue={initialEmail}
+          required
+          maxLength={200}
+          autoComplete="email"
+        />
+      </label>
+      <PasswordField
+        name="password"
+        label={tr("Password")}
+        minLength={8}
+        autoComplete="new-password"
+      />
+      <small>{tr("Use at least 8 characters.")}</small>
+      <PasswordField
+        name="confirm_password"
+        label={tr("Confirm new password")}
+        minLength={8}
+        autoComplete="new-password"
+      />
+      <label>
+        {tr("Preferred language")}
+        <LanguageSelect interfaceOnly value={language} onChange={setLanguage} />
+      </label>
+      {type === "patient" && (
+        <label>
+          {tr("Hospital invitation code (optional)")}
+          <input
+            name="invitation"
+            defaultValue={invitation}
+            maxLength={200}
+            autoComplete="off"
+          />
+        </label>
+      )}
+      <label className="checkbox-label">
+        <input type="checkbox" required />
+        {tr("I will use synthetic information only. I understand this is a prototype.")}
+      </label>
+      {error && (
+        <p className="field-error" role="alert">
+          {tr(error)}
+        </p>
+      )}
+      <div className="form-footer">
+        <button className="button primary full" disabled={busy || !connected}>
+          {busy && <Spinner />}
+          {tr("Create account & sign in")}
+        </button>
+      </div>
+    </form>
+  );
 }
 export function InvitePatient() {
   const tr=useText();

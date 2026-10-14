@@ -91,6 +91,9 @@ class Login(BaseModel):
     email: str = Field(max_length=200)
     password: str = Field(min_length=1,max_length=200)
 
+class CheckEmail(BaseModel):
+    email: str = Field(min_length=3, max_length=200)
+
 class CareLanguage(BaseModel):
     language: str = 'en'
 
@@ -203,6 +206,18 @@ def issue_session(con, user_id, request, response):
     con.delete('sessions', {'expires': {'$lt': time.time()}})
     con.insert_row('sessions', (hashlib.sha256(token.encode()).hexdigest(), user_id, time.time()+28800))
     response.set_cookie('hb_session', token, httponly=True, secure=os.getenv('COOKIE_SECURE','false').lower()=='true', samesite='lax', max_age=28800, path='/')
+
+@app.post('/api/auth/check-email')
+def check_email(body: CheckEmail):
+    clean_email = body.email.strip().lower()
+    with db.connection() as con:
+        user = con.one('users', {'email': clean_email})
+    return {
+        'registered': bool(user),
+        'email': clean_email,
+        'name': user['name'] if user else None,
+        'role': user['role'] if user else None
+    }
 
 @app.post('/api/auth/login')
 def login(body: Login, request: Request, response: Response):
