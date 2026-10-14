@@ -94,11 +94,12 @@ export function RegistrationForm({
         </label>
       )}
       <label>
-        {tr("Email")}
+        {tr("Email ID")}
         <input
           type="email"
           name="email"
           defaultValue={initialEmail}
+          placeholder={tr("Enter your email ID")}
           required
           maxLength={200}
           autoComplete="email"

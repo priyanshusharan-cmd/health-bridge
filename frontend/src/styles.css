@@ -2316,10 +2316,11 @@ textarea::placeholder {
 .login-page > header select {
   font-size: 13px;
   font-weight: 500;
-  padding: 7px 32px 7px 12px;
+  padding: 6px 24px 6px 10px;
   border-radius: 8px;
-  min-width: 125px;
-  height: 38px;
+  width: auto;
+  min-width: 0;
+  height: 34px;
   background-color: var(--ink-fcfdfb);
   border: 1px solid var(--ink-dde7de);
   color: var(--ink-45624c);

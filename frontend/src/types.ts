@@ -1,4 +1,4 @@
-export type Language = "en" | "hi" | "kn";
+export type Language = "en" | "hi" | "kn" | string;
 export type User = {
   id: string;
   name: string;

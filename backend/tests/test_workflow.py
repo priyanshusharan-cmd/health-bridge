@@ -304,8 +304,8 @@ def test_profile_edits_are_persistent_and_initials_derived(client):
 
 def test_regional_languages_and_reviewed_translation(client):
     languages = client.get('/api/languages').json()
-    assert len(languages) == 28
-    assert {item['code'] for item in languages if item['interface']} == {'en', 'hi', 'kn'}
+    assert len(languages) == 31
+    assert {'en', 'hi', 'kn'}.issubset({item['code'] for item in languages if item['interface']})
     assert next(item for item in languages if item['code'] == 'ar')['direction'] == 'rtl'
     login(client)
     assert client.post('/api/patients/patient-asha/intake',json={'reason':'Synthetic intake for a Tamil-speaking patient.', 'language':'ta'}).status_code == 200

@@ -1043,7 +1043,8 @@ export function Login({
   const handleCheckEmail = async (e: React.FormEvent) => {
     e.preventDefault();
     const clean = email.trim().toLowerCase();
-    if (!clean || !clean.includes("@")) {
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!clean || !emailRegex.test(clean)) {
       setMessage(tr("Please enter a valid email address."));
       return;
     }
@@ -1176,13 +1177,13 @@ export function Login({
           {authStep === "email" && (
             <form className="signin-form progressive-email-form" onSubmit={handleCheckEmail}>
               <label>
-                {tr("Email")}
+                {tr("Email ID")}
                 <input
                   name="email"
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="name@example.com"
+                  placeholder={tr("Enter your email ID")}
                   required
                   autoFocus
                   autoComplete="email"

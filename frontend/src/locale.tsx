@@ -2,12 +2,41 @@ import { createContext, useContext } from "react";
 import type { Language } from "./types";
 import catalog from "./locales/ui.json";
 export const LocaleContext = createContext<Language>("en");
-export const locales = { en: "en-IN", hi: "hi-IN", kn: "kn-IN" };
+const baseLocales: Record<string, string> = {
+  en: "en-IN",
+  hi: "hi-IN",
+  kn: "kn-IN",
+  as: "as-IN",
+  bn: "bn-IN",
+  brx: "brx-IN",
+  doi: "doi-IN",
+  gu: "gu-IN",
+  ks: "ks-IN",
+  kok: "kok-IN",
+  mai: "mai-IN",
+  ml: "ml-IN",
+  mni: "mni-IN",
+  mr: "mr-IN",
+  ne: "ne-IN",
+  or: "or-IN",
+  pa: "pa-IN",
+  sa: "sa-IN",
+  sat: "sat-IN",
+  sd: "sd-IN",
+  ta: "ta-IN",
+  te: "te-IN",
+  ur: "ur-IN",
+};
+export const locales: Record<string, string> = new Proxy(baseLocales, {
+  get(target, prop: string) {
+    return target[prop] || `${prop}-IN`;
+  },
+});
 export function translate<T>(value: T, language: Language): T {
   if (typeof value !== "string" || language === "en") return value;
   const key = value.trim();
-  const entry = (catalog as Record<string, { hi: string; kn: string }>)[key];
-  if (entry)
+  const entry = (catalog as Record<string, Record<string, string>>)[key];
+  if (entry && entry[language])
     return (value.slice(0, value.indexOf(key)) +
       entry[language] +
       value.slice(value.indexOf(key) + key.length)) as T;

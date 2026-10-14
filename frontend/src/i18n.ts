@@ -125,4 +125,10 @@ const kn: typeof en = {
   intakeHint: "ನಿಮಗೆ ಅನುಕೂಲವಾದ ಭಾಷೆಯಲ್ಲಿ ನಿಮ್ಮ ಮಾತುಗಳಲ್ಲಿ ಬರೆಯಿರಿ.",
   instructionsSub: "ನಿಮ್ಮ ಆರೈಕೆ ತಂಡ ಬರೆದು ಪರಿಶೀಲಿಸಿದ ಮುಂದಿನ ಹಂತಗಳು.",
 };
-export const translations: Record<Language, typeof en> = { en, hi, kn };
+const baseTranslations: Record<string, typeof en> = { en, hi, kn };
+export const translations: Record<Language, typeof en> = new Proxy(baseTranslations, {
+  get(target, prop: string) {
+    return target[prop] || target.en;
+  },
+}) as Record<Language, typeof en>;
+

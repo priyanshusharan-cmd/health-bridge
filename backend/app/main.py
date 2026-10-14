@@ -210,6 +210,8 @@ def issue_session(con, user_id, request, response):
 @app.post('/api/auth/check-email')
 def check_email(body: CheckEmail):
     clean_email = body.email.strip().lower()
+    if '@' not in clean_email or '.' not in clean_email.split('@')[-1] or len(clean_email.split('.')[-1]) < 2:
+        raise HTTPException(422, "Please enter a valid email address.")
     with db.connection() as con:
         user = con.one('users', {'email': clean_email})
     return {
