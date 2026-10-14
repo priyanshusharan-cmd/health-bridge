@@ -1,0 +1,6 @@
+project-includes = [
+    "backend",
+    "scripts",
+]
+search-path = ["backend"]
+infer-with-first-use = false

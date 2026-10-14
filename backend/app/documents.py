@@ -97,7 +97,7 @@ def read_document_detailed(data: bytes, filename: str, lang: str | None = None) 
             if image.format not in ('PNG', 'JPEG') or image.width * image.height > 20_000_000:
                 raise ValueError('Use a PNG or JPEG image under 20 megapixels.')
             media = 'image/png' if image.format == 'PNG' else 'image/jpeg'
-            text = pytesseract.image_to_string(image, lang=tess_lang, timeout=30)
+            text = str(pytesseract.image_to_string(image, lang=tess_lang, timeout=30))
             meta = {
                 'method': 'tesseract_ocr',
                 'ocr_lang': tess_lang,

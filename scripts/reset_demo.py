@@ -52,8 +52,8 @@ def reset_demo(target_dir: str | None = None, target_db: str | None = None, scen
 
     print(f"Target validated: {target_display}. Initializing...")
 
-    from app import db
-    from app.demo_config import DEMO_PASSWORD
+    from app import db  # pyright: ignore[reportMissingImports]  # type: ignore
+    from app.demo_config import DEMO_PASSWORD  # pyright: ignore[reportMissingImports]  # type: ignore
 
     if not is_mongo and resolved_dir is not None:
         db.DATA = resolved_dir
