@@ -29,7 +29,7 @@ async def main():
         results.append({'run':i+1,'engine':engine,'latency_ms':ms,'evidence_count':len(evidence),'covered_sources':len(set(q['source_id'] for q in evidence)),'source_count':len(sources),'all_quotes_source_verified':True})
     hardware=None
     try:
-        import torch
+        import torch  # pyright: ignore[reportMissingImports]  # type: ignore
         if torch.version.hip and torch.cuda.is_available():
             hardware={'hip':torch.version.hip,'gpu':torch.cuda.get_device_name(0),'scope':'This process host only; does not attest to a remote endpoint.'}
     except ImportError:

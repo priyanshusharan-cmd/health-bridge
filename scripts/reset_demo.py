@@ -17,6 +17,7 @@ def reset_demo(target_dir: str | None = None, target_db: str | None = None, scen
     default_dir = (backend_dir / "data").resolve()
     is_mongo = bool(os.getenv("MONGODB_URI"))
 
+    resolved_dir: Path | None = None
     if is_mongo:
         db_name = (target_db or os.getenv("MONGODB_DATABASE", "")).strip()
         if not db_name or db_name == "healthbridge" or ("synthetic" not in db_name.lower() and "disposable" not in db_name.lower()):
@@ -29,7 +30,8 @@ def reset_demo(target_dir: str | None = None, target_db: str | None = None, scen
         os.environ["MONGODB_DATABASE"] = db_name
         target_display = f"MongoDB database '{db_name}'"
     else:
-        resolved_dir = Path(target_dir or os.getenv("DATA_DIR", "")).resolve() if (target_dir or os.getenv("DATA_DIR")) else None
+        candidate_dir = target_dir or os.getenv("DATA_DIR", "")
+        resolved_dir = Path(candidate_dir).resolve() if candidate_dir else None
         if not resolved_dir or resolved_dir == default_dir or ("synthetic" not in str(resolved_dir).lower() and "disposable" not in str(resolved_dir).lower()):
             print(
                 f"ERROR: Refusing demo reset on ordinary database ({resolved_dir or default_dir}).\n"
@@ -53,14 +55,15 @@ def reset_demo(target_dir: str | None = None, target_db: str | None = None, scen
     from app import db
     from app.demo_config import DEMO_PASSWORD
 
-    if not is_mongo:
+    if not is_mongo and resolved_dir is not None:
         db.DATA = resolved_dir
     db.initialize()
 
     # Wipe tables in current connection
     with db.connection() as con:
-        if hasattr(con, "raw"):
-            con.raw.execute("PRAGMA foreign_keys = OFF")
+        raw_con = getattr(con, "raw", None)
+        if raw_con is not None:
+            raw_con.execute("PRAGMA foreign_keys = OFF")
         # Delete demo data
         for table in [
             "clarification_messages",
@@ -84,8 +87,8 @@ def reset_demo(target_dir: str | None = None, target_db: str | None = None, scen
             "users",
         ]:
             con.delete(table, {})
-        if hasattr(con, "raw"):
-            con.raw.execute("PRAGMA foreign_keys = ON")
+        if raw_con is not None:
+            raw_con.execute("PRAGMA foreign_keys = ON")
 
         # Re-seed synthetic demo users and fixtures
         pw = db.password_hash(DEMO_PASSWORD)

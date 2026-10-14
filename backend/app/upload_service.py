@@ -283,9 +283,10 @@ def recover_pending_upload_jobs():
     """Startup recovery scan to resume queued jobs or expired worker leases."""
     now_iso = db.now()
     with db.connection() as con:
-        if hasattr(con, 'raw'):
+        raw_con = getattr(con, 'raw', None)
+        if raw_con is not None:
             # Mark max attempts exceeded if attempt_count >= 3
-            con.raw.execute("""
+            raw_con.execute("""
                 UPDATE upload_jobs
                 SET state = 'failed',
                     error_code = 'max_attempts_exceeded',
@@ -296,7 +297,7 @@ def recover_pending_upload_jobs():
                 WHERE state IN ('queued', 'processing') AND attempt_count >= 3
             """, (now_iso,))
             # Find queued or expired jobs
-            cursor = con.raw.execute("""
+            cursor = raw_con.execute("""
                 SELECT id, ocr_lang FROM upload_jobs
                 WHERE (state = 'queued' OR (state = 'processing' AND (lease_expires_at IS NULL OR lease_expires_at < ?)))
                   AND attempt_count < 3
@@ -417,7 +418,10 @@ def apply_metadata_correction(
         })
         con.invalidate(patient_id)
         db.audit(con, patient_id, user['name'], 'Record metadata corrected', f"v{new_version}: {reason.strip()}")
-        return get_record_with_provenance(record_id, con)
+        res = get_record_with_provenance(record_id, con)
+        if not res:
+            raise HTTPException(404, 'Record not found.')
+        return res
 
 def apply_text_correction(
     record_id: str,
@@ -468,4 +472,7 @@ def apply_text_correction(
         })
         con.invalidate(patient_id)
         db.audit(con, patient_id, user['name'], 'Record text corrected', f"v{new_version}: {reason.strip()}")
-        return get_record_with_provenance(record_id, con)
+        res = get_record_with_provenance(record_id, con)
+        if not res:
+            raise HTTPException(404, 'Record not found.')
+        return res

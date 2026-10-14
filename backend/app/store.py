@@ -29,6 +29,18 @@ FIELDS = {
 }
 
 class Store:
+    def insert(self, table: str, row: dict):
+        raise NotImplementedError
+
+    def find(self, table: str, filters: dict | None = None, sort=None, limit: int | None = None) -> list[dict]:
+        raise NotImplementedError
+
+    def update(self, table: str, filters: dict, values: dict):
+        raise NotImplementedError
+
+    def delete(self, table: str, filters: dict):
+        raise NotImplementedError
+
     def insert_row(self, table, values):
         cols = FIELDS[table].split()[:len(values)]
         self.insert(table, dict(zip(cols, values)))

@@ -239,7 +239,7 @@ def change_password(body: PasswordChange, request: Request, response: Response, 
     attempts[key].append(time.time())
     with db.connection() as con:
         current=con.one('users',{'id':user['id']})
-        if not db.verify_password(body.current_password,current['password']):
+        if not current or not db.verify_password(body.current_password,current['password']):
             raise HTTPException(400,'Current password is incorrect.')
         if body.new_password == body.current_password:
             raise HTTPException(422,'Choose a different new password.')

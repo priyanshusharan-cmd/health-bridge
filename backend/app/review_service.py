@@ -118,7 +118,7 @@ def append_brief_review(
             raise HTTPException(404, "Brief not found.")
         patient_id = row["patient_id"]
         latest = con.one("briefs", {"patient_id": patient_id}, sort=[("created_at", -1)])
-        if row["status"] == "outdated" or latest["id"] != brief_id:
+        if row["status"] == "outdated" or not latest or latest["id"] != brief_id:
             raise HTTPException(409, "This brief is outdated. Prepare a new one before reviewing.")
 
         current_rev = con.clinical_revision(patient_id)
@@ -159,11 +159,13 @@ def publish_patient_instruction(
     translated: str = "",
     content_language: str | None = None,
     confirmed: bool = False,
-    user: dict = None,
+    user: dict | None = None,
     override_reason: str | None = None,
     previous_version_id: str | None = None,
     status: str = "published"
 ) -> dict:
+    if not user:
+        raise HTTPException(401, "Authentication required.")
     if not confirmed:
         raise HTTPException(422, "Please confirm that you reviewed these instructions.")
     orig = original.strip()
