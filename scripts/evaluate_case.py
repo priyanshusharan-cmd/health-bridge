@@ -38,13 +38,13 @@ SYNTHETIC_FIXTURES = [
 ]
 
 TARGET_FACTS_CHECKLIST = [
-    "Prior coronary stent (2022)",
-    "Medication: Atorvastatin 40mg daily",
-    "Medication: Metformin 500mg BID",
-    "Reported Allergy: Penicillin (severe hives / anaphylactoid)",
-    "Conflicting Allergy Statement: 'No known drug allergies' in discharge note",
-    "Recent concern: Exertional shortness of breath for 2 weeks",
-    "Recent blood pressure: 138/86 mmHg",
+    {"fact": "Prior coronary stent (2022)", "source_type": "record", "terms": ["stent", "2022"]},
+    {"fact": "Medication: Atorvastatin 40mg daily", "source_type": "record", "terms": ["atorvastatin", "40mg"]},
+    {"fact": "Medication: Metformin 500mg BID", "source_type": "record", "terms": ["metformin", "500mg"]},
+    {"fact": "Reported Allergy: Penicillin in intake", "source_type": "intake", "terms": ["penicillin", "swelling"]},
+    {"fact": "Conflicting Allergy Statement in discharge note", "source_type": "record", "terms": ["allergies", "differ"]},
+    {"fact": "Recent concern: Exertional shortness of breath", "source_type": "intake", "terms": ["shortness", "breath"]},
+    {"fact": "Recent blood pressure: 138/86 mmHg", "source_type": "record", "terms": ["138/86"]},
 ]
 
 
@@ -58,17 +58,20 @@ def evaluate_assisted(root: Path):
             rec = {
                 "id": fixture["id"],
                 "title": fixture["title"],
-                "extracted_text": text,
+                "text": text,
                 "created_at": "2026-10-14T00:00:00Z",
             }
             available_records.append(rec)
             extractions[fixture["id"]] = {
-                "extracted_text": text,
-                "pages": [{"page_number": 1, "text": text}],
+                "record_id": fixture["id"],
+                "version": 1,
+                "pages_json": json.dumps([{"page_number": 1, "length": len(text), "start_offset": 0, "end_offset": len(text)}]),
                 "method": "direct_text",
+                "warnings": "[]",
             }
 
     intake = {
+        "id": "synthetic-intake",
         "reason": "Exertional shortness of breath when walking uphill for two weeks.",
         "duration": "Two weeks",
         "allergies": "Penicillin (developed rash and facial swelling in 2018)",
@@ -91,16 +94,21 @@ def evaluate_assisted(root: Path):
 
     # Fact detection check in assisted brief
     full_brief_text = json.dumps(brief_data.get("sections", {})) + " " + json.dumps(brief_data.get("uncertainties", []))
-    detected_facts = []
+    detected_record_facts = []
+    detected_intake_facts = []
     missing_facts = []
-    for fact in TARGET_FACTS_CHECKLIST:
-        # Check key terms
-        terms = [t.lower() for t in fact.split() if len(t) > 3 and t.isalnum()]
-        matches = sum(1 for t in terms if t in full_brief_text.lower())
-        if matches >= max(1, len(terms) // 2):
-            detected_facts.append(fact)
+
+    for item in TARGET_FACTS_CHECKLIST:
+        fact_name = item["fact"]
+        terms = item["terms"]
+        matches = sum(1 for t in terms if t.lower() in full_brief_text.lower())
+        if matches == len(terms):
+            if item["source_type"] == "record":
+                detected_record_facts.append(fact_name)
+            else:
+                detected_intake_facts.append(fact_name)
         else:
-            missing_facts.append(fact)
+            missing_facts.append(fact_name)
 
     uncertainties = brief_data.get("uncertainties", [])
 
@@ -108,9 +116,8 @@ def evaluate_assisted(root: Path):
         "mode": "assisted_source_only",
         "execution_seconds": elapsed_seconds,
         "total_target_facts": len(TARGET_FACTS_CHECKLIST),
-        "detected_facts_count": len(detected_facts),
-        "missing_facts_count": len(missing_facts),
-        "detected_facts": detected_facts,
+        "detected_record_facts": detected_record_facts,
+        "detected_intake_facts": detected_intake_facts,
         "missing_facts": missing_facts,
         "uncertainties_flagged": len(uncertainties),
         "coverage": brief_data.get("coverage", {}),

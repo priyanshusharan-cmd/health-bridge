@@ -1,5 +1,5 @@
 {
-  "evaluation_date": "2026-10-14T11:22:27.661957+00:00",
+  "evaluation_date": "2026-10-14T12:08:03.578238+00:00",
   "disclaimer": "Synthetic data evaluation only. Not a clinical trial or proof of diagnostic efficacy. Manual timings must be recorded by human clinicians under controlled conditions.",
   "test_scenario": {
     "name": "Synthetic Multi-Document Cardiology Intake",
@@ -9,30 +9,78 @@
       "Follow-up Visit Note"
     ],
     "target_checklist": [
-      "Prior coronary stent (2022)",
-      "Medication: Atorvastatin 40mg daily",
-      "Medication: Metformin 500mg BID",
-      "Reported Allergy: Penicillin (severe hives / anaphylactoid)",
-      "Conflicting Allergy Statement: 'No known drug allergies' in discharge note",
-      "Recent concern: Exertional shortness of breath for 2 weeks",
-      "Recent blood pressure: 138/86 mmHg"
+      {
+        "fact": "Prior coronary stent (2022)",
+        "source_type": "record",
+        "terms": [
+          "stent",
+          "2022"
+        ]
+      },
+      {
+        "fact": "Medication: Atorvastatin 40mg daily",
+        "source_type": "record",
+        "terms": [
+          "atorvastatin",
+          "40mg"
+        ]
+      },
+      {
+        "fact": "Medication: Metformin 500mg BID",
+        "source_type": "record",
+        "terms": [
+          "metformin",
+          "500mg"
+        ]
+      },
+      {
+        "fact": "Reported Allergy: Penicillin in intake",
+        "source_type": "intake",
+        "terms": [
+          "penicillin",
+          "swelling"
+        ]
+      },
+      {
+        "fact": "Conflicting Allergy Statement in discharge note",
+        "source_type": "record",
+        "terms": [
+          "allergies",
+          "differ"
+        ]
+      },
+      {
+        "fact": "Recent concern: Exertional shortness of breath",
+        "source_type": "intake",
+        "terms": [
+          "shortness",
+          "breath"
+        ]
+      },
+      {
+        "fact": "Recent blood pressure: 138/86 mmHg",
+        "source_type": "record",
+        "terms": [
+          "138/86"
+        ]
+      }
     ]
   },
   "assisted_system_run": {
     "mode": "assisted_source_only",
     "execution_seconds": 0.0,
     "total_target_facts": 7,
-    "detected_facts_count": 3,
-    "missing_facts_count": 4,
-    "detected_facts": [
-      "Prior coronary stent (2022)",
-      "Reported Allergy: Penicillin (severe hives / anaphylactoid)",
-      "Recent concern: Exertional shortness of breath for 2 weeks"
+    "detected_record_facts": [
+      "Prior coronary stent (2022)"
+    ],
+    "detected_intake_facts": [
+      "Reported Allergy: Penicillin in intake",
+      "Recent concern: Exertional shortness of breath"
     ],
     "missing_facts": [
       "Medication: Atorvastatin 40mg daily",
       "Medication: Metformin 500mg BID",
-      "Conflicting Allergy Statement: 'No known drug allergies' in discharge note",
+      "Conflicting Allergy Statement in discharge note",
       "Recent blood pressure: 138/86 mmHg"
     ],
     "uncertainties_flagged": 1,

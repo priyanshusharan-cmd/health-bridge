@@ -128,6 +128,8 @@ export type Instruction = {
   acknowledged_at?: string | null;
   acknowledgement_status?: "acknowledged" | "needs_clarification" | null;
   override_reason?: string | null;
+  reassessment_required?: boolean;
+  reassessment_reason?: string | null;
 };
 export type ClarificationMessage = {
   id: string;
@@ -168,6 +170,16 @@ export type Workspace = {
   }[];
   instructions: Instruction[];
   clarifications?: Clarification[];
+  upload_jobs?: {
+    id: string;
+    filename: string;
+    state: "queued" | "processing" | "completed" | "failed";
+    progress: number;
+    record_id?: string | null;
+    error_message?: string | null;
+    duplicate_warning?: string | null;
+    created_at: string;
+  }[];
   activity: {
     id: number;
     actor: string;

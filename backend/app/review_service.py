@@ -172,6 +172,22 @@ def publish_patient_instruction(
         raise HTTPException(422, "Instruction versions must contain meaningful text (at least 10 characters).")
 
     with db.connection() as con:
+        version = 1
+        prev_to_supersede = None
+        if previous_version_id:
+            prev = con.one("instructions", {"id": previous_version_id})
+            if not prev:
+                raise HTTPException(404, "Previous instruction version not found.")
+            if prev["patient_id"] != patient_id:
+                raise HTTPException(403, "Cannot supersede an instruction belonging to another patient.")
+            if prev.get("status") == "superseded":
+                raise HTTPException(409, "This instruction version has already been superseded by another revision. Please refresh.")
+            if prev.get("status") not in ("published", "draft"):
+                raise HTTPException(422, f"Cannot supersede an instruction with status '{prev.get('status')}'.")
+            version = (prev.get("version") or 1) + 1
+            if status == "published":
+                prev_to_supersede = previous_version_id
+
         # Check publication policy:
         # Current brief must be approved and all open clarifications resolved, or require explicit override reason
         latest_brief = con.one("briefs", {"patient_id": patient_id}, sort=[("created_at", -1)])
@@ -190,15 +206,11 @@ def publish_patient_instruction(
                     reason_msg = f"There are {len(open_clarifications)} unresolved clarification question(s)."
                 raise HTTPException(422, f"{reason_msg} Otherwise, provide an explicit clinician override reason (at least 5 characters).")
         else:
-            if not clean_override:
-                clean_override = "Independently authored by clinician without brief"
+            if len(clean_override) < 5:
+                raise HTTPException(422, "Please provide an explicit clinician override reason (at least 5 characters) when authoring instructions without an approved visit brief.")
 
-        version = 1
-        if previous_version_id:
-            prev = con.one("instructions", {"id": previous_version_id})
-            if prev:
-                version = (prev.get("version") or 1) + 1
-                con.update("instructions", {"id": previous_version_id}, {"status": "superseded"})
+        if prev_to_supersede:
+            con.update("instructions", {"id": prev_to_supersede}, {"status": "superseded"})
 
         iid = secrets.token_hex(12)
         now_ts = db.now()
@@ -227,7 +239,7 @@ def publish_patient_instruction(
             "acknowledgement_status": None,
             "override_reason": clean_override if clean_override else None,
         })
-        db.audit(con, patient_id, user["name"], "Instructions published", f"v{version}: {pl[:100]}")
+        db.audit(con, patient_id, user["name"], f"Instructions {status}", f"v{version}: {pl[:100]}")
 
     return {
         "id": iid,
@@ -249,6 +261,9 @@ def withdraw_instruction(instruction_id: str, reason: str, user: dict) -> dict:
         inst = con.one("instructions", {"id": instruction_id})
         if not inst:
             raise HTTPException(404, "Instruction not found.")
+        assigned = con.one("assignments", {"clinician_id": user["id"], "patient_id": inst["patient_id"]})
+        if not assigned:
+            raise HTTPException(403, "You are not assigned to this patient.")
         con.update("instructions", {"id": instruction_id}, {
             "status": "withdrawn",
             "withdrawal_reason": clean_reason,
@@ -258,7 +273,7 @@ def withdraw_instruction(instruction_id: str, reason: str, user: dict) -> dict:
     return {"ok": True, "id": instruction_id, "status": "withdrawn"}
 
 
-def acknowledge_instruction(instruction_id: str, status: str, user: dict) -> dict:
+def acknowledge_instruction(instruction_id: str, status: str, user: dict, question: str | None = None) -> dict:
     if status not in ("acknowledged", "needs_clarification"):
         raise HTTPException(422, "Status must be 'acknowledged' or 'needs_clarification'.")
 
@@ -269,6 +284,8 @@ def acknowledge_instruction(instruction_id: str, status: str, user: dict) -> dic
             raise HTTPException(404, "Instruction not found.")
         if inst["patient_id"] != user["id"]:
             raise HTTPException(403, "You can only acknowledge your own instructions.")
+        if inst.get("status") != "published":
+            raise HTTPException(422, f"Cannot acknowledge instruction with status '{inst.get('status')}'. Only published instructions can be acknowledged.")
 
         con.update("instructions", {"id": instruction_id}, {
             "acknowledged_at": now_ts,
@@ -276,4 +293,36 @@ def acknowledge_instruction(instruction_id: str, status: str, user: dict) -> dic
         })
         db.audit(con, inst["patient_id"], user["name"], f"Instruction {status}", f"v{inst.get('version', 1)}")
 
-    return {"ok": True, "id": instruction_id, "status": status, "acknowledged_at": now_ts}
+        # If patient needs clarification, create actionable clarification thread assigned to clinician
+        clarification_id = None
+        if status == "needs_clarification":
+            clarification_id = secrets.token_hex(12)
+            mid = secrets.token_hex(12)
+            q_text = (question or "").strip() or f"Patient requested clarification on instructions v{inst.get('version', 1)}: {inst.get('plain', '')[:100]}"
+            con.insert("clarifications", {
+                "id": clarification_id,
+                "patient_id": inst["patient_id"],
+                "brief_id": inst.get("brief_id"),
+                "question": q_text,
+                "originating_uncertainty_id": f"instruction-v{inst.get('version', 1)}",
+                "creator_id": user["id"],
+                "creator_name": user["name"],
+                "assigned_owner": "clinician",
+                "status": "open",
+                "resolution_reason": None,
+                "created_at": now_ts,
+                "resolved_at": None,
+                "resolved_by": None,
+            })
+            con.insert("clarification_messages", {
+                "id": mid,
+                "clarification_id": clarification_id,
+                "author_id": user["id"],
+                "author_name": user["name"],
+                "role": user["role"],
+                "text": q_text,
+                "created_at": now_ts,
+            })
+            db.audit(con, inst["patient_id"], user["name"], "Clarification requested", q_text[:100])
+
+    return {"ok": True, "id": instruction_id, "status": status, "acknowledged_at": now_ts, "clarification_id": clarification_id}

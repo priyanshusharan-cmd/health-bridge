@@ -32,6 +32,7 @@ from .upload_service import (
     get_record_with_provenance,
     apply_metadata_correction,
     apply_text_correction,
+    recover_pending_upload_jobs,
 )
 from .brief_service import build_structured_brief
 from .review_service import (
@@ -48,6 +49,7 @@ from .review_service import (
 @asynccontextmanager
 async def lifespan(app):
     db.initialize()
+    recover_pending_upload_jobs()
     yield
 
 app = FastAPI(title='HealthBridge', lifespan=lifespan)
@@ -138,6 +140,7 @@ class InstructionWithdraw(BaseModel):
 
 class InstructionAcknowledge(BaseModel):
     status: Literal['acknowledged', 'needs_clarification']
+    question: str | None = Field(default=None, max_length=2000)
 
 class Profile(BaseModel):
     language: Literal['en','hi','kn']
@@ -287,10 +290,26 @@ def workspace(patient_id: str,user=Depends(current_user)):
         brief = dict(brief) if brief else None
         if brief:
             brief['content'] = json.loads(brief['content'])
+        raw_instructions = con.find('instructions', {'patient_id': patient_id}, sort=[('created_at', -1)], limit=None)
+        current_rev = con.clinical_revision(patient_id)
+        visible_instructions = []
+        for inst in raw_instructions:
+            if user['role'] == 'patient' and inst.get('status') == 'draft':
+                continue
+            inst_dict = dict(inst)
+            if inst_dict.get('status') == 'published' and inst_dict.get('source_revision') and inst_dict.get('source_revision') != current_rev:
+                inst_dict['reassessment_required'] = True
+                inst_dict['reassessment_reason'] = 'Source records or intake have changed since these instructions were published. Clinician review recommended.'
+            else:
+                inst_dict['reassessment_required'] = False
+            visible_instructions.append(inst_dict)
+
+        upload_jobs = con.find('upload_jobs', {'patient_id': patient_id}, sort=[('created_at', -1)], limit=10)
         return {'patient':patient,'records':records,'intake':dict(intake) if intake else None,'brief':brief,
                 'appointments':sorted(con.find('appointments', {'patient_id': patient_id}), key=lambda a: datetime.fromisoformat(a['starts_at'])),
-                'instructions':con.find('instructions', {'patient_id': patient_id}, sort=[('created_at', -1)], limit=None),
+                'instructions':visible_instructions,
                 'clarifications': get_patient_clarifications(patient_id),
+                'upload_jobs': upload_jobs,
                 'activity':con.find('audit', {'patient_id': patient_id}, sort=[('id', -1)], limit=30)}
 
 @app.post('/api/patients/{patient_id}/intake')
@@ -352,6 +371,8 @@ def read_upload_job(job_id: str, user=Depends(current_user)):
         'record_id': job['record_id'],
         'error_code': job['error_code'],
         'error_message': job['error_message'],
+        'duplicate_warning': job.get('duplicate_warning'),
+        'attempt_count': job.get('attempt_count', 0),
         'created_at': job['created_at'],
         'updated_at': job['updated_at']
     }
@@ -481,7 +502,8 @@ def export_patient(patient_id: str, user=Depends(current_user)):
         brief_data = dict(brief) if brief else None
         if brief_data:
             brief_data['content'] = json.loads(brief_data['content'])
-        instructions = con.find('instructions', {'patient_id': patient_id}, sort=[('created_at', -1)], limit=None)
+        raw_instructions = con.find('instructions', {'patient_id': patient_id}, sort=[('created_at', -1)], limit=None)
+        instructions = [dict(i) for i in raw_instructions if user['role'] == 'clinician' or i.get('status') != 'draft']
         clarifications = get_patient_clarifications(patient_id)
         appointments = con.find('appointments', {'patient_id': patient_id})
 
@@ -506,9 +528,22 @@ async def generate_brief(patient_id: str, body: BriefGenerateRequest | None = No
     with db.connection() as con:
         intake_row = con.one('intakes', {'patient_id': patient_id}, sort=[('created_at', -1)])
         intake = dict(intake_row) if intake_row else None
-        available_records = [dict(r) for r in con.find('records', {'patient_id': patient_id}, sort=[('created_at', -1)])]
+        # Exclude withdrawn and tombstoned records
+        all_records = con.find('records', {'patient_id': patient_id}, sort=[('created_at', -1)])
+        available_records = [
+            dict(r) for r in all_records
+            if r.get('status') != 'withdrawn' and not r.get('deleted_at')
+        ]
         if not intake and not available_records:
             raise HTTPException(422, 'Add your concerns or a record first.')
+
+        active_ids = {r['id'] for r in available_records}
+        selected_ids = None
+        if body and body.selected_record_ids is not None:
+            selected_ids = [rid for rid in body.selected_record_ids if rid in active_ids]
+            if body.selected_record_ids and not selected_ids:
+                raise HTTPException(422, 'The selected records are no longer available.')
+
         clinical_rev = con.clinical_revision(patient_id)
         extractions_by_record = {}
         for r in available_records:
@@ -520,6 +555,7 @@ async def generate_brief(patient_id: str, body: BriefGenerateRequest | None = No
     model_name = os.getenv('AI_MODEL', 'none') if ai_mode != 'extractive' else 'none'
     latency = 0
     engine = f"{ai_mode} · {model_name}" if ai_mode != 'extractive' else 'Source excerpts · no model used'
+    model_evidence = None
 
     if ai_mode != 'extractive':
         sources = []
@@ -529,14 +565,14 @@ async def generate_brief(patient_id: str, body: BriefGenerateRequest | None = No
                 'title': 'Patient intake',
                 'text': '\n'.join(f'{k.title()}: {intake[k] or "Not provided"}' for k in ('reason','duration','medications','allergies','questions'))
             })
-        for r in available_records[:12]:
+        records_for_model = [r for r in available_records if r['id'] in selected_ids] if selected_ids is not None else available_records[:12]
+        for r in records_for_model:
             sources.append({'id': r['id'], 'title': r['title'], 'text': r['text']})
         try:
-            _, engine, latency = await organize(sources)
+            model_evidence, engine, latency = await organize(sources)
         except (ValueError, httpx.HTTPError) as exc:
             raise HTTPException(503, 'The model is unavailable or its output could not be verified. Your records are safe. Check the model connection and retry.') from exc
 
-    selected_ids = body.selected_record_ids if body else None
     content = build_structured_brief(
         patient_id=patient_id,
         intake=intake,
@@ -546,7 +582,8 @@ async def generate_brief(patient_id: str, body: BriefGenerateRequest | None = No
         ai_mode=ai_mode,
         model_name=model_name,
         clinical_rev=clinical_rev,
-        latency_ms=latency
+        latency_ms=latency,
+        model_evidence=model_evidence
     )
 
     bid = secrets.token_hex(12)
@@ -646,7 +683,7 @@ def acknowledge_patient_instruction(instruction_id: str, body: InstructionAcknow
         if not inst:
             raise HTTPException(404, 'Instruction not found.')
         patient_access(inst['patient_id'], user)
-    return acknowledge_instruction(instruction_id, body.status, user)
+    return acknowledge_instruction(instruction_id, body.status, user, question=body.question)
 
 class Appointment(BaseModel):
     id: str | None = Field(default=None, max_length=100)

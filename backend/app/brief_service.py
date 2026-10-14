@@ -33,24 +33,39 @@ def select_passages_across_document(text: str, pages_info: list[dict] | None = N
 
     # If we have structured page blocks from OCR or PDF
     if pages_info and len(pages_info) > 1:
-        chars_per_page = max(300, max_chars // len(pages_info))
-        offset = 0
+        chars_per_page = max(100, max_chars // len(pages_info))
         bounded_parts = []
         for page_block in pages_info:
-            page_num = page_block.get('page_number', 1)
-            page_len = page_block.get('length', 0)
-            page_text = text[offset:offset + page_len]
-            if page_text.strip():
-                # Extract first meaningful chunk of this page
-                chunk = page_text.strip()[:chars_per_page].strip()
+            page_num = page_block.get('page_number') or page_block.get('page') or 1
+            # Find page header in text if present
+            header = f"--- Page {page_num} ---"
+            header_idx = text.find(header)
+            if header_idx != -1:
+                content_start = text.find('\n', header_idx) + 1
+                next_header = f"--- Page {page_num + 1} ---"
+                next_idx = text.find(next_header, content_start)
+                content_end = next_idx if next_idx != -1 else len(text)
+                page_text = text[content_start:content_end].strip()
+                page_start_offset = content_start
+            else:
+                start_off = page_block.get('start_offset', 0)
+                end_off = page_block.get('end_offset', len(text))
+                page_text = text[start_off:end_off].strip()
+                page_start_offset = start_off
+
+            if page_text:
+                chunk = page_text[:chars_per_page].strip()
+                actual_start = text.find(chunk, page_start_offset)
+                if actual_start == -1:
+                    actual_start = page_start_offset
+                actual_end = actual_start + len(chunk)
                 passages.append({
                     "quote": chunk,
                     "page": page_num,
-                    "start_offset": offset,
-                    "end_offset": offset + len(chunk)
+                    "start_offset": actual_start,
+                    "end_offset": actual_end
                 })
                 bounded_parts.append(chunk)
-            offset += page_len
         bounded_text = "\n---\n".join(bounded_parts)
         return bounded_text, passages, is_shortened
 
@@ -189,8 +204,13 @@ def detect_conflicts_and_uncertainties(
                     })
                     break
 
-    # If there are multiple sources discussing allergies and any discrepancy or confirmation note exists:
-    if len(allergy_sources) >= 2 or any(s["needs_confirmation"] for s in allergy_sources):
+    # A conflict occurs if one source negates an allergy while another affirms it, or if explicitly flagged as needing confirmation
+    has_negation = any(s["has_negation"] for s in allergy_sources)
+    has_affirmation = any(not s["has_negation"] for s in allergy_sources)
+    needs_confirmation = any(s["needs_confirmation"] for s in allergy_sources)
+
+    is_conflict = (has_negation and has_affirmation) or needs_confirmation
+    if is_conflict:
         citations = []
         for s in allergy_sources[:3]:
             citations.append({
@@ -202,10 +222,11 @@ def detect_conflicts_and_uncertainties(
                 "quote": s["quote"]
             })
         if citations:
+            desc = "Statements differ; confirm with a clinician."
             uncertainties.append({
                 "id": "unc-allergy-conflict",
                 "kind": "conflicting_sources",
-                "description": "Statements differ; confirm with a clinician.",
+                "description": desc,
                 "citations": citations,
                 "status": "unresolved"
             })
@@ -405,7 +426,7 @@ def build_sections(
     for unc in uncertainties:
         confirm_items.append({
             "text": unc["description"],
-            "attribution": "clinician_reviewed",
+            "attribution": "system_generated",
             "citations": unc["citations"]
         })
 
@@ -427,7 +448,8 @@ def build_structured_brief(
     ai_mode: str,
     model_name: str,
     clinical_rev: str,
-    latency_ms: int = 0
+    latency_ms: int = 0,
+    model_evidence: list[dict] | None = None
 ) -> dict:
     """Constructs complete schema 2.0 brief with backward-compatible evidence, sources, and coverage."""
     # 1. Determine included vs excluded records
@@ -447,7 +469,7 @@ def build_structured_brief(
             for r in excluded_records
         ]
 
-    # 2. Extract representative passages across entire documents
+    # 2. Extract representative passages across entire documents, utilizing model evidence when available
     record_passages: dict[str, list[dict]] = {}
     shortened_sources: list[dict] = []
     for r in included_records:
@@ -458,15 +480,37 @@ def build_structured_brief(
                 pages_info = json.loads(ext["pages_json"])
             except Exception:
                 pages_info = None
-        bounded_text, passages, is_shortened = select_passages_across_document(r.get("text", ""), pages_info)
-        record_passages[r["id"]] = passages
-        if is_shortened:
-            shortened_sources.append({
-                "id": r["id"],
-                "title": r.get("title", "Record"),
-                "character_count": len(r.get("text", "")),
-                "truncated_to": MAX_RECORD_CHAR_BUDGET
-            })
+
+        # If model evidence was verified for this record, use it
+        used_model_passages = False
+        if model_evidence:
+            r_quotes = [q for q in model_evidence if q.get("source_id") == r["id"]]
+            if r_quotes:
+                passages = []
+                for q_item in r_quotes:
+                    q_text = q_item.get("quote", "").strip()
+                    if q_text and q_text in r.get("text", ""):
+                        start_idx = r.get("text", "").find(q_text)
+                        passages.append({
+                            "quote": q_text,
+                            "page": 1,
+                            "start_offset": start_idx,
+                            "end_offset": start_idx + len(q_text)
+                        })
+                if passages:
+                    record_passages[r["id"]] = passages
+                    used_model_passages = True
+
+        if not used_model_passages:
+            bounded_text, passages, is_shortened = select_passages_across_document(r.get("text", ""), pages_info)
+            record_passages[r["id"]] = passages
+            if is_shortened:
+                shortened_sources.append({
+                    "id": r["id"],
+                    "title": r.get("title", "Record"),
+                    "character_count": len(r.get("text", "")),
+                    "truncated_to": MAX_RECORD_CHAR_BUDGET
+                })
 
     # 3. Detect uncertainties & conflicts
     uncertainties = detect_conflicts_and_uncertainties(intake, included_records, extractions_by_record)
@@ -509,7 +553,8 @@ def build_structured_brief(
         "mode": ai_mode,
         "model": model_name,
         "policy_version": "1.0",
-        "latency_ms": latency_ms
+        "latency_ms": latency_ms,
+        "model_evidence_used": bool(model_evidence)
     }
 
     return {

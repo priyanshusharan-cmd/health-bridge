@@ -311,7 +311,7 @@ def test_regional_languages_and_reviewed_translation(client):
     assert client.post('/api/patients/patient-asha/intake',json={'reason':'Synthetic intake for a Tamil-speaking patient.', 'language':'ta'}).status_code == 200
     assert client.get('/api/patients/patient-asha/workspace').json()['intake']['language'] == 'ta'
     login(client,'clinician')
-    body={'original':'Bring earlier records to the appointment.','plain':'Bring your earlier records.','language':'ta','translated':'முந்தைய பதிவுகளை கொண்டு வாருங்கள்.','confirmed':True}
+    body={'original':'Bring earlier records to the appointment.','plain':'Bring your earlier records.','language':'ta','translated':'முந்தைய பதிவுகளை கொண்டு வாருங்கள்.','confirmed':True,'override_reason':'Direct translation for patient appointment'}
     assert client.post('/api/patients/patient-asha/instructions',json=body).status_code == 200
     assert client.get('/api/patients/patient-asha/workspace').json()['instructions'][0]['translated'] == body['translated']
     assert client.post('/api/patients/patient-asha/instructions',json={**body,'language':'invalid'}).status_code == 422

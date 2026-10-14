@@ -1,6 +1,6 @@
 import { LanguageSelect } from "./LanguageSelect";
 import { useText, useLocale, locales } from "./locale";
-import { useEffect, useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import {
   ArrowDownToLine,
   ArrowRight,
@@ -137,10 +137,24 @@ export function UploadForm({
     [ocrLang, setOcrLang] = useState<string>("en"),
     [busy, setBusy] = useState(false),
     [progressMsg, setProgressMsg] = useState(""),
+    [warningMsg, setWarningMsg] = useState(""),
     [error, setError] = useState(""),
+    [activeJobId, setActiveJobId] = useState<string | null>(null),
+    [idemKey, setIdemKey] = useState<string>(""),
     [drag, setDrag] = useState(false);
+
+  const isMounted = useRef(true);
+  useEffect(() => {
+    isMounted.current = true;
+    return () => {
+      isMounted.current = false;
+    };
+  }, []);
+
   const select = (f: File | undefined) => {
     setError("");
+    setWarningMsg("");
+    setActiveJobId(null);
     if (!f) return;
     if (f.size > 10 * 1024 * 1024) {
       setError("Please choose a file smaller than 10 MB.");
@@ -151,49 +165,85 @@ export function UploadForm({
       return;
     }
     setFile(f);
+    setIdemKey(`upload-${patientId}-${f.name.replace(/[^a-zA-Z0-9]/g, "_")}-${f.size}-${Date.now().toString(36)}`);
   };
+
   const submit = async (e: FormEvent) => {
     e.preventDefault();
     if (!file) return;
     setBusy(true);
     setError("");
     setProgressMsg("Queuing document for extraction…");
-    const body = new FormData();
-    body.append("file", file);
-    body.append("ocr_lang", ocrLang);
-    const key = `upload-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
-    body.append("idempotency_key", key);
+    const key = idemKey || `upload-${patientId}-${file.name.replace(/[^a-zA-Z0-9]/g, "_")}-${file.size}`;
     try {
-      const job = await api<{ id: string; state: string; error_message?: string; record_id?: string }>(
-        `/patients/${patientId}/upload-jobs`,
-        { method: "POST", body }
-      );
-      let attempts = 0;
-      let currentJob = job;
-      while (currentJob.state !== "completed" && currentJob.state !== "failed" && attempts < 60) {
-        await new Promise((r) => setTimeout(r, 800));
-        attempts++;
-        setProgressMsg(
-          currentJob.state === "processing"
-            ? "Extracting document pages and OCR…"
-            : "Queued for processing…"
+      let currentJob: {
+        id: string;
+        state: string;
+        error_message?: string;
+        record_id?: string;
+        duplicate_warning?: string | null;
+      };
+
+      if (activeJobId) {
+        currentJob = await api<{ id: string; state: string; error_message?: string; record_id?: string; duplicate_warning?: string | null }>(
+          `/upload-jobs/${activeJobId}`
         );
-        currentJob = await api<{ id: string; state: string; error_message?: string; record_id?: string }>(
-          `/upload-jobs/${job.id}`
+      } else {
+        const body = new FormData();
+        body.append("file", file);
+        body.append("ocr_lang", ocrLang);
+        body.append("idempotency_key", key);
+        currentJob = await api<{ id: string; state: string; error_message?: string; record_id?: string; duplicate_warning?: string | null }>(
+          `/patients/${patientId}/upload-jobs`,
+          { method: "POST", body }
         );
+        if (isMounted.current) {
+          setActiveJobId(currentJob.id);
+        }
       }
+
+      if (currentJob.duplicate_warning && isMounted.current) {
+        setWarningMsg(currentJob.duplicate_warning);
+      }
+
+      let attempts = 0;
+      while (currentJob.state !== "completed" && currentJob.state !== "failed" && attempts < 150) {
+        await new Promise((r) => setTimeout(r, 1000));
+        if (!isMounted.current) return;
+        attempts++;
+        if (isMounted.current) {
+          setProgressMsg(
+            currentJob.state === "processing"
+              ? "Extracting document pages and OCR…"
+              : "Queued for processing…"
+          );
+        }
+        currentJob = await api<{ id: string; state: string; error_message?: string; record_id?: string; duplicate_warning?: string | null }>(
+          `/upload-jobs/${currentJob.id}`
+        );
+        if (currentJob.duplicate_warning && isMounted.current) {
+          setWarningMsg(currentJob.duplicate_warning);
+        }
+      }
+
+      if (!isMounted.current) return;
+
       if (currentJob.state === "failed") {
         throw new Error(currentJob.error_message || "Document extraction failed.");
       }
       if (currentJob.state !== "completed") {
-        throw new Error("Document processing is taking longer than expected. Please check your workspace in a moment.");
+        throw new Error(`Extraction is still running in the background (Job ID: ${currentJob.id}). You can check your workspace once completed.`);
       }
       await onSaved();
     } catch (e) {
-      setError((e as Error).message);
+      if (isMounted.current) {
+        setError((e as Error).message);
+      }
     } finally {
-      setBusy(false);
-      setProgressMsg("");
+      if (isMounted.current) {
+        setBusy(false);
+        setProgressMsg("");
+      }
     }
   };
   return (
@@ -247,6 +297,11 @@ export function UploadForm({
           "Synthetic demo records only. Please do not upload real medical data.",
         )}
       </div>
+      {warningMsg && (
+        <div className="banner info" style={{ margin: "0.5rem 0", background: "var(--amber-soft, #fef3c7)", borderLeft: "4px solid var(--amber, #f59e0b)", padding: "0.5rem 0.75rem", borderRadius: "4px", fontSize: "0.85rem", color: "var(--amber-dark, #92400e)" }}>
+          {tr(warningMsg)}
+        </div>
+      )}
       {error && (
         <div className="error-banner" role="alert">
           {tr(error)}

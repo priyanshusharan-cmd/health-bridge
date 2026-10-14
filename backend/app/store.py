@@ -20,7 +20,7 @@ FIELDS = {
     'instructions': 'id patient_id original plain translated language author created_at brief_id source_revision reviewer_id reviewer_name status withdrawal_reason version previous_version_id content_language reviewed_at acknowledged_at acknowledgement_status override_reason',
     'audit': 'id patient_id actor action detail created_at',
     'files': 'id data',
-    'upload_jobs': 'id patient_id user_id idempotency_key filename file_hash state progress error_code error_message record_id created_at updated_at',
+    'upload_jobs': 'id patient_id user_id idempotency_key filename file_hash ocr_lang attempt_count lease_owner lease_expires_at duplicate_warning state progress error_code error_message record_id created_at updated_at',
     'record_extractions': 'id record_id version pages_json method ocr_lang warnings created_at',
     'record_corrections': 'id record_id version kind date provider text reason reviewer_id reviewer_name created_at previous_version',
     'clarifications': 'id patient_id brief_id question originating_uncertainty_id creator_id creator_name assigned_owner status resolution_reason created_at resolved_at resolved_by',

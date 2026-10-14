@@ -9,13 +9,13 @@
 
 | Area | Check / Command | Result | Evidence / Details |
 | --- | --- | --- | --- |
-| Frontend TypeScript & Build | `npm --prefix frontend run build` | **Passed** | Clean build (`tsc -b && vite build`) in 1.89s; 0 TypeScript errors. |
-| Frontend Behavior & Localization | `npm --prefix frontend test` | **23 passed** | 23/23 tests passed (305ms). Includes 100% UI key parity in Hindi (`hi`) and Kannada (`kn`), dialog context isolation, save/refresh retry semantics, session expiry, and storage fallback. |
-| Backend Workflows & Security | `PYTHONPATH=backend .venv/bin/pytest backend/tests -q` | **41 passed** | 41/41 tests passed (8.6s). Covers authorization, durable upload queue leases, extraction provenance, conflict detection, instruction versions, patient acknowledgement, and assignment unlinking. |
-| Real HTTP API Integration | `node frontend/tests/connection.mjs` | **Passed** | Exercises frontend API client over loopback HTTP against ephemeral FastAPI/SQLite instance. Verifies full flow: intake, upload, structured brief, clarification thread, versioned instructions, and invitation unlinking. |
+| Frontend TypeScript & Build | `npm --prefix frontend run build` | **Passed** | Clean build (`tsc -b && vite build`); 0 TypeScript errors. |
+| Frontend Behavior & Localization | `npm --prefix frontend test` | **23 passed** | 23/23 tests passed across `tests/api.test.mjs`, `tests/date.test.mjs`, `tests/localization.test.mjs`, `tests/patient_context.test.mjs`, `tests/theme.test.mjs`. Includes UI key parity in Hindi (`hi`) and Kannada (`kn`), dialog context isolation, save/refresh retry semantics, session expiry, and storage fallback. |
+| Backend Workflows & Security | `PYTHONPATH=backend .venv/bin/pytest backend/tests -q` | **47 passed** | 47/47 tests passed across `backend/tests/test_audit_fixes.py`, `backend/tests/test_b4.py`, and `backend/tests/test_workflow.py`. Covers tenant isolation, foreign instruction supersession prevention, draft protection, tombstone exclusion from briefs, upload worker leases & startup recovery, extraction provenance, conflict detection, instruction versioning, and assignment unlinking. |
+| Real HTTP API Integration | `node frontend/tests/connection.mjs` | **Passed** | Exercises frontend API client over loopback HTTP against ephemeral FastAPI/SQLite instance. Verifies full flow: intake, appointments, file upload, async upload queue with idempotency, metadata/text corrections, structured brief generation, clarification thread resolution, versioned instructions, draft hiding, foreign supersession prevention, and hospital assignment unlinking. |
 | Docker Compose Configuration | `docker compose config --quiet` | **Valid** | Multi-service orchestration syntax verified. |
-| Local Submission Preflight | `.venv/bin/python scripts/release_check.py` | **Passed (`local_ready: true`)** | Local artifacts verified; external gates explicitly identified as requiring human evidence. |
-| Synthetic Case Evaluation | `.venv/bin/python scripts/evaluate_case.py` | **Passed** | Evaluated multi-document synthetic case; exported structured protocol template to `submission/evaluation-template.json`. |
+| Local Submission Preflight | `.venv/bin/python scripts/release_check.py` | **Asset check (`local_ready: true`)** | Confirms required submission assets exist on disk. Note: asset existence check only; operational health is validated by test suites above. |
+| Synthetic Case Evaluation | `.venv/bin/python scripts/evaluate_case.py` | **Passed** | Evaluated multi-document synthetic case using `text` and structured page blocks; exported structured protocol template to `submission/evaluation-template.json`. |
 
 ---
 
@@ -25,19 +25,22 @@ The following edge cases and negative pathways are covered by automated tests to
 
 1. **Unsupported Model Quotes & Fallback**:
    - Model outputs containing hallucinated quotes, non-matching whitespace, or malformed JSON are rejected by `backend/app/ai.py`.
-   - The brief service falls back to source-only deterministic extraction without inventing synthetic facts or pretending AI succeeded (`backend/tests/test_ai_boundaries.py`).
+   - The brief service falls back to source-only deterministic extraction without inventing synthetic facts or pretending AI succeeded (`backend/tests/test_workflow.py`).
 2. **Authorization & Tenant Isolation**:
    - Unauthenticated callers receive `401 Unauthorized`.
    - Unassigned clinicians attempting to access patient clinical workspaces receive `403 Forbidden`.
+   - Attempting to supersede an instruction belonging to another patient returns `403 Forbidden` (`backend/tests/test_audit_fixes.py`, `frontend/tests/connection.mjs`).
+   - Draft instructions are hidden from patient workspaces and patient export, and cannot be acknowledged by patients (`backend/tests/test_audit_fixes.py`).
    - Patients attempting clinician-only endpoints (e.g. approving a brief, resolving a clarification, or publishing instructions) receive `403 Forbidden` (`backend/tests/test_workflow.py`).
 3. **Stale Revision Conflict (409 Conflict)**:
-   - When source records or intake are modified, the patient's `clinical_revision` increments monotonically.
-   - Any clinician attempt to approve an outdated brief revision or publish instructions bound to a superseded revision is rejected with `409 Conflict` and requires a data refresh.
+   - When source records or intake are modified, the patient's `clinical_revision` updates.
+   - Any clinician attempt to approve an outdated brief revision is rejected with 409 Conflict / outdated status (`frontend/tests/connection.mjs`).
+   - Instructions referencing older revisions surface `reassessment_required: true` and display clinician review recommendations in the UI.
 4. **Tombstone Dependency Invalidation**:
    - Scoped deletion of a record (`DELETE /api/records/{id}`) records a tombstone and triggers `invalidate_briefs()`.
-   - Any existing brief citing the withdrawn record is marked as `outdated`, preventing broken citations from being presented as verified evidence.
+   - Existing briefs are marked as `outdated`, and deleted records are strictly excluded from subsequent brief generation and model evidence inputs (`backend/tests/test_audit_fixes.py`).
 5. **Acknowledged-Save & Refresh Retry Semantics**:
-   - In the frontend client, if a mutation succeeds on the backend but the subsequent background refresh fails, the UI preserves the saved state and surfaces a retryable "Saved; refresh failed" action rather than prompting the user to repeat the mutation (`frontend/tests/behavior.test.mjs`).
+   - In the frontend client, if a mutation succeeds on the backend but the subsequent background refresh fails, the UI preserves the saved state and surfaces a retryable "Saved; refresh failed" action rather than prompting the user to repeat the mutation (`frontend/tests/patient_context.test.mjs`).
 
 ---
 

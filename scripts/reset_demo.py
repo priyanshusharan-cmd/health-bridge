@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
 """Safe disposable-demo reset utility.
 
-Refuses to run against ordinary configured databases unless an explicit
-disposable target is specified via --target synthetic-demo or
-HEALTHBRIDGE_ALLOW_DEMO_RESET=true.
+Refuses to run against the ordinary configured application database.
+Requires an explicit disposable target path/name containing 'synthetic' or 'disposable'.
 """
 import argparse
 import os
@@ -14,25 +13,48 @@ from pathlib import Path
 backend_dir = Path(__file__).resolve().parents[1] / "backend"
 sys.path.insert(0, str(backend_dir))
 
-def reset_demo(target_name: str, scenario_date: str = "2026-10-14") -> None:
-    allow_env = os.getenv("HEALTHBRIDGE_ALLOW_DEMO_RESET", "false").lower() == "true"
-    if target_name != "synthetic-demo" and not allow_env:
-        print(
-            "ERROR: Refusing demo reset. The ordinary configured database cannot be reset without explicit confirmation.",
-            file=sys.stderr,
-        )
-        print(
-            "Usage: reset_demo.py --target synthetic-demo OR set HEALTHBRIDGE_ALLOW_DEMO_RESET=true",
-            file=sys.stderr,
-        )
-        sys.exit(1)
+def reset_demo(target_dir: str | None = None, target_db: str | None = None, scenario_date: str = "2026-10-14", confirm: bool = False) -> None:
+    default_dir = (backend_dir / "data").resolve()
+    is_mongo = bool(os.getenv("MONGODB_URI"))
+
+    if is_mongo:
+        db_name = (target_db or os.getenv("MONGODB_DATABASE", "")).strip()
+        if not db_name or db_name == "healthbridge" or ("synthetic" not in db_name.lower() and "disposable" not in db_name.lower()):
+            print(
+                f"ERROR: Refusing reset. Target database '{db_name}' is not an allowed disposable target.\n"
+                "Target must be explicitly specified and must contain 'synthetic' or 'disposable'.",
+                file=sys.stderr
+            )
+            sys.exit(1)
+        os.environ["MONGODB_DATABASE"] = db_name
+        target_display = f"MongoDB database '{db_name}'"
+    else:
+        resolved_dir = Path(target_dir or os.getenv("DATA_DIR", "")).resolve() if (target_dir or os.getenv("DATA_DIR")) else None
+        if not resolved_dir or resolved_dir == default_dir or ("synthetic" not in str(resolved_dir).lower() and "disposable" not in str(resolved_dir).lower()):
+            print(
+                f"ERROR: Refusing demo reset on ordinary database ({resolved_dir or default_dir}).\n"
+                "Reset is strictly restricted to dedicated disposable targets containing 'synthetic' or 'disposable' in their directory path.\n"
+                "Example: reset_demo.py --target-dir backend/data/synthetic-demo --confirm",
+                file=sys.stderr
+            )
+            sys.exit(1)
+        if not confirm:
+            print("ERROR: Re-run with --confirm to verify wipe and re-seed of the designated disposable target.", file=sys.stderr)
+            sys.exit(1)
+        resolved_dir.mkdir(parents=True, exist_ok=True)
+        os.environ["DATA_DIR"] = str(resolved_dir)
+        target_display = f"SQLite directory '{resolved_dir}'"
 
     os.environ["SCENARIO_DATE"] = scenario_date
     os.environ["DEMO_ENABLED"] = "true"
 
+    print(f"Target validated: {target_display}. Initializing...")
+
     from app import db
     from app.demo_config import DEMO_PASSWORD
 
+    if not is_mongo:
+        db.DATA = resolved_dir
     db.initialize()
 
     # Wipe tables in current connection
@@ -108,13 +130,15 @@ def reset_demo(target_name: str, scenario_date: str = "2026-10-14") -> None:
             f"{scenario_date} की अगली मुलाकात में अपनी पिछली रिपोर्ट साथ लाएँ। जिन सवालों पर बात करनी है, उन्हें लिख लें।",
             "hi", "Dr. Meera Shah (synthetic fixture)", db.now()
         ))
-        db.audit(con, "patient-asha", "HealthBridge", "Demo reset", f"Synthetic records reset for target '{target_name}'. Scenario date: {scenario_date}.")
+        db.audit(con, "patient-asha", "HealthBridge", "Demo reset", f"Synthetic records reset for {target_display}. Scenario date: {scenario_date}.")
 
-    print(f"SUCCESS: Reset demo database for target '{target_name}' with scenario date {scenario_date}.")
+    print(f"SUCCESS: Reset disposable demo database at {target_display} with scenario date {scenario_date}.")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Reset disposable HealthBridge demonstration database.")
-    parser.add_argument("--target", default="", help="Target identifier (must be 'synthetic-demo')")
+    parser.add_argument("--target-dir", default="", help="Target disposable SQLite directory (must contain 'synthetic' or 'disposable')")
+    parser.add_argument("--target-db", default="", help="Target disposable MongoDB name (must contain 'synthetic' or 'disposable')")
+    parser.add_argument("--confirm", action="store_true", help="Confirm execution on designated disposable target")
     parser.add_argument("--scenario-date", default="2026-10-14", help="Scenario anchor date (YYYY-MM-DD)")
     args = parser.parse_args()
-    reset_demo(args.target, args.scenario_date)
+    reset_demo(target_dir=args.target_dir, target_db=args.target_db, scenario_date=args.scenario_date, confirm=args.confirm)

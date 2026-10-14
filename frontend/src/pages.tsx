@@ -393,6 +393,20 @@ export function Records({
           {tr(t.upload)}
         </button>
       </div>
+      {w.upload_jobs && w.upload_jobs.some((j) => j.state === "queued" || j.state === "processing") && (
+        <div className="banner info" style={{ marginBottom: "1rem", background: "var(--blue-soft, #eff6ff)", borderLeft: "4px solid var(--blue, #3b82f6)", padding: "0.75rem 1rem", borderRadius: "6px" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", flexWrap: "wrap" }}>
+            <Spinner />
+            <strong>{tr("Processing uploads in background:")}</strong>
+            <span>
+              {w.upload_jobs
+                .filter((j) => j.state === "queued" || j.state === "processing")
+                .map((j) => `${j.filename} (${j.state === "processing" ? "Extracting" : "Queued"})`)
+                .join(", ")}
+            </span>
+          </div>
+        </div>
+      )}
       <div className="library-toolbar">
         <div className="tabs" aria-label={tr("Record categories")}>
           {kinds.map((k) => (
@@ -1101,9 +1115,15 @@ export function Instructions({
 
   const acknowledge = async (instructionId: string, status: "acknowledged" | "needs_clarification") => {
     try {
-      await post(`/instructions/${instructionId}/acknowledge`, { status });
+      let question: string | undefined = undefined;
+      if (status === "needs_clarification") {
+        const q = window.prompt(tr("What would you like your care team to clarify about these instructions?"));
+        if (!q || !q.trim()) return;
+        question = q.trim();
+      }
+      await post(`/instructions/${instructionId}/acknowledge`, { status, question });
       await refresh();
-      notify(status === "acknowledged" ? "Instructions acknowledged." : "Clarification requested from care team.");
+      notify(status === "acknowledged" ? "Instructions acknowledged." : "Clarification question sent to care team.");
     } catch (e) {
       notify((e as Error).message);
     }
@@ -1169,11 +1189,19 @@ export function Instructions({
                 ) : (
                   <Badge tone="green">{tr("Published")}</Badge>
                 )}
+                {item.reassessment_required && (
+                  <Badge tone="amber">{tr("Reassessment recommended")}</Badge>
+                )}
                 {item.override_reason && (
                   <Badge tone="amber">{tr("Clinician override note")}</Badge>
                 )}
               </div>
             </div>
+            {item.reassessment_required && item.reassessment_reason && (
+              <div className="warning-banner" style={{ margin: "0.5rem 0", background: "var(--amber-soft, #fef3c7)", borderLeft: "4px solid var(--amber, #f59e0b)", padding: "0.5rem 0.75rem", borderRadius: "4px", fontSize: "0.85rem", color: "var(--amber-dark, #92400e)" }}>
+                <strong>{tr("Reassessment recommended")}:</strong> {tr(item.reassessment_reason)}
+              </div>
+            )}
             {item.status === "withdrawn" && item.withdrawal_reason && (
               <div className="error-banner" style={{ margin: "0.5rem 0" }}>
                 <strong>{tr("Withdrawn by clinician")}:</strong> {item.withdrawal_reason}
@@ -1212,7 +1240,7 @@ export function Instructions({
             ) : (
               <div
                 className="instruction-text"
-                lang={tab === "translated" ? item.language : "en"}
+                lang={tab === "translated" ? item.language : (item.content_language || "en")}
                 dir="auto"
               >
                 <span className="instruction-quote">“</span>

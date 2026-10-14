@@ -139,16 +139,21 @@ def test_invitation_revocation_and_assignment_unlink(tmp_path, monkeypatch):
     assert pat_ws.json()["patient"]["id"] == "pat_u"
 
 def test_safe_demo_reset_refuses_ordinary_db(tmp_path, monkeypatch):
-    monkeypatch.setattr(db, "DATA", tmp_path)
-    monkeypatch.setattr(db, "backend", lambda: "sqlite")
-    
-    # Calling reset_demo without target or env raises SystemExit
+    monkeypatch.setenv("MONGODB_URI", "")
+    # Calling reset_demo without target or ordinary-db raises SystemExit
     with pytest.raises(SystemExit):
-        reset_demo(target_name="ordinary-db")
+        reset_demo(target_dir="ordinary-db")
     
-    # Calling reset_demo with target="synthetic-demo" succeeds
-    reset_demo(target_name="synthetic-demo", scenario_date="2026-10-14")
+    disposable_dir = tmp_path / "synthetic-disposable"
+    # Calling without confirm raises SystemExit
+    with pytest.raises(SystemExit):
+        reset_demo(target_dir=str(disposable_dir), confirm=False)
+
+    # Calling reset_demo with target containing synthetic and confirm=True succeeds
+    reset_demo(target_dir=str(disposable_dir), confirm=True, scenario_date="2026-10-14")
     
+    monkeypatch.setattr(db, "DATA", disposable_dir)
+    monkeypatch.setattr(db, "backend", lambda: "sqlite")
     with db.connection() as con:
         asha = con.one("users", {"id": "patient-asha"})
         assert asha is not None

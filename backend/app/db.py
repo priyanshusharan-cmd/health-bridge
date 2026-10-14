@@ -207,3 +207,21 @@ def initialize_sqlite():
             except sqlite3.OperationalError:
                 pass
 
+        # Additive migrations for upload_jobs table
+        for col_def in [
+            "ocr_lang TEXT",
+            "attempt_count INTEGER NOT NULL DEFAULT 0",
+            "lease_owner TEXT",
+            "lease_expires_at TEXT",
+            "duplicate_warning TEXT"
+        ]:
+            try:
+                raw.execute(f'ALTER TABLE upload_jobs ADD COLUMN {col_def}')
+            except sqlite3.OperationalError:
+                pass
+
+        try:
+            raw.execute('CREATE UNIQUE INDEX IF NOT EXISTS idx_upload_jobs_idem ON upload_jobs(patient_id, idempotency_key) WHERE idempotency_key IS NOT NULL')
+        except sqlite3.OperationalError:
+            pass
+

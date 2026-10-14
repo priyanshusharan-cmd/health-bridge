@@ -142,5 +142,9 @@ def unlink_assignment(patient_id: str, user=Depends(current_user)):
             raise HTTPException(404, 'Assignment not found.')
 
         con.delete('assignments', {'clinician_id': clinician_id, 'patient_id': patient_id})
+        # If no active assignments remain for the patient, clear hospital membership to allow transfer/reassignment
+        remaining = con.find('assignments', {'patient_id': patient_id})
+        if not remaining:
+            con.delete('memberships', {'user_id': patient_id})
         db.audit(con, patient_id, user['name'], 'Assignment unlinked', f'Clinician {clinician_id} unlinked from patient {patient_id}.')
         return {'ok': True, 'unlinked': True}
