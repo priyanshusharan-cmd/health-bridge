@@ -1,0 +1,68 @@
+{
+  "evaluation_date": "2026-10-14T11:22:27.661957+00:00",
+  "disclaimer": "Synthetic data evaluation only. Not a clinical trial or proof of diagnostic efficacy. Manual timings must be recorded by human clinicians under controlled conditions.",
+  "test_scenario": {
+    "name": "Synthetic Multi-Document Cardiology Intake",
+    "fixtures": [
+      "Long Consultation Report",
+      "Discharge Summary with Allergy Note",
+      "Follow-up Visit Note"
+    ],
+    "target_checklist": [
+      "Prior coronary stent (2022)",
+      "Medication: Atorvastatin 40mg daily",
+      "Medication: Metformin 500mg BID",
+      "Reported Allergy: Penicillin (severe hives / anaphylactoid)",
+      "Conflicting Allergy Statement: 'No known drug allergies' in discharge note",
+      "Recent concern: Exertional shortness of breath for 2 weeks",
+      "Recent blood pressure: 138/86 mmHg"
+    ]
+  },
+  "assisted_system_run": {
+    "mode": "assisted_source_only",
+    "execution_seconds": 0.0,
+    "total_target_facts": 7,
+    "detected_facts_count": 3,
+    "missing_facts_count": 4,
+    "detected_facts": [
+      "Prior coronary stent (2022)",
+      "Reported Allergy: Penicillin (severe hives / anaphylactoid)",
+      "Recent concern: Exertional shortness of breath for 2 weeks"
+    ],
+    "missing_facts": [
+      "Medication: Atorvastatin 40mg daily",
+      "Medication: Metformin 500mg BID",
+      "Conflicting Allergy Statement: 'No known drug allergies' in discharge note",
+      "Recent blood pressure: 138/86 mmHg"
+    ],
+    "uncertainties_flagged": 1,
+    "coverage": {
+      "available_records": 3,
+      "included_records": 3,
+      "excluded_sources": [],
+      "shortened_sources": []
+    }
+  },
+  "human_evaluator_template": {
+    "instructions": "Have a qualified clinician review the same synthetic records manually and record preparation time, missed facts, and error corrections before and after using HealthBridge.",
+    "manual_baseline_protocol": {
+      "evaluator_role": "Clinician or medical resident",
+      "sample_cases": 1,
+      "recorded_manual_time_seconds": null,
+      "manual_missed_facts": [],
+      "manual_incorrect_notes": []
+    },
+    "assisted_protocol": {
+      "recorded_review_time_seconds": null,
+      "clinician_corrections_required": null,
+      "clarifications_initiated": null,
+      "final_instruction_edits": null
+    },
+    "limitations": [
+      "Small sample size (synthetic case studies)",
+      "Clinician familiarity with UI affects review speed",
+      "Quote matching does not evaluate clinical nuance or omitted unquoted context",
+      "Local inference latency varies with hardware"
+    ]
+  }
+}

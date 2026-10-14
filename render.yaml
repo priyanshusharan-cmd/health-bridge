@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: healthbridge
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /api/health
+    envVars:
+      - key: MONGODB_URI
+        sync: false
+      - key: MONGODB_DATABASE
+        value: healthbridge
+      - key: COOKIE_SECURE
+        value: "true"
+      - key: DEMO_ENABLED
+        value: "true"
+      - key: AI_BACKEND
+        value: extractive

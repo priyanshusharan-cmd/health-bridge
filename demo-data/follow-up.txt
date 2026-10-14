@@ -1,0 +1,8 @@
+SYNTHETIC DEMO DATA — NOT A REAL PATIENT RECORD
+Date: 2026-10-03
+Provider: Greenleaf Clinic
+Visit note
+The patient would like to discuss earlier reports during their next appointment.
+Please bring the previous reports to the appointment on 15 October 2026.
+Allergy information: not confirmed. Ask the patient to verify their recorded information.
+No medication instructions are included in this synthetic demonstration.

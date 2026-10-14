@@ -1,0 +1,1686 @@
+{
+  "Refresh failed": {
+    "hi": "रिफ್ರೆश विफल रहा",
+    "kn": "ರಿಫ್ರೆಶ್ ವಿಫಲವಾಗಿದೆ"
+  },
+  "Showing cached data · Refresh failed": {
+    "hi": "कैश किया गया डेटा दिखाया जा रहा है · रिफ्रेश विफल रहा",
+    "kn": "ಕ್ಯಾಶ್ ಮಾಡಿದ ಡೇಟಾ ತೋರಿಸಲಾಗುತ್ತಿದೆ · ರಿಫ್ರೆಶ್ ವಿಫಲವಾಗಿದೆ"
+  },
+  "Saved; refresh failed. Check your connection.": {
+    "hi": "सहेजा गया; रिफ्रेश विफल रहा। अपना कनेक्शन जांचें।",
+    "kn": "ಉಳಿಸಲಾಗಿದೆ; ರಿಫ್ರೆಶ್ ವಿಫಲವಾಗಿದೆ. ನಿಮ್ಮ ಸಂಪರ್ಕವನ್ನು ಪರಿಶೀಲಿಸಿ."
+  },
+  "OCR language pack": {
+    "hi": "ओसीआर भाषा पैक",
+    "kn": "ಓಸಿಆರ್ ಭಾಷಾ ಪ್ಯಾಕ್"
+  },
+  "Correct metadata": {
+    "hi": "मेटाडेटा सुधारें",
+    "kn": "ಮೆಟಾಡೇಟಾ ತಿದ್ದುಪಡಿ"
+  },
+  "Save correction": {
+    "hi": "सुधार सहेजें",
+    "kn": "ತಿದ್ದುಪಡಿ ಉಳಿಸಿ"
+  },
+  "Reason for correction": {
+    "hi": "सुधार का कारण",
+    "kn": "ತಿದ್ದುಪಡಿಗೆ ಕಾರಣ"
+  },
+  "Reviewed corrections:": {
+    "hi": "समीक्षित सुधार:",
+    "kn": "ಪರಿಶೀಲಿಸಿದ ತಿದ್ದುಪಡಿಗಳು:"
+  },
+  "Cancel correction": {
+    "hi": "सुधार रद्द करें",
+    "kn": "ತಿದ್ದುಪಡಿ ರದ್ದುಮಾಡಿ"
+  },
+  "Document processing is taking longer than expected. Please check your workspace in a moment.": {
+    "hi": "दस्तावेज़ प्रसंस्करण में अपेक्षा से अधिक समय लग रहा है। कृपया कुछ ही पलों में अपना कार्यक्षेत्र जांचें।",
+    "kn": "ದಾಖಲೆ ಪ್ರಕ್ರಿಯೆಗೆ ನಿರೀಕ್ಷೆಗಿಂತ ಹೆಚ್ಚು ಸಮಯ ತೆಗೆದುಕೊಳ್ಳುತ್ತಿದೆ. ದಯವಿಟ್ಟು ಸ್ವಲ್ಪ ಸಮಯದಲ್ಲಿ ನಿಮ್ಮ ಕಾರ್ಯಕ್ಷೇತ್ರವನ್ನು ಪರಿಶೀಲಿಸಿ."
+  },
+  "Queuing document for extraction…": {
+    "hi": "निकासी के लिए दस्तावेज़ कतारबद्ध किया जा रहा है…",
+    "kn": "ಹೊರತೆಗೆಯಲು ದಾಖಲೆಯನ್ನು ಸರತಿಯಲ್ಲಿ ಇರಿಸಲಾಗುತ್ತಿದೆ…"
+  },
+  "Extracting document pages and OCR…": {
+    "hi": "दस्तावेज़ पृष्ठ और ओसीआर निकाले जा रहे हैं…",
+    "kn": "ದಾಖಲೆಯ ಪುಟಗಳು ಮತ್ತು ಓಸಿಆರ್ ಹೊರತೆಗೆಯಲಾಗುತ್ತಿದೆ…"
+  },
+  "Queued for processing…": {
+    "hi": "प्रसंस्करण के लिए कतारबद्ध…",
+    "kn": "ಪ್ರಕ್ರಿಯೆಗಾಗಿ ಸರತಿಯಲ್ಲಿ ಇರಿಸಲಾಗಿದೆ…"
+  },
+  "Connecting your care…": {
+    "hi": "आपकी जानकारी जोड़ रहे हैं…",
+    "kn": "ನಿಮ್ಮ ಮಾಹಿತಿಯನ್ನು ಸಂಪರ್ಕಿಸಲಾಗುತ್ತಿದೆ…"
+  },
+  "HealthBridge home": {
+    "hi": "HealthBridge मुख्य पृष्ठ",
+    "kn": "HealthBridge ಮುಖಪುಟ"
+  },
+  "Main navigation": {
+    "hi": "मुख्य नेविगेशन",
+    "kn": "ಮುಖ್ಯ ನ್ಯಾವಿಗೇಶನ್"
+  },
+  "Care is a team effort.": {
+    "hi": "देखभाल मिलकर होती है।",
+    "kn": "ಆರೈಕೆ ಒಂದು ತಂಡದ ಪ್ರಯತ್ನ."
+  },
+  "Your story stays connected.": {
+    "hi": "आपकी जानकारी जुड़ी रहती है।",
+    "kn": "ನಿಮ್ಮ ಮಾಹಿತಿ ಸಂಪರ್ಕದಲ್ಲಿರುತ್ತದೆ."
+  },
+  "Your clinician stays in control.": {
+    "hi": "निर्णय आपके डॉक्टर के पास रहते हैं।",
+    "kn": "ನಿರ್ಧಾರಗಳು ನಿಮ್ಮ ವೈದ್ಯರ ಕೈಯಲ್ಲಿರುತ್ತವೆ."
+  },
+  "Our approach": {
+    "hi": "हमारा तरीका",
+    "kn": "ನಮ್ಮ ವಿಧಾನ"
+  },
+  "About this demo": {
+    "hi": "इस डेमो के बारे में",
+    "kn": "ಈ ಡೆಮೋ ಕುರಿತು"
+  },
+  "Open profile": {
+    "hi": "प्रोफ़ाइल खोलें",
+    "kn": "ಪ್ರೊಫೈಲ್ ತೆರೆಯಿರಿ"
+  },
+  "Open navigation": {
+    "hi": "नेविगेशन खोलें",
+    "kn": "ನ್ಯಾವಿಗೇಶನ್ ತೆರೆಯಿರಿ"
+  },
+  "My workspace": {
+    "hi": "मेरा कार्यक्षेत्र",
+    "kn": "ನನ್ನ ಕಾರ್ಯಕ್ಷೇತ್ರ"
+  },
+  "Privacy notice": {
+    "hi": "गोपनीयता सूचना",
+    "kn": "ಗೌಪ್ಯತೆ ಸೂಚನೆ"
+  },
+  "Open account profile": {
+    "hi": "खाते की प्रोफ़ाइल खोलें",
+    "kn": "ಖಾತೆಯ ಪ್ರೊಫೈಲ್ ತೆರೆಯಿರಿ"
+  },
+  "Demo workspace": {
+    "hi": "डेमो कार्यक्षेत्र",
+    "kn": "ಡೆಮೋ ಕಾರ್ಯಕ್ಷೇತ್ರ"
+  },
+  "Synthetic patients only. Please don’t upload real medical data.": {
+    "hi": "केवल काल्पनिक मरीज। वास्तविक चिकित्सा जानकारी अपलोड न करें।",
+    "kn": "ಕಾಲ್ಪನಿಕ ರೋಗಿಗಳು ಮಾತ್ರ. ನಿಜವಾದ ವೈದ್ಯಕೀಯ ಮಾಹಿತಿ ಅಪ್ಲೋಡ್ ಮಾಡಬೇಡಿ."
+  },
+  "PREVIEW": {
+    "hi": "पूर्वावलोकन",
+    "kn": "ಮುನ್ನೋಟ"
+  },
+  "Patient": {
+    "hi": "मरीज़",
+    "kn": "ರೋಗಿ"
+  },
+  "Assigned to you": {
+    "hi": "आपको सौंपा गया",
+    "kn": "ನಿಮಗೆ ನಿಯೋಜಿಸಲಾಗಿದೆ"
+  },
+  "Retry": {
+    "hi": "फिर कोशिश करें",
+    "kn": "ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ"
+  },
+  "Dismiss error": {
+    "hi": "त्रुटि संदेश बंद करें",
+    "kn": "ದೋಷ ಸಂದೇಶ ಮುಚ್ಚಿ"
+  },
+  "Loading workspace": {
+    "hi": "कार्यक्षेत्र लोड हो रहा है",
+    "kn": "ಕಾರ್ಯಕ್ಷೇತ್ರ ಲೋಡ್ ಆಗುತ್ತಿದೆ"
+  },
+  "No assigned patients": {
+    "hi": "कोई मरीज नहीं सौंपा गया",
+    "kn": "ನಿಯೋಜಿತ ರೋಗಿಗಳಿಲ್ಲ"
+  },
+  "Your assigned patients will appear here.": {
+    "hi": "आपको सौंपे गए मरीज यहाँ दिखेंगे।",
+    "kn": "ನಿಮಗೆ ನಿಯೋಜಿತ ರೋಗಿಗಳು ಇಲ್ಲಿ ಕಾಣಿಸುತ್ತಾರೆ."
+  },
+  "Dismiss notification": {
+    "hi": "सूचना बंद करें",
+    "kn": "ಅಧಿಸೂಚನೆ ಮುಚ್ಚಿ"
+  },
+  "Your profile": {
+    "hi": "आपकी प्रोफ़ाइल",
+    "kn": "ನಿಮ್ಮ ಪ್ರೊಫೈಲ್"
+  },
+  "How this demo handles information": {
+    "hi": "यह डेमो जानकारी कैसे संभालता है",
+    "kn": "ಈ ಡೆಮೋ ಮಾಹಿತಿಯನ್ನು ಹೇಗೆ ನಿರ್ವಹಿಸುತ್ತದೆ"
+  },
+  "Add to your health story": {
+    "hi": "अपनी स्वास्थ्य जानकारी जोड़ें",
+    "kn": "ನಿಮ್ಮ ಆರೋಗ್ಯ ಮಾಹಿತಿ ಸೇರಿಸಿ"
+  },
+  "A closer look at your record": {
+    "hi": "अपने रिकॉर्ड का विवरण देखें",
+    "kn": "ನಿಮ್ಮ ದಾಖಲೆಯ ವಿವರ ನೋಡಿ"
+  },
+  "Publish clear next steps": {
+    "hi": "स्पष्ट अगले कदम साझा करें",
+    "kn": "ಸ್ಪಷ್ಟ ಮುಂದಿನ ಹಂತಗಳನ್ನು ಪ್ರಕಟಿಸಿ"
+  },
+  "Built around people, not predictions": {
+    "hi": "लोगों की जरूरतों के लिए बनाया गया",
+    "kn": "ಜನರ ಅಗತ್ಯಗಳಿಗಾಗಿ ನಿರ್ಮಿಸಲಾಗಿದೆ"
+  },
+  "HealthBridge brings records and patient concerns into one source-linked brief. Clinicians review the information and write the next steps.": {
+    "hi": "HealthBridge रिकॉर्ड और मरीज की चिंताओं को मूल स्रोतों सहित एक संक्षिप्त विवरण में जोड़ता है। डॉक्टर जानकारी जाँचते हैं और अगले कदम लिखते हैं।",
+    "kn": "HealthBridge ದಾಖಲೆಗಳು ಮತ್ತು ರೋಗಿಯ ಕಾಳಜಿಗಳನ್ನು ಮೂಲಗಳೊಂದಿಗೆ ಒಂದು ಸಂಕ್ಷಿಪ್ತ ವಿವರದಲ್ಲಿ ಸೇರಿಸುತ್ತದೆ. ವೈದ್ಯರು ಪರಿಶೀಲಿಸಿ ಮುಂದಿನ ಹಂತಗಳನ್ನು ಬರೆಯುತ್ತಾರೆ."
+  },
+  "What’s running?": {
+    "hi": "क्या चल रहा है?",
+    "kn": "ಏನು ಚಾಲನೆಯಲ್ಲಿದೆ?"
+  },
+  "Backend:": {
+    "hi": "बैकएंड:",
+    "kn": "ಬ್ಯಾಕೆಂಡ್:"
+  },
+  "Processing:": {
+    "hi": "प्रसंस्करण:",
+    "kn": "ಸಂಸ್ಕರಣೆ:"
+  },
+  "Model:": {
+    "hi": "मॉडल:",
+    "kn": "ಮಾದರಿ:"
+  },
+  "Source-only mode selects excerpts without an AI model. The model adapter supports Ollama and AMD-hosted vLLM. AMD hardware execution has not been verified in this environment.": {
+    "hi": "केवल-स्रोत मोड AI मॉडल के बिना अंश चुनता है। मॉडल कनेक्शन Ollama और AMD पर चलने वाले vLLM का समर्थन करता है। इस वातावरण में AMD पर चलने की पुष्टि नहीं हुई है।",
+    "kn": "ಮೂಲ-ಮಾತ್ರ ಕ್ರಮವು AI ಮಾದರಿಯಿಲ್ಲದೆ ಆಯ್ದ ಭಾಗಗಳನ್ನು ತೋರಿಸುತ್ತದೆ. Ollama ಮತ್ತು AMDಯಲ್ಲಿನ vLLMಗೆ ಸಂಪರ್ಕ ಬೆಂಬಲವಿದೆ. ಈ ಪರಿಸರದಲ್ಲಿ AMD ಕಾರ್ಯಾಚರಣೆ ದೃಢಪಟ್ಟಿಲ್ಲ."
+  },
+  "Safe demo, honest boundaries": {
+    "hi": "डेमो की सीमाएँ",
+    "kn": "ಡೆಮೋದ ಮಿತಿಗಳು"
+  },
+  "Use synthetic data only. This prototype does not diagnose, prescribe, or claim regulatory certification. Core navigation is multilingual; clinical translations must be checked by a qualified reviewer.": {
+    "hi": "केवल काल्पनिक जानकारी इस्तेमाल करें। यह प्रोटोटाइप निदान या दवा नहीं सुझाता और नियामक प्रमाणन का दावा नहीं करता। चिकित्सा अनुवाद योग्य समीक्षक से जँचवाएँ।",
+    "kn": "ಕಾಲ್ಪನಿಕ ಮಾಹಿತಿ ಮಾತ್ರ ಬಳಸಿ. ಈ ಪ್ರೋಟೋಟೈಪ್ ರೋಗನಿರ್ಣಯ ಅಥವಾ ಔಷಧಿ ಸಲಹೆ ನೀಡುವುದಿಲ್ಲ; ನಿಯಂತ್ರಕ ಪ್ರಮಾಣೀಕರಣದ ದಾವೆ ಮಾಡುವುದಿಲ್ಲ. ವೈದ್ಯಕೀಯ ಅನುವಾದವನ್ನು ಅರ್ಹ ಪರಿಶೀಲಕರು ಪರಿಶೀಲಿಸಬೇಕು."
+  },
+  "Human review stays in the loop": {
+    "hi": "मानवीय समीक्षा जरूरी है",
+    "kn": "ಮಾನವ ಪರಿಶೀಲನೆ ಅಗತ್ಯ"
+  },
+  "Human-centered. Open by design.": {
+    "hi": "लोगों को ध्यान में रखकर बनाया गया।",
+    "kn": "ಜನರನ್ನು ಗಮನದಲ್ಲಿಟ್ಟುಕೊಂಡು ನಿರ್ಮಿಸಲಾಗಿದೆ."
+  },
+  "YOUR CARE, CONNECTED": {
+    "hi": "आपकी देखभाल, एक साथ",
+    "kn": "ನಿಮ್ಮ ಆರೈಕೆ, ಸಂಪರ್ಕಿತ"
+  },
+  "A clearer path": {
+    "hi": "एक स्पष्ट रास्ता",
+    "kn": "ಒಂದು ಸ್ಪಷ್ಟ ದಾರಿ"
+  },
+  "better care.": {
+    "hi": "बेहतर देखभाल।",
+    "kn": "ಉತ್ತಮ ಆರೈಕೆ."
+  },
+  "Your health story shouldn’t get lost between documents, languages, and appointments. Bring it all together — with your care team by your side.": {
+    "hi": "आपकी स्वास्थ्य जानकारी दस्तावेजों, भाषाओं और मुलाकातों के बीच खोनी नहीं चाहिए। अपनी देखभाल टीम के साथ सब एक जगह रखें।",
+    "kn": "ನಿಮ್ಮ ಆರೋಗ್ಯ ಮಾಹಿತಿ ದಾಖಲೆಗಳು, ಭಾಷೆಗಳು ಮತ್ತು ಭೇಟಿಗಳ ನಡುವೆ ಕಳೆದುಹೋಗಬಾರದು. ನಿಮ್ಮ ಆರೈಕೆ ತಂಡದೊಂದಿಗೆ ಎಲ್ಲವನ್ನೂ ಒಟ್ಟಿಗೆ ಇರಿಸಿ."
+  },
+  "Share your records": {
+    "hi": "अपने रिकॉर्ड साझा करें",
+    "kn": "ನಿಮ್ಮ ದಾಖಲೆಗಳನ್ನು ಹಂಚಿಕೊಳ್ಳಿ"
+  },
+  "Prepare together": {
+    "hi": "मिलकर तैयारी करें",
+    "kn": "ಒಟ್ಟಿಗೆ ಸಿದ್ಧರಾಗಿ"
+  },
+  "Move forward": {
+    "hi": "आगे बढ़ें",
+    "kn": "ಮುಂದುವರಿಯಿರಿ"
+  },
+  "Your story, connected": {
+    "hi": "आपकी जानकारी, एक साथ",
+    "kn": "ನಿಮ್ಮ ಮಾಹಿತಿ, ಒಂದೇ ಕಡೆ"
+  },
+  "Every detail has a source.": {
+    "hi": "हर जानकारी का स्रोत है।",
+    "kn": "ಪ್ರತಿ ವಿವರಕ್ಕೂ ಮೂಲವಿದೆ."
+  },
+  "Reviewed by a human.": {
+    "hi": "व्यक्ति द्वारा समीक्षित।",
+    "kn": "ವ್ಯಕ್ತಿಯಿಂದ ಪರಿಶೀಲಿಸಲಾಗಿದೆ."
+  },
+  "Made clearer for you.": {
+    "hi": "आपके लिए आसान बनाया गया।",
+    "kn": "ನಿಮಗಾಗಿ ಸ್ಪಷ್ಟಪಡಿಸಲಾಗಿದೆ."
+  },
+  "WELCOME TO HEALTHBRIDGE": {
+    "hi": "HEALTHBRIDGE में स्वागत है",
+    "kn": "HEALTHBRIDGEಗೆ ಸ್ವಾಗತ"
+  },
+  "Good care starts": {
+    "hi": "अच्छी देखभाल की शुरुआत",
+    "kn": "ಉತ್ತಮ ಆರೈಕೆ ಆರಂಭವಾಗುವುದು"
+  },
+  "with understanding.": {
+    "hi": "समझ से होती है।",
+    "kn": "ಅರ್ಥಮಾಡಿಕೊಳ್ಳುವುದರಿಂದ."
+  },
+  "Step into a connected care journey.": {
+    "hi": "अपनी देखभाल की जानकारी एक साथ रखें।",
+    "kn": "ನಿಮ್ಮ ಆರೈಕೆಯ ಮಾಹಿತಿಯನ್ನು ಒಟ್ಟಿಗೆ ಇರಿಸಿ."
+  },
+  "EXPLORE THE DEMO AS": {
+    "hi": "इस भूमिका में डेमो देखें",
+    "kn": "ಈ ಪಾತ್ರದಲ್ಲಿ ಡೆಮೋ ನೋಡಿ"
+  },
+  "Email": {
+    "hi": "ईमेल",
+    "kn": "ಇಮೇಲ್"
+  },
+  "Password": {
+    "hi": "पासवर्ड",
+    "kn": "ಪಾಸ್‌ವರ್ಡ್"
+  },
+  "Sign in": {
+    "hi": "साइन इन",
+    "kn": "ಸೈನ್ ಇನ್"
+  },
+  "Connecting patients, providers, and care.": {
+    "hi": "मरीजों, डॉक्टरों और देखभाल को जोड़ना।",
+    "kn": "ರೋಗಿಗಳು, ವೈದ್ಯರು ಮತ್ತು ಆರೈಕೆಯನ್ನು ಸಂಪರ್ಕಿಸುವುದು."
+  },
+  "LET’S TAKE THE NEXT STEP": {
+    "hi": "अगला कदम उठाएँ",
+    "kn": "ಮುಂದಿನ ಹೆಜ್ಜೆ ಇಡೋಣ"
+  },
+  "Prepared with sources. Reviewed with care.": {
+    "hi": "स्रोतों सहित तैयार। सावधानी से समीक्षित।",
+    "kn": "ಮೂಲಗಳೊಂದಿಗೆ ಸಿದ್ಧ. ಕಾಳಜಿಯಿಂದ ಪರಿಶೀಲನೆ."
+  },
+  "Health records": {
+    "hi": "स्वास्थ्य रिकॉर्ड",
+    "kn": "ಆರೋಗ್ಯ ದಾಖಲೆಗಳು"
+  },
+  "Briefs to review": {
+    "hi": "समीक्षा के लिए विवरण",
+    "kn": "ಪರಿಶೀಲಿಸಬೇಕಾದ ವಿವರಗಳು"
+  },
+  "Care updates": {
+    "hi": "देखभाल के अपडेट",
+    "kn": "ಆರೈಕೆ ನವೀಕರಣಗಳು"
+  },
+  "Let’s get you ready": {
+    "hi": "तैयारी शुरू करें",
+    "kn": "ಸಿದ್ಧರಾಗೋಣ"
+  },
+  "No upcoming visit": {
+    "hi": "कोई आगामी मुलाकात नहीं",
+    "kn": "ಮುಂಬರುವ ಭೇಟಿ ಇಲ್ಲ"
+  },
+  "Your next scheduled appointment will appear here.": {
+    "hi": "आपकी अगली निर्धारित मुलाकात यहाँ दिखेगी।",
+    "kn": "ನಿಮ್ಮ ಮುಂದಿನ ನಿಗದಿತ ಭೇಟಿ ಇಲ್ಲಿ ಕಾಣಿಸುತ್ತದೆ."
+  },
+  "Your questions matter.": {
+    "hi": "आपके सवाल जरूरी हैं।",
+    "kn": "ನಿಮ್ಮ ಪ್ರಶ್ನೆಗಳು ಮುಖ್ಯ."
+  },
+  "A small note now can make a big difference in the room.": {
+    "hi": "अभी लिखा एक छोटा नोट मुलाकात में मदद कर सकता है।",
+    "kn": "ಈಗ ಬರೆದ ಒಂದು ಸಣ್ಣ ಟಿಪ್ಪಣಿ ಭೇಟಿಯಲ್ಲಿ ಸಹಾಯ ಮಾಡಬಹುದು."
+  },
+  "You’re in the loop.": {
+    "hi": "आपको पूरी जानकारी मिलती है।",
+    "kn": "ನಿಮಗೆ ಮಾಹಿತಿ ದೊರೆಯುತ್ತದೆ."
+  },
+  "Every brief keeps its sources. Every care decision stays with your clinician.": {
+    "hi": "हर विवरण में स्रोत रहते हैं। देखभाल के निर्णय आपके डॉक्टर लेते हैं।",
+    "kn": "ಪ್ರತಿ ವಿವರದಲ್ಲೂ ಮೂಲಗಳು ಇರುತ್ತವೆ. ಆರೈಕೆ ನಿರ್ಧಾರಗಳನ್ನು ನಿಮ್ಮ ವೈದ್ಯರು ತೆಗೆದುಕೊಳ್ಳುತ್ತಾರೆ."
+  },
+  "Record categories": {
+    "hi": "रिकॉर्ड की श्रेणियाँ",
+    "kn": "ದಾಖಲೆ ವರ್ಗಗಳು"
+  },
+  "Search records": {
+    "hi": "रिकॉर्ड खोजें",
+    "kn": "ದಾಖಲೆಗಳನ್ನು ಹುಡುಕಿ"
+  },
+  "View record": {
+    "hi": "रिकॉर्ड देखें",
+    "kn": "ದಾಖಲೆ ನೋಡಿ"
+  },
+  "Records are source information, not AI medical advice. Open any record to see its original text.": {
+    "hi": "रिकॉर्ड मूल जानकारी हैं, AI की चिकित्सा सलाह नहीं। मूल पाठ देखने के लिए रिकॉर्ड खोलें।",
+    "kn": "ದಾಖಲೆಗಳು ಮೂಲ ಮಾಹಿತಿ, AI ವೈದ್ಯಕೀಯ ಸಲಹೆಯಲ್ಲ. ಮೂಲ ಪಠ್ಯ ನೋಡಲು ದಾಖಲೆಯನ್ನು ತೆರೆಯಿರಿ."
+  },
+  "Every record is part of your story. Keep the original close.": {
+    "hi": "हर रिकॉर्ड आपकी जानकारी का हिस्सा है। मूल रिकॉर्ड साथ रखें।",
+    "kn": "ಪ್ರತಿ ದಾಖಲೆ ನಿಮ್ಮ ಮಾಹಿತಿಯ ಭಾಗ. ಮೂಲವನ್ನು ಹತ್ತಿರ ಇರಿಸಿ."
+  },
+  "records": {
+    "hi": "रिकॉर्ड",
+    "kn": "ದಾಖಲೆಗಳು"
+  },
+  "· Source document": {
+    "hi": "· मूल दस्तावेज",
+    "kn": "· ಮೂಲ ದಾಖಲೆ"
+  },
+  "Source-linked information, prepared for a conversation with your clinician.": {
+    "hi": "डॉक्टर से चर्चा के लिए मूल स्रोतों सहित जानकारी।",
+    "kn": "ವೈದ್ಯರೊಂದಿಗೆ ಚರ್ಚಿಸಲು ಮೂಲಗಳೊಂದಿಗೆ ಸಿದ್ಧಪಡಿಸಿದ ಮಾಹಿತಿ."
+  },
+  "The conversation starts with you": {
+    "hi": "बातचीत आपसे शुरू होती है",
+    "kn": "ಸಂಭಾಷಣೆ ನಿಮ್ಮಿಂದ ಆರಂಭವಾಗುತ್ತದೆ"
+  },
+  "Edit intake": {
+    "hi": "दी गई जानकारी बदलें",
+    "kn": "ನೀಡಿದ ಮಾಹಿತಿ ಬದಲಿಸಿ"
+  },
+  "Patient provided": {
+    "hi": "मरीज द्वारा दी गई जानकारी",
+    "kn": "ರೋಗಿ ನೀಡಿದ ಮಾಹಿತಿ"
+  },
+  "Duration": {
+    "hi": "अवधि",
+    "kn": "ಅವಧಿ"
+  },
+  "Questions to discuss": {
+    "hi": "चर्चा के सवाल",
+    "kn": "ಚರ್ಚಿಸಬೇಕಾದ ಪ್ರಶ್ನೆಗಳು"
+  },
+  "Tell your care team what matters": {
+    "hi": "अपनी देखभाल टीम को जरूरी बातें बताएँ",
+    "kn": "ನಿಮ್ಮ ಆರೈಕೆ ತಂಡಕ್ಕೆ ಮುಖ್ಯ ವಿಷಯ ತಿಳಿಸಿ"
+  },
+  "Start my intake": {
+    "hi": "अपनी जानकारी भरें",
+    "kn": "ನನ್ನ ಮಾಹಿತಿ ತುಂಬಿ"
+  },
+  "PATIENT HEALTHBRIDGE SUMMARY": {
+    "hi": "मरीज का HEALTHBRIDGE विवरण",
+    "kn": "ರೋಗಿಯ HEALTHBRIDGE ಸಾರಾಂಶ"
+  },
+  "Your visit brief": {
+    "hi": "आपकी मुलाकात का विवरण",
+    "kn": "ನಿಮ್ಮ ಭೇಟಿಯ ವಿವರ"
+  },
+  "years ·": {
+    "hi": "वर्ष ·",
+    "kn": "ವರ್ಷ ·"
+  },
+  "Refresh brief": {
+    "hi": "विवरण फिर तैयार करें",
+    "kn": "ವಿವರವನ್ನು ಮತ್ತೆ ಸಿದ್ಧಪಡಿಸಿ"
+  },
+  "A little preparation goes a long way": {
+    "hi": "थोड़ी तैयारी बहुत मदद करती है",
+    "kn": "ಸ್ವಲ್ಪ ಸಿದ್ಧತೆ ಬಹಳ ಸಹಾಯ ಮಾಡುತ್ತದೆ"
+  },
+  "Bring your intake and records together in a source-linked brief. Your clinician reviews it before you rely on it.": {
+    "hi": "अपनी जानकारी और रिकॉर्ड को स्रोतों सहित एक विवरण में जोड़ें। उस पर निर्भर होने से पहले डॉक्टर समीक्षा करते हैं।",
+    "kn": "ನಿಮ್ಮ ಮಾಹಿತಿ ಮತ್ತು ದಾಖಲೆಗಳನ್ನು ಮೂಲಗಳೊಂದಿಗೆ ಒಂದು ವಿವರದಲ್ಲಿ ಸೇರಿಸಿ. ಅದನ್ನು ಅವಲಂಬಿಸುವ ಮೊದಲು ವೈದ್ಯರು ಪರಿಶೀಲಿಸುತ್ತಾರೆ."
+  },
+  "Make the handoff yours.": {
+    "hi": "जानकारी जाँचकर आगे बढ़ाएँ।",
+    "kn": "ಮಾಹಿತಿಯನ್ನು ಪರಿಶೀಲಿಸಿ ಮುಂದುವರಿಸಿ."
+  },
+  "Check the sources, record corrections, and confirm the brief. Approval applies to this version only.": {
+    "hi": "स्रोत जाँचें, सुधार लिखें और विवरण की पुष्टि करें। मंजूरी केवल इस संस्करण पर लागू होती है।",
+    "kn": "ಮೂಲಗಳನ್ನು ಪರಿಶೀಲಿಸಿ, ತಿದ್ದುಪಡಿಗಳನ್ನು ದಾಖಲಿಸಿ ಮತ್ತು ವಿವರವನ್ನು ದೃಢಪಡಿಸಿ. ಅನುಮೋದನೆ ಈ ಆವೃತ್ತಿಗೆ ಮಾತ್ರ ಅನ್ವಯಿಸುತ್ತದೆ."
+  },
+  "Review note / corrections": {
+    "hi": "समीक्षा नोट / सुधार",
+    "kn": "ಪರಿಶೀಲನೆ ಟಿಪ್ಪಣಿ / ತಿದ್ದುಪಡಿಗಳು"
+  },
+  "Document what you verified or what needs clarification…": {
+    "hi": "क्या जाँचा या किस बात की पुष्टि चाहिए, लिखें…",
+    "kn": "ಏನು ಪರಿಶೀಲಿಸಲಾಗಿದೆ ಅಥವಾ ಏನು ಸ್ಪಷ್ಟವಾಗಬೇಕು ಎಂದು ಬರೆಯಿರಿ…"
+  },
+  "Approve brief": {
+    "hi": "विवरण मंजूर करें",
+    "kn": "ವಿವರ ಅನುಮೋದಿಸಿ"
+  },
+  "Needs clarification": {
+    "hi": "स्पष्टीकरण चाहिए",
+    "kn": "ಸ್ಪಷ್ಟೀಕರಣ ಅಗತ್ಯ"
+  },
+  "Clarity, without assumptions.": {
+    "hi": "बिना अनुमान के स्पष्टता।",
+    "kn": "ಊಹೆಗಳಿಲ್ಲದ ಸ್ಪಷ್ಟತೆ."
+  },
+  "Missing details stay missing. Source excerpts remain unchanged. We don’t generate diagnoses or treatment advice.": {
+    "hi": "अनुपलब्ध जानकारी का अनुमान नहीं लगाते। स्रोत के अंश नहीं बदलते। हम निदान या उपचार सलाह नहीं बनाते।",
+    "kn": "ಲಭ್ಯವಿಲ್ಲದ ಮಾಹಿತಿಯನ್ನು ಊಹಿಸುವುದಿಲ್ಲ. ಮೂಲದ ಭಾಗಗಳನ್ನು ಬದಲಿಸುವುದಿಲ್ಲ. ರೋಗನಿರ್ಣಯ ಅಥವಾ ಚಿಕಿತ್ಸಾ ಸಲಹೆ ಸೃಷ್ಟಿಸುವುದಿಲ್ಲ."
+  },
+  "Original sources included": {
+    "hi": "मूल स्रोत शामिल हैं",
+    "kn": "ಮೂಲ ದಾಖಲೆಗಳು ಸೇರಿವೆ"
+  },
+  "Unknowns kept visible": {
+    "hi": "अज्ञात जानकारी स्पष्ट है",
+    "kn": "ತಿಳಿಯದ ಮಾಹಿತಿ ಸ್ಪಷ್ಟವಾಗಿದೆ"
+  },
+  "Human review required": {
+    "hi": "मानवीय समीक्षा जरूरी",
+    "kn": "ಮಾನವ ಪರಿಶೀಲನೆ ಅಗತ್ಯ"
+  },
+  "Add instructions": {
+    "hi": "निर्देश जोड़ें",
+    "kn": "ಸೂಚನೆಗಳನ್ನು ಸೇರಿಸಿ"
+  },
+  "Next steps will appear here": {
+    "hi": "अगले कदम यहाँ दिखेंगे",
+    "kn": "ಮುಂದಿನ ಹಂತಗಳು ಇಲ್ಲಿ ಕಾಣಿಸುತ್ತವೆ"
+  },
+  "Your clinician can publish reviewed instructions after your visit.": {
+    "hi": "मुलाकात के बाद डॉक्टर जाँचे हुए निर्देश साझा कर सकते हैं।",
+    "kn": "ಭೇಟಿಯ ನಂತರ ವೈದ್ಯರು ಪರಿಶೀಲಿಸಿದ ಸೂಚನೆಗಳನ್ನು ಪ್ರಕಟಿಸಬಹುದು."
+  },
+  "A note from your care team": {
+    "hi": "आपकी देखभाल टीम का संदेश",
+    "kn": "ನಿಮ್ಮ ಆರೈಕೆ ತಂಡದ ಸಂದೇಶ"
+  },
+  "Clinician authored": {
+    "hi": "डॉक्टर द्वारा लिखा गया",
+    "kn": "ವೈದ್ಯರು ಬರೆದದ್ದು"
+  },
+  "No reviewed translation yet": {
+    "hi": "अभी कोई जाँचा हुआ अनुवाद नहीं",
+    "kn": "ಇನ್ನೂ ಪರಿಶೀಲಿಸಿದ ಅನುವಾದ ಇಲ್ಲ"
+  },
+  "Ask your care team for instructions in your preferred language.": {
+    "hi": "अपनी पसंदीदा भाषा में निर्देश के लिए देखभाल टीम से पूछें।",
+    "kn": "ನಿಮ್ಮ ಆಯ್ಕೆಯ ಭಾಷೆಯಲ್ಲಿ ಸೂಚನೆಗಳಿಗಾಗಿ ಆರೈಕೆ ತಂಡವನ್ನು ಕೇಳಿ."
+  },
+  "If anything is unclear, confirm it with your healthcare provider.": {
+    "hi": "कोई बात अस्पष्ट हो तो अपने स्वास्थ्य सेवा प्रदाता से पुष्टि करें।",
+    "kn": "ಯಾವುದೇ ವಿಷಯ ಅಸ್ಪಷ್ಟವಾಗಿದ್ದರೆ ನಿಮ್ಮ ಆರೋಗ್ಯ ಸೇವಾ ಪೂರೈಕೆದಾರರೊಂದಿಗೆ ದೃಢಪಡಿಸಿ."
+  },
+  "A transparent trail of care.": {
+    "hi": "देखभाल की गतिविधियों का स्पष्ट रिकॉर्ड।",
+    "kn": "ಆರೈಕೆ ಚಟುವಟಿಕೆಗಳ ಸ್ಪಷ್ಟ ದಾಖಲೆ."
+  },
+  "See what changed, when it happened, and who was involved.": {
+    "hi": "देखें क्या बदला, कब हुआ और किसने किया।",
+    "kn": "ಏನು ಬದಲಾಯಿತು, ಯಾವಾಗ ಮತ್ತು ಯಾರು ಮಾಡಿದರು ಎಂದು ನೋಡಿ."
+  },
+  "recent events": {
+    "hi": "हाल की गतिविधियाँ",
+    "kn": "ಇತ್ತೀಚಿನ ಚಟುವಟಿಕೆಗಳು"
+  },
+  "No activity yet": {
+    "hi": "अभी कोई गतिविधि नहीं",
+    "kn": "ಇನ್ನೂ ಚಟುವಟಿಕೆ ಇಲ್ಲ"
+  },
+  "Saved records and clinician reviews will appear here.": {
+    "hi": "सहेजे गए रिकॉर्ड और डॉक्टर की समीक्षाएँ यहाँ दिखेंगी।",
+    "kn": "ಉಳಿಸಿದ ದಾಖಲೆಗಳು ಮತ್ತು ವೈದ್ಯರ ಪರಿಶೀಲನೆಗಳು ಇಲ್ಲಿ ಕಾಣಿಸುತ್ತವೆ."
+  },
+  "People first. Details connected.": {
+    "hi": "मरीज पहले। जानकारी एक साथ।",
+    "kn": "ಮೊದಲು ಜನರು. ಮಾಹಿತಿ ಒಂದೇ ಕಡೆ."
+  },
+  "Your assigned patients and the stories waiting for your attention.": {
+    "hi": "आपको सौंपे गए मरीज और समीक्षा की प्रतीक्षा में उनकी जानकारी।",
+    "kn": "ನಿಮಗೆ ನಿಯೋಜಿತ ರೋಗಿಗಳು ಮತ್ತು ಪರಿಶೀಲನೆಗಾಗಿ ಕಾಯುತ್ತಿರುವ ಮಾಹಿತಿ."
+  },
+  "patients": {
+    "hi": "मरीज",
+    "kn": "ರೋಗಿಗಳು"
+  },
+  "Patient access is restricted to your assignments.": {
+    "hi": "आप केवल सौंपे गए मरीजों की जानकारी देख सकते हैं।",
+    "kn": "ನಿಮಗೆ ನಿಯೋಜಿತ ರೋಗಿಗಳ ಮಾಹಿತಿಯನ್ನು ಮಾತ್ರ ನೋಡಬಹುದು."
+  },
+  "Patient-provided information · clinician review required": {
+    "hi": "मरीज की जानकारी · डॉक्टर की समीक्षा जरूरी",
+    "kn": "ರೋಗಿ ನೀಡಿದ ಮಾಹಿತಿ · ವೈದ್ಯರ ಪರಿಶೀಲನೆ ಅಗತ್ಯ"
+  },
+  "Tell us what brought you here…": {
+    "hi": "बताएँ आप किस कारण आए हैं…",
+    "kn": "ನೀವು ಬಂದ ಕಾರಣ ತಿಳಿಸಿ…"
+  },
+  "Saving new information makes earlier briefs outdated.": {
+    "hi": "नई जानकारी सहेजने पर पुराने विवरण अप्रचलित हो जाते हैं।",
+    "kn": "ಹೊಸ ಮಾಹಿತಿ ಉಳಿಸಿದಾಗ ಹಿಂದಿನ ವಿವರಗಳು ಹಳೆಯದಾಗುತ್ತವೆ."
+  },
+  "A report, a referral, a visit note — keep it together here.": {
+    "hi": "रिपोर्ट, रेफरल या मुलाकात का नोट — यहाँ साथ रखें।",
+    "kn": "ವರದಿ, ರೆಫರಲ್ ಅಥವಾ ಭೇಟಿಯ ಟಿಪ್ಪಣಿ — ಇಲ್ಲಿ ಒಟ್ಟಿಗೆ ಇರಿಸಿ."
+  },
+  "PDF, PNG, JPG or TXT · up to 10 MB · 20 PDF pages": {
+    "hi": "PDF, PNG, JPG या TXT · अधिकतम 10 MB · 20 PDF पृष्ठ",
+    "kn": "PDF, PNG, JPG ಅಥವಾ TXT · ಗರಿಷ್ಠ 10 MB · 20 PDF ಪುಟಗಳು"
+  },
+  "Synthetic demo records only. Please do not upload real medical data.": {
+    "hi": "केवल काल्पनिक डेमो रिकॉर्ड। वास्तविक चिकित्सा जानकारी अपलोड न करें।",
+    "kn": "ಕಾಲ್ಪನಿಕ ಡೆಮೋ ದಾಖಲೆಗಳು ಮಾತ್ರ. ನಿಜವಾದ ವೈದ್ಯಕೀಯ ಮಾಹಿತಿ ಅಪ್ಲೋಡ್ ಮಾಡಬೇಡಿ."
+  },
+  "Loading original source…": {
+    "hi": "मूल स्रोत लोड हो रहा है…",
+    "kn": "ಮೂಲವನ್ನು ಲೋಡ್ ಮಾಡಲಾಗುತ್ತಿದೆ…"
+  },
+  "Original file": {
+    "hi": "मूल फ़ाइल",
+    "kn": "ಮೂಲ ಫೈಲ್"
+  },
+  "Extracted source text": {
+    "hi": "निकाला गया मूल पाठ",
+    "kn": "ಹೊರತೆಗೆದ ಮೂಲ ಪಠ್ಯ"
+  },
+  "Verify against original": {
+    "hi": "मूल से जाँचें",
+    "kn": "ಮೂಲದೊಂದಿಗೆ ಪರಿಶೀಲಿಸಿ"
+  },
+  "Classification uses document keywords. Missing dates and providers remain unknown. OCR may contain errors; the original file is authoritative.": {
+    "hi": "वर्गीकरण दस्तावेज के शब्दों पर आधारित है। न मिली तारीख और प्रदाता की जानकारी अज्ञात रहती है। OCR में त्रुटियाँ हो सकती हैं; मूल फ़ाइल से जाँचें।",
+    "kn": "ವರ್ಗೀಕರಣವು ದಾಖಲೆಯ ಪದಗಳ ಆಧಾರದಲ್ಲಿದೆ. ಲಭ್ಯವಿಲ್ಲದ ದಿನಾಂಕ ಮತ್ತು ಪೂರೈಕೆದಾರ ತಿಳಿಯದಂತೆಯೇ ಇರುತ್ತಾರೆ. OCRನಲ್ಲಿ ದೋಷಗಳಿರಬಹುದು; ಮೂಲ ಫೈಲ್ ಪರಿಶೀಲಿಸಿ."
+  },
+  "Author and review each version before sharing it. Translations are not generated automatically.": {
+    "hi": "साझा करने से पहले हर संस्करण लिखें और जाँचें। अनुवाद अपने आप नहीं बनते।",
+    "kn": "ಹಂಚಿಕೊಳ್ಳುವ ಮೊದಲು ಪ್ರತಿ ಆವೃತ್ತಿಯನ್ನು ಬರೆದು ಪರಿಶೀಲಿಸಿ. ಅನುವಾದಗಳು ಸ್ವಯಂಚಾಲಿತವಾಗಿ ಸೃಷ್ಟಿಯಾಗುವುದಿಲ್ಲ."
+  },
+  "Original clinician instructions": {
+    "hi": "डॉक्टर के मूल निर्देश",
+    "kn": "ವೈದ್ಯರ ಮೂಲ ಸೂಚನೆಗಳು"
+  },
+  "Plain-language version": {
+    "hi": "सरल भाषा का संस्करण",
+    "kn": "ಸರಳ ಭಾಷೆಯ ಆವೃತ್ತಿ"
+  },
+  "Translation language": {
+    "hi": "अनुवाद की भाषा",
+    "kn": "ಅನುವಾದದ ಭಾಷೆ"
+  },
+  "English · no translation": {
+    "hi": "अंग्रेज़ी · अनुवाद नहीं",
+    "kn": "ಇಂಗ್ಲಿಷ್ · ಅನುವಾದ ಇಲ್ಲ"
+  },
+  "Hindi": {
+    "hi": "हिन्दी",
+    "kn": "ಹಿಂದಿ"
+  },
+  "Kannada": {
+    "hi": "कन्नड़",
+    "kn": "ಕನ್ನಡ"
+  },
+  "Reviewed translation": {
+    "hi": "जाँचा हुआ अनुवाद",
+    "kn": "ಪರಿಶೀಲಿಸಿದ ಅನುವಾದ"
+  },
+  "I have checked every version against the original. No medication, dosage, timing, or clinical meaning has been changed.": {
+    "hi": "मैंने हर संस्करण मूल से जाँचा है। दवा, खुराक, समय या चिकित्सा अर्थ नहीं बदला गया है।",
+    "kn": "ಪ್ರತಿ ಆವೃತ್ತಿಯನ್ನು ಮೂಲದೊಂದಿಗೆ ಪರಿಶೀಲಿಸಿದ್ದೇನೆ. ಔಷಧಿ, ಪ್ರಮಾಣ, ಸಮಯ ಅಥವಾ ವೈದ್ಯಕೀಯ ಅರ್ಥ ಬದಲಾಗಿಲ್ಲ."
+  },
+  "Clinician review required": {
+    "hi": "डॉक्टर की समीक्षा जरूरी",
+    "kn": "ವೈದ್ಯರ ಪರಿಶೀಲನೆ ಅಗತ್ಯ"
+  },
+  "Publish instructions": {
+    "hi": "निर्देश साझा करें",
+    "kn": "ಸೂಚನೆಗಳನ್ನು ಪ್ರಕಟಿಸಿ"
+  },
+  "Close dialog": {
+    "hi": "संवाद बंद करें",
+    "kn": "ಸಂವಾದ ಮುಚ್ಚಿ"
+  },
+  "Information, with a human touch. HealthBridge organizes records; your clinician makes care decisions.": {
+    "hi": "HealthBridge रिकॉर्ड व्यवस्थित करता है; देखभाल के निर्णय आपके डॉक्टर लेते हैं।",
+    "kn": "HealthBridge ದಾಖಲೆಗಳನ್ನು ವ್ಯವಸ್ಥಿತಗೊಳಿಸುತ್ತದೆ; ಆರೈಕೆ ನಿರ್ಧಾರಗಳನ್ನು ನಿಮ್ಮ ವೈದ್ಯರು ತೆಗೆದುಕೊಳ್ಳುತ್ತಾರೆ."
+  },
+  "Your initials are generated from your saved name. Changes are stored in your account.": {
+    "hi": "आपके सहेजे नाम से शुरुआती अक्षर बनते हैं। बदलाव आपके खाते में सहेजे जाते हैं।",
+    "kn": "ನಿಮ್ಮ ಉಳಿಸಿದ ಹೆಸರಿನಿಂದ ಮೊದಲ ಅಕ್ಷರಗಳು ರೂಪುಗೊಳ್ಳುತ್ತವೆ. ಬದಲಾವಣೆಗಳನ್ನು ಖಾತೆಯಲ್ಲಿ ಉಳಿಸಲಾಗುತ್ತದೆ."
+  },
+  "Name": {
+    "hi": "नाम",
+    "kn": "ಹೆಸರು"
+  },
+  "Age": {
+    "hi": "उम्र",
+    "kn": "ವಯಸ್ಸು"
+  },
+  "Preferred language": {
+    "hi": "पसंदीदा भाषा",
+    "kn": "ಆಯ್ಕೆಯ ಭಾಷೆ"
+  },
+  "Account:": {
+    "hi": "खाता:",
+    "kn": "ಖಾತೆ:"
+  },
+  "Role:": {
+    "hi": "भूमिका:",
+    "kn": "ಪಾತ್ರ:"
+  },
+  ". Account email and role cannot be changed here.": {
+    "hi": "। खाते का ईमेल और भूमिका यहाँ नहीं बदल सकते।",
+    "kn": ". ಖಾತೆಯ ಇಮೇಲ್ ಮತ್ತು ಪಾತ್ರವನ್ನು ಇಲ್ಲಿ ಬದಲಿಸಲಾಗುವುದಿಲ್ಲ."
+  },
+  "Use fictional details in this shared demo.": {
+    "hi": "इस साझा डेमो में काल्पनिक जानकारी दें।",
+    "kn": "ಈ ಹಂಚಿಕೆಯ ಡೆಮೋದಲ್ಲಿ ಕಾಲ್ಪನಿಕ ವಿವರ ಬಳಸಿ."
+  },
+  "Save profile": {
+    "hi": "प्रोफ़ाइल सहेजें",
+    "kn": "ಪ್ರೊಫೈಲ್ ಉಳಿಸಿ"
+  },
+  "Demo privacy notice": {
+    "hi": "डेमो गोपनीयता सूचना",
+    "kn": "ಡೆಮೋ ಗೌಪ್ಯತೆ ಸೂಚನೆ"
+  },
+  "This prototype is for synthetic information only. Demo accounts are shared: anyone using the same demo login can see and change its information. Do not enter real medical or personal data.": {
+    "hi": "यह प्रोटोटाइप केवल काल्पनिक जानकारी के लिए है। डेमो खाते साझा हैं: एक ही लॉगिन इस्तेमाल करने वाला कोई भी व्यक्ति जानकारी देख और बदल सकता है। वास्तविक चिकित्सा या निजी जानकारी न दें।",
+    "kn": "ಈ ಪ್ರೋಟೋಟೈಪ್ ಕಾಲ್ಪನಿಕ ಮಾಹಿತಿಗಾಗಿ ಮಾತ್ರ. ಡೆಮೋ ಖಾತೆಗಳು ಹಂಚಿಕೆಯಲ್ಲಿವೆ: ಅದೇ ಲಾಗಿನ್ ಬಳಸುವ ಯಾರಾದರೂ ಮಾಹಿತಿ ನೋಡಬಹುದು ಮತ್ತು ಬದಲಿಸಬಹುದು. ನಿಜವಾದ ವೈದ್ಯಕೀಯ ಅಥವಾ ವೈಯಕ್ತಿಕ ಮಾಹಿತಿ ನೀಡಬೇಡಿ."
+  },
+  "What is stored": {
+    "hi": "क्या सहेजा जाता है",
+    "kn": "ಏನು ಉಳಿಸಲಾಗುತ್ತದೆ"
+  },
+  "Account details, intake, records, instructions and audit history are stored in the server’s SQLite database. Uploaded files are stored on the server’s filesystem. Data remains until the deployment operator removes it; there is no automatic retention schedule or self-service deletion yet.": {
+    "hi": "खाते का विवरण, मरीज की जानकारी, रिकॉर्ड, निर्देश और गतिविधि इतिहास सर्वर के SQLite डेटाबेस में सहेजे जाते हैं। अपलोड की फ़ाइलें सर्वर पर रहती हैं। संचालक के हटाने तक जानकारी रहती है; अभी स्वतः या स्वयं हटाने की सुविधा नहीं है।",
+    "kn": "ಖಾತೆ ವಿವರ, ರೋಗಿಯ ಮಾಹಿತಿ, ದಾಖಲೆಗಳು, ಸೂಚನೆಗಳು ಮತ್ತು ಚಟುವಟಿಕೆ ಇತಿಹಾಸವನ್ನು ಸರ್ವರ್‌ನ SQLite ಡೇಟಾಬೇಸ್‌ನಲ್ಲಿ ಉಳಿಸಲಾಗುತ್ತದೆ. ಫೈಲ್‌ಗಳು ಸರ್ವರ್‌ನಲ್ಲಿ ಇರುತ್ತವೆ. ನಿರ್ವಾಹಕರು ತೆಗೆದುಹಾಕುವವರೆಗೆ ಮಾಹಿತಿ ಉಳಿಯುತ್ತದೆ; ಸ್ವಯಂಚಾಲಿತ ಅಥವಾ ಸ್ವಯಂ ಅಳಿಸುವ ಸೌಲಭ್ಯ ಇನ್ನೂ ಇಲ್ಲ."
+  },
+  "Model processing": {
+    "hi": "मॉडल प्रसंस्करण",
+    "kn": "ಮಾದರಿ ಸಂಸ್ಕರಣೆ"
+  },
+  "Source-only mode processes excerpts on the application server without a model request. When a model endpoint is configured, bounded record excerpts are sent to that endpoint. Its operator and hosting location determine where processing occurs.": {
+    "hi": "केवल-स्रोत मोड में मॉडल अनुरोध के बिना ऐप सर्वर पर अंश संसाधित होते हैं। मॉडल जुड़ा होने पर सीमित रिकॉर्ड अंश उस एंडपॉइंट पर भेजे जाते हैं। प्रसंस्करण स्थान उसके संचालक और होस्टिंग पर निर्भर है।",
+    "kn": "ಮೂಲ-ಮಾತ್ರ ಕ್ರಮದಲ್ಲಿ ಮಾದರಿ ವಿನಂತಿಯಿಲ್ಲದೆ ಅಪ್ಲಿಕೇಶನ್ ಸರ್ವರ್‌ನಲ್ಲಿ ಭಾಗಗಳನ್ನು ಸಂಸ್ಕರಿಸಲಾಗುತ್ತದೆ. ಮಾದರಿ ಸಂಪರ್ಕಿಸಿದಾಗ ಸೀಮಿತ ಭಾಗಗಳನ್ನು ಆ ಎಂಡ್‌ಪಾಯಿಂಟ್‌ಗೆ ಕಳುಹಿಸಲಾಗುತ್ತದೆ. ಸಂಸ್ಕರಣೆಯ ಸ್ಥಳ ಅದರ ನಿರ್ವಾಹಕರು ಮತ್ತು ಹೋಸ್ಟಿಂಗ್ ಮೇಲೆ ಅವಲಂಬಿತ."
+  },
+  "Cookies and appearance": {
+    "hi": "कुकी और रूप-रंग",
+    "kn": "ಕುಕೀಗಳು ಮತ್ತು ನೋಟ"
+  },
+  "An HttpOnly session cookie keeps you signed in for up to eight hours. Signing out revokes that session. Browser storage holds your theme preference. Fonts are bundled locally; this app does not include analytics or advertising trackers.": {
+    "hi": "HttpOnly सत्र कुकी आपको आठ घंटे तक साइन इन रखती है। साइन आउट करने पर सत्र समाप्त होता है। ब्राउज़र आपकी थीम पसंद रखता है। फ़ॉन्ट ऐप में शामिल हैं; इसमें विश्लेषण या विज्ञापन ट्रैकर नहीं हैं।",
+    "kn": "HttpOnly ಸೆಷನ್ ಕುಕೀ ಎಂಟು ಗಂಟೆಗಳವರೆಗೆ ಸೈನ್ ಇನ್ ಇಡುತ್ತದೆ. ಸೈನ್ ಔಟ್ ಮಾಡಿದಾಗ ಸೆಷನ್ ಮುಗಿಯುತ್ತದೆ. ಬ್ರೌಸರ್ ನಿಮ್ಮ ಥೀಮ್ ಆಯ್ಕೆಯನ್ನು ಉಳಿಸುತ್ತದೆ. ಫಾಂಟ್‌ಗಳು ಸ್ಥಳೀಯವಾಗಿವೆ; ವಿಶ್ಲೇಷಣೆ ಅಥವಾ ಜಾಹೀರಾತು ಟ್ರ್ಯಾಕರ್‌ಗಳಿಲ್ಲ."
+  },
+  "Access and limitations": {
+    "hi": "पहुँच और सीमाएँ",
+    "kn": "ಪ್ರವೇಶ ಮತ್ತು ಮಿತಿಗಳು"
+  },
+  "Patients access their own workspace; clinicians access assigned patients. These controls are prototype safeguards, not a HIPAA/GDPR certification. This notice describes the current demo, not a production legal policy. Contact the deployment operator before using any real data.": {
+    "hi": "मरीज अपना कार्यक्षेत्र देखते हैं; डॉक्टर सौंपे गए मरीजों को देखते हैं। ये प्रोटोटाइप सुरक्षा उपाय हैं, HIPAA/GDPR प्रमाणन नहीं। यह वर्तमान डेमो की सूचना है, उत्पादन की कानूनी नीति नहीं। वास्तविक जानकारी से पहले संचालक से संपर्क करें।",
+    "kn": "ರೋಗಿಗಳು ತಮ್ಮ ಕಾರ್ಯಕ್ಷೇತ್ರವನ್ನು, ವೈದ್ಯರು ನಿಯೋಜಿತ ರೋಗಿಗಳನ್ನು ಪ್ರವೇಶಿಸುತ್ತಾರೆ. ಇವು ಪ್ರೋಟೋಟೈಪ್ ಸುರಕ್ಷತಾ ಕ್ರಮಗಳು, HIPAA/GDPR ಪ್ರಮಾಣೀಕರಣವಲ್ಲ. ಇದು ಪ್ರಸ್ತುತ ಡೆಮೋದ ಸೂಚನೆ, ಉತ್ಪಾದನಾ ಕಾನೂನು ನೀತಿಯಲ್ಲ. ನಿಜವಾದ ಮಾಹಿತಿ ಬಳಸುವ ಮೊದಲು ನಿರ್ವಾಹಕರನ್ನು ಸಂಪರ್ಕಿಸಿ."
+  },
+  "CLINICIAN WORKSPACE": {
+    "hi": "डॉक्टर का कार्यक्षेत्र",
+    "kn": "ವೈದ್ಯರ ಕಾರ್ಯಕ್ಷೇತ್ರ"
+  },
+  "YOUR CARE SPACE": {
+    "hi": "आपकी देखभाल का स्थान",
+    "kn": "ನಿಮ್ಮ ಆರೈಕೆಯ ಸ್ಥಳ"
+  },
+  "Patient account": {
+    "hi": "मरीज का खाता",
+    "kn": "ರೋಗಿಯ ಖಾತೆ"
+  },
+  "Clinician account": {
+    "hi": "डॉक्टर का खाता",
+    "kn": "ವೈದ್ಯರ ಖಾತೆ"
+  },
+  "A CONNECTED VIEW OF YOUR PATIENT": {
+    "hi": "आपके मरीज की जानकारी एक साथ",
+    "kn": "ನಿಮ್ಮ ರೋಗಿಯ ಮಾಹಿತಿ ಒಂದೇ ಕಡೆ"
+  },
+  "A CLEARER PATH TO CARE": {
+    "hi": "देखभाल का स्पष्ट रास्ता",
+    "kn": "ಆರೈಕೆಗೆ ಸ್ಪಷ್ಟ ದಾರಿ"
+  },
+  "Source-only mode · no AI inference": {
+    "hi": "केवल-स्रोत मोड · AI इस्तेमाल नहीं हुआ",
+    "kn": "ಮೂಲ-ಮಾತ್ರ ಕ್ರಮ · AI ಬಳಸಿಲ್ಲ"
+  },
+  "A clinician": {
+    "hi": "डॉक्टर",
+    "kn": "ವೈದ್ಯರು"
+  },
+  "A patient": {
+    "hi": "मरीज",
+    "kn": "ರೋಗಿ"
+  },
+  "Review the story. Guide the next step.": {
+    "hi": "जानकारी जाँचें। अगला कदम बताएँ।",
+    "kn": "ಮಾಹಿತಿ ಪರಿಶೀಲಿಸಿ. ಮುಂದಿನ ಹಂತ ತಿಳಿಸಿ."
+  },
+  "Your records. Your language. Your care.": {
+    "hi": "आपके रिकॉर्ड। आपकी भाषा। आपकी देखभाल।",
+    "kn": "ನಿಮ್ಮ ದಾಖಲೆಗಳು. ನಿಮ್ಮ ಭಾಷೆ. ನಿಮ್ಮ ಆರೈಕೆ."
+  },
+  "Hide sign-in form": {
+    "hi": "साइन इन फ़ॉर्म छिपाएँ",
+    "kn": "ಸೈನ್ ಇನ್ ಫಾರ್ಮ್ ಮರೆಮಾಡಿ"
+  },
+  "Sign in with your account": {
+    "hi": "अपने खाते से साइन इन करें",
+    "kn": "ನಿಮ್ಮ ಖಾತೆಯಿಂದ ಸೈನ್ ಇನ್ ಮಾಡಿ"
+  },
+  "Fictional patients. Real, connected workflows.": {
+    "hi": "काल्पनिक मरीज। सच में जुड़ी प्रक्रियाएँ।",
+    "kn": "ಕಾಲ್ಪನಿಕ ರೋಗಿಗಳು. ನಿಜವಾದ ಸಂಪರ್ಕಿತ ಪ್ರಕ್ರಿಯೆಗಳು."
+  },
+  "Secure account access.": {
+    "hi": "सुरक्षित खाता पहुँच।",
+    "kn": "ಸುರಕ್ಷಿತ ಖಾತೆ ಪ್ರವೇಶ."
+  },
+  "Please don’t enter sensitive medical information.": {
+    "hi": "संवेदनशील चिकित्सा जानकारी न दें।",
+    "kn": "ಸೂಕ್ಷ್ಮ ವೈದ್ಯಕೀಯ ಮಾಹಿತಿ ನೀಡಬೇಡಿ."
+  },
+  "Backend connection required.": {
+    "hi": "बैकएंड कनेक्शन जरूरी है।",
+    "kn": "ಬ್ಯಾಕೆಂಡ್ ಸಂಪರ್ಕ ಅಗತ್ಯ."
+  },
+  "The details that matter, with the sources behind them.": {
+    "hi": "जरूरी विवरण, उनके स्रोतों के साथ।",
+    "kn": "ಮುಖ್ಯ ವಿವರಗಳು, ಅವುಗಳ ಮೂಲಗಳೊಂದಿಗೆ."
+  },
+  "A clearer handoff starts here.": {
+    "hi": "स्पष्ट जानकारी से शुरुआत करें।",
+    "kn": "ಸ್ಪಷ್ಟ ಮಾಹಿತಿಯಿಂದ ಆರಂಭಿಸಿ."
+  },
+  "Open visit brief": {
+    "hi": "मुलाकात का विवरण खोलें",
+    "kn": "ಭೇಟಿಯ ವಿವರ ತೆರೆಯಿರಿ"
+  },
+  "Your intake is saved": {
+    "hi": "आपकी जानकारी सहेजी गई",
+    "kn": "ನಿಮ್ಮ ಮಾಹಿತಿ ಉಳಿಸಲಾಗಿದೆ"
+  },
+  "Tell us what’s on your mind": {
+    "hi": "अपनी चिंताएँ बताएँ",
+    "kn": "ನಿಮ್ಮ ಕಾಳಜಿಗಳನ್ನು ತಿಳಿಸಿ"
+  },
+  "Reviewed by your clinician": {
+    "hi": "आपके डॉक्टर ने जाँचा",
+    "kn": "ನಿಮ್ಮ ವೈದ್ಯರು ಪರಿಶೀಲಿಸಿದ್ದಾರೆ"
+  },
+  "Brief ready for review": {
+    "hi": "विवरण समीक्षा के लिए तैयार",
+    "kn": "ವಿವರ ಪರಿಶೀಲನೆಗೆ ಸಿದ್ಧ"
+  },
+  "Your next step": {
+    "hi": "आपका अगला कदम",
+    "kn": "ನಿಮ್ಮ ಮುಂದಿನ ಹಂತ"
+  },
+  "Your care team has shared updates": {
+    "hi": "देखभाल टीम ने अपडेट साझा किए",
+    "kn": "ಆರೈಕೆ ತಂಡ ನವೀಕರಣ ಹಂಚಿಕೊಂಡಿದೆ"
+  },
+  "Clear, reviewed instructions": {
+    "hi": "स्पष्ट, जाँचे हुए निर्देश",
+    "kn": "ಸ್ಪಷ್ಟ, ಪರಿಶೀಲಿಸಿದ ಸೂಚನೆಗಳು"
+  },
+  "Review my questions": {
+    "hi": "मेरे सवाल देखें",
+    "kn": "ನನ್ನ ಪ್ರಶ್ನೆಗಳನ್ನು ನೋಡಿ"
+  },
+  "Add my questions": {
+    "hi": "मेरे सवाल जोड़ें",
+    "kn": "ನನ್ನ ಪ್ರಶ್ನೆಗಳನ್ನು ಸೇರಿಸಿ"
+  },
+  "No matching records": {
+    "hi": "मिलता हुआ रिकॉर्ड नहीं",
+    "kn": "ಹೊಂದುವ ದಾಖಲೆಗಳಿಲ್ಲ"
+  },
+  "Try another search or category.": {
+    "hi": "दूसरी खोज या श्रेणी आज़माएँ।",
+    "kn": "ಬೇರೆ ಹುಡುಕಾಟ ಅಥವಾ ವರ್ಗ ಪ್ರಯತ್ನಿಸಿ."
+  },
+  "A complete story. A considered next step.": {
+    "hi": "पूरी जानकारी। सोच-समझकर अगला कदम।",
+    "kn": "ಸಂಪೂರ್ಣ ಮಾಹಿತಿ. ಪರಿಶೀಲಿಸಿದ ಮುಂದಿನ ಹಂತ."
+  },
+  "Edit my intake": {
+    "hi": "मेरी जानकारी बदलें",
+    "kn": "ನನ್ನ ಮಾಹಿತಿ ಬದಲಿಸಿ"
+  },
+  "Add my intake": {
+    "hi": "मेरी जानकारी जोड़ें",
+    "kn": "ನನ್ನ ಮಾಹಿತಿ ಸೇರಿಸಿ"
+  },
+  "Clinician reviewed": {
+    "hi": "डॉक्टर द्वारा समीक्षित",
+    "kn": "ವೈದ್ಯರು ಪರಿಶೀಲಿಸಿದ್ದಾರೆ"
+  },
+  "Outdated · regenerate": {
+    "hi": "पुराना · फिर तैयार करें",
+    "kn": "ಹಳೆಯದು · ಮತ್ತೆ ಸಿದ್ಧಪಡಿಸಿ"
+  },
+  "Review required": {
+    "hi": "समीक्षा जरूरी",
+    "kn": "ಪರಿಶೀಲನೆ ಅಗತ್ಯ"
+  },
+  "Source excerpt": {
+    "hi": "मूल स्रोत का अंश",
+    "kn": "ಮೂಲದ ಆಯ್ದ ಭಾಗ"
+  },
+  "Clinician review": {
+    "hi": "डॉक्टर की समीक्षा",
+    "kn": "ವೈದ್ಯರ ಪರಿಶೀಲನೆ"
+  },
+  "Review note": {
+    "hi": "समीक्षा नोट",
+    "kn": "ಪರಿಶೀಲನೆ ಟಿಪ್ಪಣಿ"
+  },
+  "Preparing your brief…": {
+    "hi": "आपका विवरण तैयार हो रहा है…",
+    "kn": "ನಿಮ್ಮ ವಿವರ ಸಿದ್ಧಪಡಿಸಲಾಗುತ್ತಿದೆ…"
+  },
+  "Prepare my visit brief": {
+    "hi": "मुलाकात का विवरण तैयार करें",
+    "kn": "ನನ್ನ ಭೇಟಿಯ ವಿವರ ಸಿದ್ಧಪಡಿಸಿ"
+  },
+  "Plain language": {
+    "hi": "सरल भाषा",
+    "kn": "ಸರಳ ಭಾಷೆ"
+  },
+  "Original": {
+    "hi": "मूल",
+    "kn": "ಮೂಲ"
+  },
+  "Translation": {
+    "hi": "अनुवाद",
+    "kn": "ಅನುವಾದ"
+  },
+  "No pending briefs": {
+    "hi": "कोई लंबित विवरण नहीं",
+    "kn": "ಬಾಕಿ ವಿವರಗಳಿಲ್ಲ"
+  },
+  "Drop your record here": {
+    "hi": "अपना रिकॉर्ड यहाँ छोड़ें",
+    "kn": "ನಿಮ್ಮ ದಾಖಲೆಯನ್ನು ಇಲ್ಲಿ ಬಿಡಿ"
+  },
+  "or click to browse files": {
+    "hi": "या फ़ाइल चुनने के लिए क्लिक करें",
+    "kn": "ಅಥವಾ ಫೈಲ್ ಆಯ್ಕೆ ಮಾಡಲು ಕ್ಲಿಕ್ ಮಾಡಿ"
+  },
+  "Extracting text and saving your record…": {
+    "hi": "पाठ निकालकर रिकॉर्ड सहेज रहे हैं…",
+    "kn": "ಪಠ್ಯ ಹೊರತೆಗೆದು ದಾಖಲೆ ಉಳಿಸಲಾಗುತ್ತಿದೆ…"
+  },
+  "Original files stay available for review.": {
+    "hi": "मूल फ़ाइलें समीक्षा के लिए उपलब्ध रहती हैं।",
+    "kn": "ಮೂಲ ಫೈಲ್‌ಗಳು ಪರಿಶೀಲನೆಗೆ ಲಭ್ಯವಿರುತ್ತವೆ."
+  },
+  "Processing…": {
+    "hi": "प्रसंस्करण जारी…",
+    "kn": "ಸಂಸ್ಕರಿಸಲಾಗುತ್ತಿದೆ…"
+  },
+  "Add record": {
+    "hi": "रिकॉर्ड जोड़ें",
+    "kn": "ದಾಖಲೆ ಸೇರಿಸಿ"
+  },
+  "Dark": {
+    "hi": "डार्क",
+    "kn": "ಗಾಢ"
+  },
+  "Light": {
+    "hi": "लाइट",
+    "kn": "ತಿಳಿ"
+  },
+  "Switch to dark mode": {
+    "hi": "डार्क मोड चुनें",
+    "kn": "ಗಾಢ ಕ್ರಮಕ್ಕೆ ಬದಲಿಸಿ"
+  },
+  "Switch to light mode": {
+    "hi": "लाइट मोड चुनें",
+    "kn": "ತಿಳಿ ಕ್ರಮಕ್ಕೆ ಬದಲಿಸಿ"
+  },
+  "Share your story": {
+    "hi": "अपनी जानकारी दें",
+    "kn": "ನಿಮ್ಮ ಮಾಹಿತಿ ನೀಡಿ"
+  },
+  "Bring it together": {
+    "hi": "जानकारी एक साथ रखें",
+    "kn": "ಮಾಹಿತಿ ಒಟ್ಟಿಗೆ ಇರಿಸಿ"
+  },
+  "Prepare & review": {
+    "hi": "तैयारी और समीक्षा",
+    "kn": "ಸಿದ್ಧತೆ ಮತ್ತು ಪರಿಶೀಲನೆ"
+  },
+  "Know what’s next": {
+    "hi": "अगला कदम जानें",
+    "kn": "ಮುಂದಿನ ಹಂತ ತಿಳಿಯಿರಿ"
+  },
+  "All records": {
+    "hi": "सभी रिकॉर्ड",
+    "kn": "ಎಲ್ಲಾ ದಾಖಲೆಗಳು"
+  },
+  "Lab report": {
+    "hi": "लैब रिपोर्ट",
+    "kn": "ಪ್ರಯೋಗಾಲಯ ವರದಿ"
+  },
+  "Referral": {
+    "hi": "रेफरल",
+    "kn": "ರೆಫರಲ್"
+  },
+  "Visit note": {
+    "hi": "मुलाकात का नोट",
+    "kn": "ಭೇಟಿಯ ಟಿಪ್ಪಣಿ"
+  },
+  "Prescription": {
+    "hi": "पर्चा",
+    "kn": "ಔಷಧಿ ಚೀಟಿ"
+  },
+  "Discharge summary": {
+    "hi": "डिस्चार्ज सारांश",
+    "kn": "ಡಿಸ್ಚಾರ್ಜ್ ಸಾರಾಂಶ"
+  },
+  "Other": {
+    "hi": "अन्य",
+    "kn": "ಇತರೆ"
+  },
+  "Brief prepared": {
+    "hi": "विवरण तैयार किया गया",
+    "kn": "ವಿವರ ಸಿದ್ಧಪಡಿಸಲಾಗಿದೆ"
+  },
+  "Demo created": {
+    "hi": "डेमो बनाया गया",
+    "kn": "ಡೆಮೋ ರಚಿಸಲಾಗಿದೆ"
+  },
+  "Intake saved": {
+    "hi": "मरीज की जानकारी सहेजी गई",
+    "kn": "ರೋಗಿಯ ಮಾಹಿತಿ ಉಳಿಸಲಾಗಿದೆ"
+  },
+  "Record added": {
+    "hi": "रिकॉर्ड जोड़ा गया",
+    "kn": "ದಾಖಲೆ ಸೇರಿಸಲಾಗಿದೆ"
+  },
+  "Brief approved": {
+    "hi": "विवरण मंजूर किया गया",
+    "kn": "ವಿವರ ಅನುಮೋದಿಸಲಾಗಿದೆ"
+  },
+  "Brief flagged": {
+    "hi": "विवरण पर स्पष्टीकरण माँगा गया",
+    "kn": "ವಿವರಕ್ಕೆ ಸ್ಪಷ್ಟೀಕರಣ ಕೇಳಲಾಗಿದೆ"
+  },
+  "Instructions published": {
+    "hi": "निर्देश साझा किए गए",
+    "kn": "ಸೂಚನೆಗಳನ್ನು ಪ್ರಕಟಿಸಲಾಗಿದೆ"
+  },
+  "Source excerpts · no model used": {
+    "hi": "मूल स्रोत के अंश · मॉडल इस्तेमाल नहीं हुआ",
+    "kn": "ಮೂಲದ ಭಾಗಗಳು · ಮಾದರಿ ಬಳಸಿಲ್ಲ"
+  },
+  "Synthetic records loaded. No real patient data.": {
+    "hi": "काल्पनिक रिकॉर्ड लोड किए गए। वास्तविक मरीज की जानकारी नहीं है।",
+    "kn": "ಕಾಲ್ಪನಿಕ ದಾಖಲೆಗಳನ್ನು ಲೋಡ್ ಮಾಡಲಾಗಿದೆ. ನಿಜವಾದ ರೋಗಿ ಮಾಹಿತಿ ಇಲ್ಲ."
+  },
+  "Patient-provided information; review required.": {
+    "hi": "मरीज की जानकारी; समीक्षा जरूरी।",
+    "kn": "ರೋಗಿ ನೀಡಿದ ಮಾಹಿತಿ; ಪರಿಶೀಲನೆ ಅಗತ್ಯ."
+  },
+  "Clinician-authored versions reviewed before publication.": {
+    "hi": "डॉक्टर के लिखे संस्करण साझा करने से पहले जाँचे गए।",
+    "kn": "ವೈದ್ಯರು ಬರೆದ ಆವೃತ್ತಿಗಳನ್ನು ಪ್ರಕಟಿಸುವ ಮೊದಲು ಪರಿಶೀಲಿಸಲಾಗಿದೆ."
+  },
+  "Date not provided": {
+    "hi": "तारीख नहीं दी गई",
+    "kn": "ದಿನಾಂಕ ಒದಗಿಸಲಾಗಿಲ್ಲ"
+  },
+  "Not provided": {
+    "hi": "नहीं बताया गया",
+    "kn": "ಒದಗಿಸಲಾಗಿಲ್ಲ"
+  },
+  "Undated": {
+    "hi": "तारीख नहीं है",
+    "kn": "ದಿನಾಂಕವಿಲ್ಲ"
+  },
+  "Source document": {
+    "hi": "मूल दस्तावेज",
+    "kn": "ಮೂಲ ದಾಖಲೆ"
+  },
+  "Selected source excerpts for review, not a complete record. Up to 12 documents are included; long sources may be shortened. This is not a diagnosis or treatment plan.": {
+    "hi": "समीक्षा के लिए चुने गए स्रोत अंश, पूरा रिकॉर्ड नहीं। अधिकतम 12 दस्तावेज शामिल हैं; लंबे स्रोत छोटे किए जा सकते हैं। यह निदान या उपचार योजना नहीं है।",
+    "kn": "ಪರಿಶೀಲನೆಗಾಗಿ ಆಯ್ದ ಮೂಲ ಭಾಗಗಳು, ಸಂಪೂರ್ಣ ದಾಖಲೆಯಲ್ಲ. ಗರಿಷ್ಠ 12 ದಾಖಲೆಗಳು ಸೇರಿವೆ; ಉದ್ದವಾದ ಮೂಲಗಳನ್ನು ಕಡಿಮೆ ಮಾಡಬಹುದು. ಇದು ರೋಗನಿರ್ಣಯ ಅಥವಾ ಚಿಕಿತ್ಸಾ ಯೋಜನೆಯಲ್ಲ."
+  },
+  "Profile saved.": {
+    "hi": "प्रोफ़ाइल सहेजी गई।",
+    "kn": "ಪ್ರೊಫೈಲ್ ಉಳಿಸಲಾಗಿದೆ."
+  },
+  "Record added to your care timeline.": {
+    "hi": "रिकॉर्ड आपकी समयरेखा में जोड़ा गया।",
+    "kn": "ದಾಖಲೆ ನಿಮ್ಮ ಕಾಲಕ್ರಮಕ್ಕೆ ಸೇರಿಸಲಾಗಿದೆ."
+  },
+  "Your visit information has been saved.": {
+    "hi": "आपकी मुलाकात की जानकारी सहेजी गई।",
+    "kn": "ನಿಮ್ಮ ಭೇಟಿಯ ಮಾಹಿತಿ ಉಳಿಸಲಾಗಿದೆ."
+  },
+  "Reviewed instructions are now available to the patient.": {
+    "hi": "जाँचे हुए निर्देश अब मरीज को उपलब्ध हैं।",
+    "kn": "ಪರಿಶೀಲಿಸಿದ ಸೂಚನೆಗಳು ಈಗ ರೋಗಿಗೆ ಲಭ್ಯವಿವೆ."
+  },
+  "Your source-linked visit brief is ready for review.": {
+    "hi": "स्रोतों सहित मुलाकात का विवरण समीक्षा के लिए तैयार है।",
+    "kn": "ಮೂಲಗಳೊಂದಿಗೆ ಭೇಟಿಯ ವಿವರ ಪರಿಶೀಲನೆಗೆ ಸಿದ್ಧವಾಗಿದೆ."
+  },
+  "Brief approved. Your review is visible to the patient.": {
+    "hi": "विवरण मंजूर हुआ। आपकी समीक्षा मरीज देख सकता है।",
+    "kn": "ವಿವರ ಅನುಮೋದಿಸಲಾಗಿದೆ. ನಿಮ್ಮ ಪರಿಶೀಲನೆ ರೋಗಿಗೆ ಕಾಣಿಸುತ್ತದೆ."
+  },
+  "Brief flagged for clarification.": {
+    "hi": "विवरण पर स्पष्टीकरण माँगा गया।",
+    "kn": "ವಿವರಕ್ಕೆ ಸ್ಪಷ್ಟೀಕರಣ ಕೇಳಲಾಗಿದೆ."
+  },
+  "Please choose a file smaller than 10 MB.": {
+    "hi": "10 MB से छोटी फ़ाइल चुनें।",
+    "kn": "10 MBಗಿಂತ ಚಿಕ್ಕ ಫೈಲ್ ಆಯ್ಕೆಮಾಡಿ."
+  },
+  "Choose a PDF, PNG, JPG or TXT file.": {
+    "hi": "PDF, PNG, JPG या TXT फ़ाइल चुनें।",
+    "kn": "PDF, PNG, JPG ಅಥವಾ TXT ಫೈಲ್ ಆಯ್ಕೆಮಾಡಿ."
+  },
+  "Add a review note or correction before continuing.": {
+    "hi": "आगे बढ़ने से पहले समीक्षा नोट या सुधार जोड़ें।",
+    "kn": "ಮುಂದುವರಿಯುವ ಮೊದಲು ಪರಿಶೀಲನೆ ಟಿಪ್ಪಣಿ ಅಥವಾ ತಿದ್ದುಪಡಿ ಸೇರಿಸಿ."
+  },
+  "Please sign in to continue.": {
+    "hi": "जारी रखने के लिए साइन इन करें।",
+    "kn": "ಮುಂದುವರಿಯಲು ಸೈನ್ ಇನ್ ಮಾಡಿ."
+  },
+  "This patient is not assigned to your account.": {
+    "hi": "यह मरीज आपके खाते को नहीं सौंपा गया है।",
+    "kn": "ಈ ರೋಗಿಯನ್ನು ನಿಮ್ಮ ಖಾತೆಗೆ ನಿಯೋಜಿಸಿಲ್ಲ."
+  },
+  "Clinician access required.": {
+    "hi": "डॉक्टर की पहुँच जरूरी है।",
+    "kn": "ವೈದ್ಯರ ಪ್ರವೇಶ ಅಗತ್ಯ."
+  },
+  "Too many attempts. Try again in a minute.": {
+    "hi": "बहुत अधिक प्रयास। एक मिनट बाद कोशिश करें।",
+    "kn": "ಹೆಚ್ಚು ಪ್ರಯತ್ನಗಳು. ಒಂದು ನಿಮಿಷದ ನಂತರ ಪ್ರಯತ್ನಿಸಿ."
+  },
+  "Email or password is incorrect.": {
+    "hi": "ईमेल या पासवर्ड गलत है।",
+    "kn": "ಇಮೇಲ್ ಅಥವಾ ಪಾಸ್‌ವರ್ಡ್ ತಪ್ಪಾಗಿದೆ."
+  },
+  "Please enter a name of at least two characters.": {
+    "hi": "कम से कम दो अक्षरों का नाम लिखें।",
+    "kn": "ಕನಿಷ್ಠ ಎರಡು ಅಕ್ಷರಗಳ ಹೆಸರು ನಮೂದಿಸಿ."
+  },
+  "Please describe your reason for the visit.": {
+    "hi": "मुलाकात का कारण बताएँ।",
+    "kn": "ಭೇಟಿಯ ಕಾರಣ ವಿವರಿಸಿ."
+  },
+  "Maximum file size is 10 MB.": {
+    "hi": "अधिकतम फ़ाइल आकार 10 MB है।",
+    "kn": "ಗರಿಷ್ಠ ಫೈಲ್ ಗಾತ್ರ 10 MB."
+  },
+  "Unable to read this file. Use a readable PDF (up to 20 pages), PNG, JPG or UTF-8 TXT. Scans require Tesseract.": {
+    "hi": "फ़ाइल पढ़ नहीं सके। स्पष्ट PDF (अधिकतम 20 पृष्ठ), PNG, JPG या UTF-8 TXT दें। स्कैन के लिए Tesseract चाहिए।",
+    "kn": "ಫೈಲ್ ಓದಲಾಗಲಿಲ್ಲ. ಸ್ಪಷ್ಟ PDF (ಗರಿಷ್ಠ 20 ಪುಟಗಳು), PNG, JPG ಅಥವಾ UTF-8 TXT ಬಳಸಿ. ಸ್ಕ್ಯಾನ್‌ಗೆ Tesseract ಅಗತ್ಯ."
+  },
+  "No readable text found. Try a clearer document or a text file.": {
+    "hi": "पढ़ने योग्य पाठ नहीं मिला। स्पष्ट दस्तावेज या टेक्स्ट फ़ाइल दें।",
+    "kn": "ಓದಬಹುದಾದ ಪಠ್ಯ ಸಿಗಲಿಲ್ಲ. ಸ್ಪಷ್ಟ ದಾಖಲೆ ಅಥವಾ ಪಠ್ಯ ಫೈಲ್ ಬಳಸಿ."
+  },
+  "Document text exceeds 80,000 characters. Split the document first.": {
+    "hi": "दस्तावेज में 80,000 से अधिक अक्षर हैं। पहले उसे बाँटें।",
+    "kn": "ದಾಖಲೆಯಲ್ಲಿ 80,000ಕ್ಕಿಂತ ಹೆಚ್ಚು ಅಕ್ಷರಗಳಿವೆ. ಮೊದಲು ವಿಭಜಿಸಿ."
+  },
+  "Record not found.": {
+    "hi": "रिकॉर्ड नहीं मिला।",
+    "kn": "ದಾಖಲೆ ಸಿಗಲಿಲ್ಲ."
+  },
+  "Add your concerns or a record first.": {
+    "hi": "पहले अपनी चिंताएँ या रिकॉर्ड जोड़ें।",
+    "kn": "ಮೊದಲು ನಿಮ್ಮ ಕಾಳಜಿ ಅಥವಾ ದಾಖಲೆ ಸೇರಿಸಿ."
+  },
+  "The model is unavailable or its output could not be verified. Your records are safe. Check the model connection and retry.": {
+    "hi": "मॉडल उपलब्ध नहीं या परिणाम सत्यापित नहीं हुआ। रिकॉर्ड सुरक्षित हैं। मॉडल कनेक्शन जाँचकर फिर कोशिश करें।",
+    "kn": "ಮಾದರಿ ಲಭ್ಯವಿಲ್ಲ ಅಥವಾ ಫಲಿತಾಂಶ ಪರಿಶೀಲಿಸಲಾಗಲಿಲ್ಲ. ದಾಖಲೆಗಳು ಸುರಕ್ಷಿತವಾಗಿವೆ. ಸಂಪರ್ಕ ಪರಿಶೀಲಿಸಿ ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ."
+  },
+  "The patient record changed while preparing the brief. Please generate it again.": {
+    "hi": "विवरण तैयार करते समय रिकॉर्ड बदला। कृपया फिर तैयार करें।",
+    "kn": "ವಿವರ ಸಿದ್ಧಪಡಿಸುವಾಗ ದಾಖಲೆ ಬದಲಾಗಿದೆ. ಮತ್ತೆ ಸಿದ್ಧಪಡಿಸಿ."
+  },
+  "Add a meaningful review note.": {
+    "hi": "अर्थपूर्ण समीक्षा नोट जोड़ें।",
+    "kn": "ಅರ್ಥಪೂರ್ಣ ಪರಿಶೀಲನೆ ಟಿಪ್ಪಣಿ ಸೇರಿಸಿ."
+  },
+  "Brief not found.": {
+    "hi": "विवरण नहीं मिला।",
+    "kn": "ವಿವರ ಸಿಗಲಿಲ್ಲ."
+  },
+  "This brief is outdated. Prepare a new one before reviewing.": {
+    "hi": "विवरण पुराना है। समीक्षा से पहले नया तैयार करें।",
+    "kn": "ಈ ವಿವರ ಹಳೆಯದು. ಪರಿಶೀಲಿಸುವ ಮೊದಲು ಹೊಸದು ಸಿದ್ಧಪಡಿಸಿ."
+  },
+  "Instruction versions must contain meaningful text.": {
+    "hi": "निर्देशों के संस्करणों में अर्थपूर्ण पाठ होना चाहिए।",
+    "kn": "ಸೂಚನೆಯ ಆವೃತ್ತಿಗಳಲ್ಲಿ ಅರ್ಥಪೂರ್ಣ ಪಠ್ಯ ಇರಬೇಕು."
+  },
+  "Confirm that every version preserves the original meaning.": {
+    "hi": "पुष्टि करें कि हर संस्करण में मूल अर्थ बना है।",
+    "kn": "ಪ್ರತಿ ಆವೃತ್ತಿಯಲ್ಲೂ ಮೂಲ ಅರ್ಥ ಉಳಿದಿದೆ ಎಂದು ದೃಢಪಡಿಸಿ."
+  },
+  "Add the reviewed translation or choose English.": {
+    "hi": "जाँचा हुआ अनुवाद जोड़ें या अंग्रेज़ी चुनें।",
+    "kn": "ಪರಿಶೀಲಿಸಿದ ಅನುವಾದ ಸೇರಿಸಿ ಅಥವಾ ಇಂಗ್ಲಿಷ್ ಆಯ್ಕೆಮಾಡಿ."
+  },
+  "Patient intake": {
+    "hi": "मरीज की दी गई जानकारी",
+    "kn": "ರೋಗಿ ನೀಡಿದ ಮಾಹಿತಿ"
+  },
+  "Source": {
+    "hi": "स्रोत",
+    "kn": "ಮೂಲ"
+  },
+  "patient": {
+    "hi": "मरीज",
+    "kn": "ರೋಗಿ"
+  },
+  "clinician": {
+    "hi": "डॉक्टर",
+    "kn": "ವೈದ್ಯರು"
+  },
+  "to": {
+    "hi": "की ओर",
+    "kn": "ಕಡೆಗೆ"
+  },
+  "model configured": {
+    "hi": "मॉडल कॉन्फ़िगर है",
+    "kn": "ಮಾದರಿ ಸಂರಚಿಸಲಾಗಿದೆ"
+  },
+  "Click to replace": {
+    "hi": "बदलने के लिए क्लिक करें",
+    "kn": "ಬದಲಿಸಲು ಕ್ಲಿಕ್ ಮಾಡಿ"
+  },
+  "Language": {
+    "hi": "भाषा",
+    "kn": "ಭಾಷೆ"
+  },
+  "Original clinical content stays in its source language. Ask your care team for a reviewed translation.": {
+    "hi": "मूल चिकित्सा जानकारी अपनी भाषा में रहती है। जाँचे हुए अनुवाद के लिए देखभाल टीम से पूछें।",
+    "kn": "ಮೂಲ ವೈದ್ಯಕೀಯ ಮಾಹಿತಿ ಅದರ ಭಾಷೆಯಲ್ಲೇ ಉಳಿಯುತ್ತದೆ. ಪರಿಶೀಲಿಸಿದ ಅನುವಾದಕ್ಕಾಗಿ ಆರೈಕೆ ತಂಡವನ್ನು ಕೇಳಿ."
+  },
+  "Preferred care language": {
+    "hi": "देखभाल की पसंदीदा भाषा",
+    "kn": "ಆರೈಕೆಯ ಆದ್ಯತೆಯ ಭಾಷೆ"
+  },
+  "Care languages apply to your intake and reviewed instructions. Interface languages are English, Hindi and Kannada.": {
+    "hi": "देखभाल की भाषाएँ आपकी जानकारी और समीक्षा किए गए निर्देशों के लिए हैं। इंटरफ़ेस अंग्रेज़ी, हिन्दी और कन्नड़ में है।",
+    "kn": "ಆರೈಕೆ ಭಾಷೆಗಳು ನಿಮ್ಮ ಮಾಹಿತಿ ಮತ್ತು ಪರಿಶೀಲಿಸಿದ ಸೂಚನೆಗಳಿಗೆ ಅನ್ವಯಿಸುತ್ತವೆ. ಬಳಕೆದಾರ ಇಂಟರ್ಫೇಸ್ ಇಂಗ್ಲಿಷ್, ಹಿಂದಿ ಮತ್ತು ಕನ್ನಡದಲ್ಲಿದೆ."
+  },
+  "Retry languages": {
+    "hi": "भाषाएँ फिर लोड करें",
+    "kn": "ಭಾಷೆಗಳನ್ನು ಮತ್ತೆ ಲೋಡ್ ಮಾಡಿ"
+  },
+  "International": {
+    "hi": "अंतरराष्ट्रीय",
+    "kn": "ಅಂತರರಾಷ್ಟ್ರೀಯ"
+  },
+  "South Asia · North and West": {
+    "hi": "दक्षिण एशिया · उत्तर और पश्चिम",
+    "kn": "ದಕ್ಷಿಣ ಏಷ್ಯಾ · ಉತ್ತರ ಮತ್ತು ಪಶ್ಚಿಮ"
+  },
+  "South Asia · South": {
+    "hi": "दक्षिण एशिया · दक्षिण",
+    "kn": "ದಕ್ಷಿಣ ಏಷ್ಯಾ · ದಕ್ಷಿಣ"
+  },
+  "South Asia · East": {
+    "hi": "दक्षिण एशिया · पूर्व",
+    "kn": "ದಕ್ಷಿಣ ಏಷ್ಯಾ · ಪೂರ್ವ"
+  },
+  "Middle East": {
+    "hi": "मध्य पूर्व",
+    "kn": "ಮಧ್ಯಪ್ರಾಚ್ಯ"
+  },
+  "East and Southeast Asia": {
+    "hi": "पूर्व और दक्षिण पूर्व एशिया",
+    "kn": "ಪೂರ್ವ ಮತ್ತು ಆಗ್ನೇಯ ಏಷ್ಯಾ"
+  },
+  "Europe and the Americas": {
+    "hi": "यूरोप और अमेरिका",
+    "kn": "ಯುರೋಪ್ ಮತ್ತು ಅಮೆರಿಕಗಳು"
+  },
+  "Keep the details of an appointment you have arranged. This does not book a visit with the clinic.": {
+    "hi": "तय की गई मुलाकात का विवरण रखें। इससे क्लिनिक में बुकिंग नहीं होती।",
+    "kn": "ನೀವು ನಿಗದಿಪಡಿಸಿದ ಭೇಟಿಯ ವಿವರಗಳನ್ನು ಉಳಿಸಿ. ಇದು ಕ್ಲಿನಿಕ್ ಭೇಟಿಯನ್ನು ಬುಕ್ ಮಾಡುವುದಿಲ್ಲ."
+  },
+  "Clinician": {
+    "hi": "चिकित्सक",
+    "kn": "ವೈದ್ಯರು"
+  },
+  "Specialty": {
+    "hi": "विशेषता",
+    "kn": "ವಿಶೇಷತೆ"
+  },
+  "Location": {
+    "hi": "स्थान",
+    "kn": "ಸ್ಥಳ"
+  },
+  "Date and time": {
+    "hi": "तारीख और समय",
+    "kn": "ದಿನಾಂಕ ಮತ್ತು ಸಮಯ"
+  },
+  "Times use your device timezone.": {
+    "hi": "समय आपके उपकरण के समय क्षेत्र में है।",
+    "kn": "ಸಮಯವು ನಿಮ್ಮ ಸಾಧನದ ಸಮಯ ವಲಯವನ್ನು ಬಳಸುತ್ತದೆ."
+  },
+  "Save appointment": {
+    "hi": "मुलाकात सहेजें",
+    "kn": "ಭೇಟಿಯನ್ನು ಉಳಿಸಿ"
+  },
+  "Edit appointment": {
+    "hi": "मुलाकात बदलें",
+    "kn": "ಭೇಟಿಯನ್ನು ಬದಲಿಸಿ"
+  },
+  "Add appointment": {
+    "hi": "मुलाकात जोड़ें",
+    "kn": "ಭೇಟಿಯನ್ನು ಸೇರಿಸಿ"
+  },
+  "Appointment details": {
+    "hi": "मुलाकात का विवरण",
+    "kn": "ಭೇಟಿಯ ವಿವರಗಳು"
+  },
+  "Appointment saved": {
+    "hi": "मुलाकात सहेजी गई",
+    "kn": "ಭೇಟಿಯನ್ನು ಉಳಿಸಲಾಗಿದೆ"
+  },
+  "Personal appointment details; confirm the booking with your clinic.": {
+    "hi": "मुलाकात का निजी विवरण; क्लिनिक से बुकिंग की पुष्टि करें।",
+    "kn": "ವೈಯಕ್ತಿಕ ಭೇಟಿಯ ವಿವರಗಳು; ಕ್ಲಿನಿಕ್‌ನಲ್ಲಿ ಬುಕಿಂಗ್ ದೃಢಪಡಿಸಿ."
+  },
+  "Account details, records, uploaded files and care history are stored in the configured database: MongoDB for hosted deployments or SQLite for local use. Older local uploads may remain on disk. Data stays until the operator removes it; self-service deletion is not available yet.": {
+    "hi": "खाते का विवरण, रिकॉर्ड, अपलोड और देखभाल इतिहास चुने हुए डेटाबेस में रहते हैं: होस्टिंग के लिए MongoDB या स्थानीय उपयोग के लिए SQLite। पुराने स्थानीय अपलोड डिस्क पर हो सकते हैं। संचालक के हटाने तक डेटा रहता है; स्वयं हटाने की सुविधा अभी नहीं है।",
+    "kn": "ಖಾತೆ ವಿವರಗಳು, ದಾಖಲೆಗಳು, ಅಪ್ಲೋಡ್‌ಗಳು ಮತ್ತು ಆರೈಕೆ ಇತಿಹಾಸವನ್ನು ಆಯ್ಕೆಮಾಡಿದ ಡೇಟಾಬೇಸ್‌ನಲ್ಲಿ ಉಳಿಸಲಾಗುತ್ತದೆ: ಹೋಸ್ಟಿಂಗ್‌ಗೆ MongoDB ಅಥವಾ ಸ್ಥಳೀಯ ಬಳಕೆಗೆ SQLite. ಹಳೆಯ ಸ್ಥಳೀಯ ಅಪ್ಲೋಡ್‌ಗಳು ಡಿಸ್ಕ್‌ನಲ್ಲಿ ಇರಬಹುದು. ನಿರ್ವಾಹಕರು ತೆಗೆದುಹಾಕುವವರೆಗೆ ಡೇಟಾ ಉಳಿಯುತ್ತದೆ; ಸ್ವಯಂ ಅಳಿಸುವ ಸೌಲಭ್ಯ ಇನ್ನೂ ಇಲ್ಲ."
+  },
+  "Retry connection": {
+    "hi": "कनेक्शन फिर जाँचें",
+    "kn": "ಸಂಪರ್ಕವನ್ನು ಮತ್ತೆ ಪರಿಶೀಲಿಸಿ"
+  },
+  "The request timed out. Check your connection and try again.": {
+    "hi": "अनुरोध का समय समाप्त हो गया। कनेक्शन जाँचें और फिर कोशिश करें।",
+    "kn": "ವಿನಂತಿಯ ಸಮಯ ಮೀರಿದೆ. ಸಂಪರ್ಕ ಪರಿಶೀಲಿಸಿ ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ."
+  },
+  "Cannot reach the server. Check your connection and try again.": {
+    "hi": "सर्वर से संपर्क नहीं हो पाया। कनेक्शन जाँचें और फिर कोशिश करें।",
+    "kn": "ಸರ್ವರ್ ತಲುಪಲು ಸಾಧ್ಯವಾಗುತ್ತಿಲ್ಲ. ಸಂಪರ್ಕ ಪರಿಶೀಲಿಸಿ ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ."
+  },
+  "Create your own workspace. Use fictional details in this prototype.": {
+    "hi": "अपना कार्यक्षेत्र बनाएँ। इस प्रोटोटाइप में काल्पनिक विवरण इस्तेमाल करें।",
+    "kn": "ನಿಮ್ಮ ಕಾರ್ಯಸ್ಥಳ ರಚಿಸಿ. ಈ ಮಾದರಿಯಲ್ಲಿ ಕಾಲ್ಪನಿಕ ವಿವರಗಳನ್ನು ಬಳಸಿ."
+  },
+  "Account type": {
+    "hi": "खाते का प्रकार",
+    "kn": "ಖಾತೆಯ ವಿಧ"
+  },
+  "Hospital or clinic": {
+    "hi": "अस्पताल या क्लिनिक",
+    "kn": "ಆಸ್ಪತ್ರೆ ಅಥವಾ ಕ್ಲಿನಿಕ್"
+  },
+  "Hospital or clinic name": {
+    "hi": "अस्पताल या क्लिनिक का नाम",
+    "kn": "ಆಸ್ಪತ್ರೆ ಅಥವಾ ಕ್ಲಿನಿಕ್ ಹೆಸರು"
+  },
+  "Use at least 10 characters.": {
+    "hi": "कम से कम 10 अक्षर इस्तेमाल करें।",
+    "kn": "ಕನಿಷ್ಠ 10 ಅಕ್ಷರಗಳನ್ನು ಬಳಸಿ."
+  },
+  "Hospital invitation code (optional)": {
+    "hi": "अस्पताल आमंत्रण कोड (वैकल्पिक)",
+    "kn": "ಆಸ್ಪತ್ರೆ ಆಹ್ವಾನ ಕೋಡ್ (ಐಚ್ಛಿಕ)"
+  },
+  "I will use synthetic information only. I understand this is a prototype.": {
+    "hi": "मैं केवल काल्पनिक जानकारी इस्तेमाल करूँगा। मैं समझता हूँ कि यह एक प्रोटोटाइप है।",
+    "kn": "ನಾನು ಕಾಲ್ಪನಿಕ ಮಾಹಿತಿಯನ್ನು ಮಾತ್ರ ಬಳಸುತ್ತೇನೆ. ಇದು ಮಾದರಿ ಎಂದು ನನಗೆ ತಿಳಿದಿದೆ."
+  },
+  "Create account": {
+    "hi": "खाता बनाएँ",
+    "kn": "ಖಾತೆ ರಚಿಸಿ"
+  },
+  "Create an invitation for a patient email. The patient must accept it before their workspace appears here. Invitations expire after 24 hours.": {
+    "hi": "मरीज़ के ईमेल के लिए आमंत्रण बनाएँ। कार्यक्षेत्र यहाँ दिखने से पहले मरीज़ को इसे स्वीकार करना होगा। आमंत्रण 24 घंटे में समाप्त हो जाता है।",
+    "kn": "ರೋಗಿಯ ಇಮೇಲ್‌ಗೆ ಆಹ್ವಾನ ರಚಿಸಿ. ಅವರ ಕಾರ್ಯಸ್ಥಳ ಇಲ್ಲಿ ಕಾಣಲು ರೋಗಿಯು ಅದನ್ನು ಸ್ವೀಕರಿಸಬೇಕು. ಆಹ್ವಾನವು 24 ಗಂಟೆಗಳ ನಂತರ ಮುಕ್ತಾಯಗೊಳ್ಳುತ್ತದೆ."
+  },
+  "Patient email": {
+    "hi": "मरीज़ का ईमेल",
+    "kn": "ರೋಗಿಯ ಇಮೇಲ್"
+  },
+  "Create invitation": {
+    "hi": "आमंत्रण बनाएँ",
+    "kn": "ಆಹ್ವಾನ ರಚಿಸಿ"
+  },
+  "Share this link privately with the patient": {
+    "hi": "यह लिंक मरीज़ के साथ निजी रूप से साझा करें",
+    "kn": "ಈ ಲಿಂಕ್ ಅನ್ನು ರೋಗಿಯೊಂದಿಗೆ ಖಾಸಗಿಯಾಗಿ ಹಂಚಿಕೊಳ್ಳಿ"
+  },
+  "Select and copy the link manually.": {
+    "hi": "लिंक चुनें और खुद कॉपी करें।",
+    "kn": "ಲಿಂಕ್ ಆಯ್ಕೆಮಾಡಿ ಕೈಯಾರೆ ನಕಲಿಸಿ."
+  },
+  "Copied": {
+    "hi": "कॉपी किया गया",
+    "kn": "ನಕಲಿಸಲಾಗಿದೆ"
+  },
+  "Copy link": {
+    "hi": "लिंक कॉपी करें",
+    "kn": "ಲಿಂಕ್ ನಕಲಿಸಿ"
+  },
+  "Join your hospital workspace": {
+    "hi": "अपने अस्पताल के कार्यक्षेत्र से जुड़ें",
+    "kn": "ನಿಮ್ಮ ಆಸ್ಪತ್ರೆಯ ಕಾರ್ಯಸ್ಥಳಕ್ಕೆ ಸೇರಿ"
+  },
+  "Use the invitation code from your care team. It must match your account email.": {
+    "hi": "अपनी देखभाल टीम का आमंत्रण कोड इस्तेमाल करें। यह आपके खाते के ईमेल से मेल खाना चाहिए।",
+    "kn": "ನಿಮ್ಮ ಆರೈಕೆ ತಂಡದ ಆಹ್ವಾನ ಕೋಡ್ ಬಳಸಿ. ಅದು ನಿಮ್ಮ ಖಾತೆಯ ಇಮೇಲ್‌ಗೆ ಹೊಂದಿಕೆಯಾಗಬೇಕು."
+  },
+  "Invitation code": {
+    "hi": "आमंत्रण कोड",
+    "kn": "ಆಹ್ವಾನ ಕೋಡ್"
+  },
+  "Accept invitation": {
+    "hi": "आमंत्रण स्वीकार करें",
+    "kn": "ಆಹ್ವಾನ ಸ್ವೀಕರಿಸಿ"
+  },
+  "Hospital joined": {
+    "hi": "अस्पताल से जुड़ गए",
+    "kn": "ಆಸ್ಪತ್ರೆಗೆ ಸೇರಲಾಗಿದೆ"
+  },
+  "Invite a patient": {
+    "hi": "मरीज़ को आमंत्रित करें",
+    "kn": "ರೋಗಿಯನ್ನು ಆಹ್ವಾನಿಸಿ"
+  },
+  "Back to sign in": {
+    "hi": "साइन इन पर वापस जाएँ",
+    "kn": "ಸೈನ್ ಇನ್‌ಗೆ ಹಿಂತಿರುಗಿ"
+  },
+  "Go back": {
+    "hi": "पीछे जाएँ",
+    "kn": "ಹಿಂದಕ್ಕೆ ಹೋಗಿ"
+  },
+  "Go forward": {
+    "hi": "आगे जाएँ",
+    "kn": "ಮುಂದಕ್ಕೆ ಹೋಗಿ"
+  },
+  "Use fictional details in this prototype.": {
+    "hi": "इस प्रोटोटाइप में काल्पनिक विवरण इस्तेमाल करें।",
+    "kn": "ಈ ಮಾದರಿಯಲ್ಲಿ ಕಾಲ್ಪನಿಕ ವಿವರಗಳನ್ನು ಬಳಸಿ."
+  },
+  "Show password": {
+    "hi": "पासवर्ड दिखाएँ",
+    "kn": "ಪಾಸ್‌ವರ್ಡ್ ತೋರಿಸಿ"
+  },
+  "Hide password": {
+    "hi": "पासवर्ड छिपाएँ",
+    "kn": "ಪಾಸ್‌ವರ್ಡ್ ಮರೆಮಾಡಿ"
+  },
+  "Password and security": {
+    "hi": "पासवर्ड और सुरक्षा",
+    "kn": "ಪಾಸ್‌ವರ್ಡ್ ಮತ್ತು ಸುರಕ್ಷತೆ"
+  },
+  "Shared demo passwords cannot be changed. Create your own account.": {
+    "hi": "साझा डेमो का पासवर्ड नहीं बदल सकते। अपना खाता बनाएँ।",
+    "kn": "ಹಂಚಿದ ಡೆಮೋ ಪಾಸ್‌ವರ್ಡ್ ಬದಲಾಯಿಸಲಾಗುವುದಿಲ್ಲ. ನಿಮ್ಮ ಸ್ವಂತ ಖಾತೆ ರಚಿಸಿ."
+  },
+  "Current password": {
+    "hi": "वर्तमान पासवर्ड",
+    "kn": "ಪ್ರಸ್ತುತ ಪಾಸ್‌ವರ್ಡ್"
+  },
+  "New password": {
+    "hi": "नया पासवर्ड",
+    "kn": "ಹೊಸ ಪಾಸ್‌ವರ್ಡ್"
+  },
+  "Confirm new password": {
+    "hi": "नए पासवर्ड की पुष्टि करें",
+    "kn": "ಹೊಸ ಪಾಸ್‌ವರ್ಡ್ ದೃಢೀಕರಿಸಿ"
+  },
+  "Use at least 15 characters.": {
+    "hi": "कम से कम 15 अक्षर इस्तेमाल करें।",
+    "kn": "ಕನಿಷ್ಠ 15 ಅಕ್ಷರಗಳನ್ನು ಬಳಸಿ."
+  },
+  "Use at least 15 characters. Other sessions will be signed out.": {
+    "hi": "कम से कम 15 अक्षर इस्तेमाल करें। अन्य सत्रों से साइन आउट हो जाएगा।",
+    "kn": "ಕನಿಷ್ಠ 15 ಅಕ್ಷರಗಳನ್ನು ಬಳಸಿ. ಇತರ ಸೆಷನ್‌ಗಳಿಂದ ಸೈನ್ ಔಟ್ ಆಗುತ್ತದೆ."
+  },
+  "The new passwords do not match.": {
+    "hi": "नए पासवर्ड मेल नहीं खाते।",
+    "kn": "ಹೊಸ ಪಾಸ್‌ವರ್ಡ್‌ಗಳು ಹೊಂದಿಕೆಯಾಗುತ್ತಿಲ್ಲ."
+  },
+  "Password updated. Other sessions were signed out.": {
+    "hi": "पासवर्ड बदल गया। अन्य सत्रों से साइन आउट कर दिया गया।",
+    "kn": "ಪಾಸ್‌ವರ್ಡ್ ಬದಲಾಯಿಸಲಾಗಿದೆ. ಇತರ ಸೆಷನ್‌ಗಳಿಂದ ಸೈನ್ ಔಟ್ ಮಾಡಲಾಗಿದೆ."
+  },
+  "Change password": {
+    "hi": "पासवर्ड बदलें",
+    "kn": "ಪಾಸ್‌ವರ್ಡ್ ಬದಲಾಯಿಸಿ"
+  },
+  "Sign out all devices": {
+    "hi": "सभी डिवाइस से साइन आउट करें",
+    "kn": "ಎಲ್ಲ ಸಾಧನಗಳಿಂದ ಸೈನ್ ಔಟ್ ಮಾಡಿ"
+  },
+  "Current password is incorrect.": {
+    "hi": "वर्तमान पासवर्ड गलत है।",
+    "kn": "ಪ್ರಸ್ತುತ ಪಾಸ್‌ವರ್ಡ್ ತಪ್ಪಾಗಿದೆ."
+  },
+  "Choose a different new password.": {
+    "hi": "अलग नया पासवर्ड चुनें।",
+    "kn": "ಬೇರೆ ಹೊಸ ಪಾಸ್‌ವರ್ಡ್ ಆಯ್ಕೆಮಾಡಿ."
+  },
+  "Sign out": {
+    "hi": "साइन आउट करें",
+    "kn": "ಸೈನ್ ಔಟ್ ಮಾಡಿ"
+  },
+  "Use at least 8 characters.": {
+    "hi": "कम से कम 8 अक्षर इस्तेमाल करें।",
+    "kn": "ಕನಿಷ್ಠ 8 ಅಕ್ಷರಗಳನ್ನು ಬಳಸಿ."
+  },
+  "Use at least 8 characters. Other sessions will be signed out.": {
+    "hi": "कम से कम 8 अक्षर इस्तेमाल करें। अन्य सत्रों से साइन आउट हो जाएगा।",
+    "kn": "ಕನಿಷ್ಠ 8 ಅಕ್ಷರಗಳನ್ನು ಬಳಸಿ. ಇತರ ಸೆಷನ್‌ಗಳಿಂದ ಸೈನ್ ಔಟ್ ಆಗುತ್ತದೆ."
+  },
+  "Refresh patients": {
+    "hi": "मरीज़ों की सूची ताज़ा करें",
+    "kn": "ರೋಗಿಗಳ ಪಟ್ಟಿಯನ್ನು ನವೀಕರಿಸಿ"
+  },
+  "This email cannot accept a patient invitation. Use an unassigned patient account.": {
+    "hi": "यह ईमेल मरीज़ का निमंत्रण स्वीकार नहीं कर सकता। अस्पताल से न जुड़े मरीज़ के खाते का उपयोग करें।",
+    "kn": "ಈ ಇಮೇಲ್ ರೋಗಿಯ ಆಹ್ವಾನ ಸ್ವೀಕರಿಸಲು ಸಾಧ್ಯವಿಲ್ಲ. ಆಸ್ಪತ್ರೆಯೊಂದಿಗೆ ಸಂಪರ್ಕಿಸದ ರೋಗಿಯ ಖಾತೆ ಬಳಸಿ."
+  },
+  "HealthBridge": {
+    "hi": "HealthBridge",
+    "kn": "HealthBridge"
+  },
+  "records included": {
+    "hi": "रिकॉर्ड शामिल",
+    "kn": "ದಾಖಲೆಗಳನ್ನು ಸೇರಿಸಲಾಗಿದೆ"
+  },
+  "excluded due to limit": {
+    "hi": "सीमा के कारण बाहर रखा गया",
+    "kn": "ಮಿತಿಯ ಕಾರಣ ಹೊರಗಿಡಲಾಗಿದೆ"
+  },
+  "Items requiring clinician confirmation": {
+    "hi": "चिकित्सक द्वारा पुष्टि की आवश्यकता वाले बिंदु",
+    "kn": "ವೈದ್ಯರ ದೃಢೀಕರಣದ ಅಗತ್ಯವಿರುವ ಅಂಶಗಳು"
+  },
+  "Statements differ": {
+    "hi": "कथनों में भिन्नता है",
+    "kn": "ಹೇಳಿಕೆಗಳಲ್ಲಿ ವ್ಯತ್ಯಾಸವಿದೆ"
+  },
+  "Extraction warning": {
+    "hi": "निष्कर्षण चेतावनी",
+    "kn": "ಹೊರತೆಗೆಯುವಿಕೆ ಎಚ್ಚರಿಕೆ"
+  },
+  "Information needed": {
+    "hi": "जानकारी आवश्यक",
+    "kn": "ಮಾಹಿತಿ ಅಗತ್ಯವಿದೆ"
+  },
+  "View source": {
+    "hi": "स्रोत देखें",
+    "kn": "ಮೂಲವನ್ನು ವೀಕ್ಷಿಸಿ"
+  },
+  "Reason for visit & questions": {
+    "hi": "भेंट का कारण और प्रश्न",
+    "kn": "ಭೇಟಿಯ ಕಾರಣ ಮತ್ತು ಪ್ರಶ್ನೆಗಳು"
+  },
+  "Patient-reported medications & allergies": {
+    "hi": "मरीज़ द्वारा बताई गई दवाएँ और एलर्जी",
+    "kn": "ರೋಗಿ ವರದಿ ಮಾಡಿದ ಔಷಧಿಗಳು ಮತ್ತು ಅಲರ್ಜಿಗಳು"
+  },
+  "Recorded medical history & findings": {
+    "hi": "दर्ज चिकित्सा इतिहास और निष्कर्ष",
+    "kn": "ದಾಖಲಾದ ವೈದ್ಯಕೀಯ ಇತಿಹಾಸ ಮತ್ತು ಸಂಶೋಧನೆಗಳು"
+  },
+  "Information to confirm": {
+    "hi": "पुष्टि करने योग्य जानकारी",
+    "kn": "ದೃಢೀಕರಿಸಬೇಕಾದ ಮಾಹಿತಿ"
+  },
+  "Clinician confirmed": {
+    "hi": "चिकित्सक द्वारा पुष्ट",
+    "kn": "ವೈದ್ಯರು ದೃಢಪಡಿಸಿದ್ದಾರೆ"
+  },
+  "Document recorded": {
+    "hi": "दस्तावेज़ में दर्ज",
+    "kn": "ದಾಖಲೆಯಲ್ಲಿ ನಮೂದಿಸಲಾಗಿದೆ"
+  },
+  "Page": {
+    "hi": "पृष्ठ",
+    "kn": "ಪುಟ"
+  },
+  "Clarifications": {
+    "hi": "स्पष्टीकरण",
+    "kn": "ಸ್ಪಷ್ಟೀಕರಣಗಳು"
+  },
+  "Open clarification": {
+    "hi": "खुला स्पष्टीकरण",
+    "kn": "ತೆರೆದ ಸ್ಪಷ್ಟೀಕರಣ"
+  },
+  "Resolved": {
+    "hi": "हल किया गया",
+    "kn": "ಪರಿಹರಿಸಲಾಗಿದೆ"
+  },
+  "Version": {
+    "hi": "संस्करण",
+    "kn": "ಆವೃತ್ತಿ"
+  },
+  "Withdrawn": {
+    "hi": "वापस लिया गया",
+    "kn": "ಹಿಂಪಡೆಯಲಾಗಿದೆ"
+  },
+  "Withdrawn by clinician": {
+    "hi": "चिकित्सक द्वारा वापस लिया गया",
+    "kn": "ವೈದ್ಯರಿಂದ ಹಿಂಪಡೆಯಲಾಗಿದೆ"
+  },
+  "Superseded by newer version": {
+    "hi": "नए संस्करण द्वारा प्रतिस्थापित",
+    "kn": "ಹೊಸ ಆವೃತ್ತಿಯಿಂದ ಬದಲಾಯಿಸಲಾಗಿದೆ"
+  },
+  "Clinician override note": {
+    "hi": "चिकित्सक अधिभावी टिप्पणी",
+    "kn": "ವೈದ್ಯರ ಓವರ್‌ರೈಡ್ ಟಿಪ್ಪಣಿ"
+  },
+  "Acknowledged by patient": {
+    "hi": "मरीज़ द्वारा स्वीकार किया गया",
+    "kn": "ರೋಗಿಯಿಂದ ಸ್ವೀಕರಿಸಲಾಗಿದೆ"
+  },
+  "Patient requested clarification": {
+    "hi": "मरीज़ ने स्पष्टीकरण का अनुरोध किया",
+    "kn": "ರೋಗಿ ಸ್ಪಷ್ಟೀಕರಣವನ್ನು ಕೋರಿದ್ದಾರೆ"
+  },
+  "I understand these instructions": {
+    "hi": "मैं इन निर्देशों को समझता हूँ",
+    "kn": "ನಾನು ಈ ಸೂಚನೆಗಳನ್ನು ಅರ್ಥಮಾಡಿಕೊಂಡಿದ್ದೇನೆ"
+  },
+  "I need clarification": {
+    "hi": "मुझे स्पष्टीकरण चाहिए",
+    "kn": "ನನಗೆ ಸ್ಪಷ್ಟೀಕರಣ ಬೇಕು"
+  },
+  "Acknowledgement confirms receipt, not medical comprehension.": {
+    "hi": "स्वीकृति केवल प्राप्ति की पुष्टि करती है, चिकित्सा समझ का प्रमाण नहीं।",
+    "kn": "ಸ್ವೀಕೃತಿಯು ತಲುಪಿರುವುದನ್ನು ಮಾತ್ರ ದೃಢೀಕರಿಸುತ್ತದೆ, ವೈದ್ಯಕೀಯ ತಿಳುವಳಿಕೆಯ ಪುರಾವೆಯಲ್ಲ."
+  },
+  "Withdraw": {
+    "hi": "वापस लें",
+    "kn": "ಹಿಂಪಡೆಯಿರಿ"
+  },
+  "Resolved by": {
+    "hi": "द्वारा हल किया गया",
+    "kn": "ಇವರಿಂದ ಪರಿಹರಿಸಲಾಗಿದೆ"
+  },
+  "Write a response…": {
+    "hi": "प्रतिक्रिया लिखें…",
+    "kn": "ಪ್ರತಿಕ್ರಿಯೆಯನ್ನು ಬರೆಯಿರಿ…"
+  },
+  "Reply": {
+    "hi": "उत्तर दें",
+    "kn": "ಪ್ರತ್ಯುತ್ತರ"
+  },
+  "Resolve": {
+    "hi": "समाधान करें",
+    "kn": "ಪರಿಹರಿಸಿ"
+  },
+  "Ask clarification": {
+    "hi": "स्पष्टीकरण पूछें",
+    "kn": "ಸ್ಪಷ್ಟೀಕರಣವನ್ನು ಕೇಳಿ"
+  },
+  "No clarification questions requested yet.": {
+    "hi": "अभी तक कोई स्पष्टीकरण प्रश्न नहीं पूछा गया है।",
+    "kn": "ಇನ್ನೂ ಯಾವುದೇ ಸ್ಪಷ್ಟೀಕರಣ ಪ್ರಶ್ನೆಗಳನ್ನು ಕೇಳಲಾಗಿಲ್ಲ."
+  },
+  "Withdraw record": {
+    "hi": "रिकॉर्ड वापस लें",
+    "kn": "ದಾಖಲೆಯನ್ನು ಹಿಂಪಡೆಯಿರಿ"
+  },
+  "Withdraw this record? Any visit brief referencing this record will be marked outdated.": {
+    "hi": "क्या इस रिकॉर्ड को वापस लेना है? इस रिकॉर्ड का संदर्भ देने वाला कोई भी संक्षिप्त विवरण पुराना चिह्नित किया जाएगा।",
+    "kn": "ಈ ದಾಖಲೆಯನ್ನು ಹಿಂಪಡೆಯಬೇಕೆ? ಈ ದಾಖಲೆಯನ್ನು ಉಲ್ಲೇಖಿಸುವ ಯಾವುದೇ ಭೇಟಿ ವಿವರಣೆಯನ್ನು ಹಳೆಯದು ಎಂದು ಗುರುತಿಸಲಾಗುತ್ತದೆ."
+  },
+  "Export your data": {
+    "hi": "अपना डेटा निर्यात करें",
+    "kn": "ನಿಮ್ಮ ಡೇಟಾವನ್ನು ರಫ್ತು ಮಾಡಿ"
+  },
+  "Download an authentic structured copy of your care history, intake, and instructions for your records.": {
+    "hi": "अपने रिकॉर्ड के लिए अपने देखभाल इतिहास, इनटेक और निर्देशों की एक प्रामाणिक संरचित प्रति डाउनलोड करें।",
+    "kn": "ನಿಮ್ಮ ದಾಖಲೆಗಳಿಗಾಗಿ ನಿಮ್ಮ ಆರೈಕೆ ಇತಿಹಾಸ, ಇಂಟೇಕ್ ಮತ್ತು ಸೂಚನೆಗಳ ಅಧಿಕೃತ ರಚನಾತ್ಮಕ ಪ್ರತಿಯನ್ನು ಡೌನ್‌ಲೋಡ್ ಮಾಡಿ."
+  },
+  "Export my health summary (JSON)": {
+    "hi": "मेरा स्वास्थ्य सारांश निर्यात करें (JSON)",
+    "kn": "ನನ್ನ ಆರೋಗ್ಯ ಸಾರಾಂಶವನ್ನು ರಫ್ತು ಮಾಡಿ (JSON)"
+  },
+  "New version": {
+    "hi": "नया संस्करण",
+    "kn": "ಹೊಸ ಆವೃತ್ತಿ"
+  },
+  "Please provide a reason for withdrawal": {
+    "hi": "कृपया वापस लेने का कारण बताएं",
+    "kn": "ದಯವಿಟ್ಟು ಹಿಂಪಡೆಯಲು ಕಾರಣವನ್ನು ಒದಗಿಸಿ"
+  },
+  "Updating instruction to version": {
+    "hi": "निर्देश को संस्करण में अपडेट किया जा रहा है",
+    "kn": "ಸೂಚನೆಯನ್ನು ಆವೃತ್ತಿಗೆ ನವೀಕರಿಸಲಾಗುತ್ತಿದೆ"
+  },
+  "Clinical override reason (optional)": {
+    "hi": "चिकित्सीय अधिभावी कारण (वैकल्पिक)",
+    "kn": "ವೈದ್ಯಕೀಯ ಓವರ್‌ರೈಡ್ ಕಾರಣ (ಐಚ್ಛಿಕ)"
+  },
+  "Superseded": {
+    "hi": "प्रतिस्थापित",
+    "kn": "ಬದಲಾಯಿಸಲಾಗಿದೆ"
+  },
+  "Published": {
+    "hi": "प्रकाशित",
+    "kn": "ಪ್ರಕಟಿಸಲಾಗಿದೆ"
+  },
+  "Draft": {
+    "hi": "प्रारूप",
+    "kn": "ಕರಡು"
+  },
+  "Clarification regarding:": {
+    "hi": "के संबंध में स्पष्टीकरण:",
+    "kn": "ಕುರಿತು ಸ್ಪಷ್ಟೀಕರಣ:"
+  },
+  "Cancel": {
+    "hi": "रद्द करें",
+    "kn": "ರದ್ದುಮಾಡಿ"
+  },
+  "Resolution reason": {
+    "hi": "समाधान का कारण",
+    "kn": "ಪರಿಹಾರದ ಕಾರಣ"
+  }
+}

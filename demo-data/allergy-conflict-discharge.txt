@@ -1,0 +1,19 @@
+SYNTHETIC DEMO DATA — NOT A REAL PATIENT RECORD
+Date: 2026-09-30
+Provider: City General Hospital
+Inpatient Discharge Summary
+Attending Physician: Dr. K. Narayan
+
+Hospital Course and Final Review:
+Patient admitted for observation following acute exhaustion and dehydration.
+IV rehydration therapy administered over 24 hours with complete symptom resolution.
+
+Recorded Allergy Status:
+Allergies: No known drug allergies (NKDA) recorded on hospital chart.
+
+Medication Reconciliation:
+Discharge medications: Oral electrolyte rehydration solution as needed.
+
+Clinical Instructions:
+Follow up with primary care clinician in two weeks.
+Confirm all reported sensitivities and previous medication histories during next visit.

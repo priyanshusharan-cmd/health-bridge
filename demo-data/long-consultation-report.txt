@@ -1,0 +1,27 @@
+SYNTHETIC DEMO DATA — NOT A REAL PATIENT RECORD
+Date: 2026-10-08
+Provider: Central Specialty Clinic
+Comprehensive Consultation Report
+Patient: Synthetic Demo Case
+Attending Clinician: Dr. R. Verma
+
+Reason for Consultation:
+Patient presented with recurrent episodic lethargy and fatigue over the preceding month.
+Previous laboratory investigations performed at external diagnostic centers were reviewed.
+
+Clinical History and Physical Assessment:
+Cardiovascular examination revealed regular rate and rhythm with normal heart sounds.
+Chest examination revealed clear bilateral vesicular breath sounds. No wheezing or crackles.
+Abdominal assessment showed soft, non-tender abdomen without organomegaly.
+
+Medications:
+Current prescribed medications: Not recorded in this clinical consultation note.
+
+Allergy Status:
+No adverse drug reactions or allergies reported during this specific consultation visit.
+
+Plan and Recommendations:
+1. Maintain regular sleep hygiene and hydration.
+2. Attend scheduled follow-up consultation with primary physician.
+3. Bring all prior physical copies of diagnostic panels and clinical notes.
+Late document note: Patient advised to avoid intense strenuous activity prior to repeat metabolic panel.
