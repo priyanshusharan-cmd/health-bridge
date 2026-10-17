@@ -9,6 +9,7 @@ from fastapi import APIRouter, Depends, HTTPException, Request, Response
 from pydantic import BaseModel, Field, field_validator
 from pymongo.errors import DuplicateKeyError
 from . import db
+from .languages import CODES
 from .main import current_user, public, clinician, issue_session, attempts
 router = APIRouter()
 
@@ -24,11 +25,19 @@ class Email(BaseModel):
         return value
 
 class Registration(Email):
+    specialty: str = Field(default='',max_length=120)
     name: str = Field(min_length=2,max_length=100)
     password: str = Field(min_length=8,max_length=200)
     account_type: Literal['patient','hospital']
     hospital_name: str = Field(default='',max_length=160)
-    language: Literal['en','hi','kn'] = 'en'
+    language: str = 'en'
+
+    @field_validator('language')
+    @classmethod
+    def supported_language(cls, value):
+        if value not in CODES:
+            raise ValueError('Choose a supported language.')
+        return value
     invitation: str = Field(default='',max_length=200)
 
     @field_validator('name')
@@ -40,9 +49,9 @@ class Registration(Email):
 class InvitationCode(BaseModel):
     invitation: str = Field(min_length=20,max_length=200)
 
-def accept(con, token, email, patient_id):
+def accept(con, token, email, patient_id, hashed=False):
     token=token.strip()
-    invitation=con.one('invitations',{'token':hashlib.sha256(token.encode()).hexdigest()})
+    invitation=con.one('invitations',{'token':token if hashed else hashlib.sha256(token.encode()).hexdigest()})
     if not invitation or invitation['expires'] <= time.time() or invitation['accepted_by'] or invitation['email'] != email:
         raise HTTPException(422,'This invitation is invalid, expired, already used, or belongs to another email address.')
     if con.one('memberships',{'user_id':patient_id}):
@@ -66,7 +75,7 @@ def register(body: Registration, request: Request, response: Response):
     try:
         with db.connection() as con:
             if con.one('users',{'email':body.email}): raise HTTPException(409,'An account with this email already exists. Please sign in.')
-            con.insert('users',dict(id=uid,name=body.name,email=body.email,password=db.password_hash(body.password),role='clinician' if body.account_type=='hospital' else 'patient',language=body.language,age=None,initials=''.join(word[0] for word in body.name.split()[:2]).upper()))
+            con.insert('users',dict(id=uid,name=body.name,email=body.email,password=db.password_hash(body.password),role='clinician' if body.account_type=='hospital' else 'patient',language=body.language,specialty=body.specialty.strip() if body.account_type=='hospital' else '',age=None,initials=''.join(word[0] for word in body.name.split()[:2]).upper()))
             if body.account_type=='hospital':
                 oid=secrets.token_hex(12)
                 con.insert('organizations',dict(id=oid,name=body.hospital_name.strip(),created_at=db.now()))
@@ -93,7 +102,33 @@ def invite(body:Email,user=Depends(current_user)):
             raise HTTPException(409,'This email cannot accept a patient invitation. Use an unassigned patient account.')
         expires=time.time()+86400
         con.insert('invitations',dict(id=secrets.token_hex(12),token=hashlib.sha256(token.encode()).hexdigest(),organization_id=membership['organization_id'],clinician_id=user['id'],email=body.email,expires=expires,accepted_by=None))
-    return {'invitation':token,'email':body.email,'expires':expires}
+    return {'invitation':token,'registered':bool(existing),'email':body.email,'expires':expires}
+
+@router.get('/api/patient/invitations')
+def pending_invitations(user=Depends(current_user)):
+    if user['role'] != 'patient':
+        raise HTTPException(403, 'Only patient accounts can view these invitations.')
+    with db.connection() as con:
+        if con.one('memberships', {'user_id': user['id']}):
+            return []
+        rows = con.find('invitations', {'email': user['email'], 'expires': {'$gt': time.time()}, 'accepted_by': None})
+        result = []
+        for row in rows:
+            doctor = con.one('users', {'id': row['clinician_id']}) or {}
+            hospital = con.one('organizations', {'id': row['organization_id']}) or {}
+            result.append({'id': row['id'], 'hospital': hospital.get('name', 'Your care team'), 'doctor': doctor.get('name', 'Your doctor'), 'specialty': doctor.get('specialty', '')})
+        return result
+
+@router.post('/api/patient/invitations/{invitation_id}/accept')
+def accept_pending(invitation_id: str, user=Depends(current_user)):
+    if user['role'] != 'patient':
+        raise HTTPException(403, 'Only patient accounts can accept invitations.')
+    with db.connection() as con:
+        invitation = con.one('invitations', {'id': invitation_id, 'email': user['email']})
+        if not invitation:
+            raise HTTPException(404, 'Invitation not found.')
+        accept(con, invitation['token'], user['email'], user['id'], hashed=True)
+    return public(user)
 
 @router.post('/api/hospital/join')
 def join(body:InvitationCode,user=Depends(current_user)):

@@ -9,6 +9,8 @@ import {
   Check,
   CheckCircle2,
   ChevronRight,
+  ChevronsDown,
+  ChevronsUp,
   ClipboardCheck,
   Clock3,
   FileText,
@@ -19,15 +21,16 @@ import {
   MessageSquare,
   Plus,
   Search,
+  RefreshCw,
   ShieldCheck,
   Sparkles,
   Upload,
   UserRound,
 } from "lucide-react";
-import type { User, Workspace, RecordItem, Instruction } from "./types";
+import type { User, Workspace, RecordItem, Instruction, Intake, Clarification } from "./types";
 import { translations } from "./i18n";
 import { Badge, useDate, Empty, SectionTitle, Spinner } from "./ui";
-import { post } from "./api";
+import { api, post } from "./api";
 type T = typeof translations.en;
 type Base = { w: Workspace; t: T };
 const kindClass = (kind: string) =>
@@ -213,15 +216,15 @@ export function Overview({
             <div className="journey-steps">
               {[
                 {
-                  label: "Share your story",
+                  label: clinician ? "Review patient intake" : "Share your story",
                   detail: w.intake
-                    ? "Your intake is saved"
-                    : "Tell us what’s on your mind",
+                    ? (clinician ? "Patient intake available" : "Your intake is saved")
+                    : (clinician ? "No patient intake recorded" : "Tell us what’s on your mind"),
                   done: !!w.intake,
                   action: onIntake,
                 },
                 {
-                  label: "Bring it together",
+                  label: clinician ? "Review source records" : "Bring it together",
                   detail: `${w.records.length} records in one place`,
                   done: w.records.length > 0,
                   action: () => navigate("records"),
@@ -229,17 +232,17 @@ export function Overview({
                 {
                   label: "Prepare & review",
                   detail: approved
-                    ? "Reviewed by your clinician"
+                    ? (clinician ? "Clinical review completed" : "Reviewed by your clinician")
                     : w.brief
                       ? "Brief ready for review"
-                      : "Your next step",
+                      : (clinician ? "Prepare visit brief" : "Your next step"),
                   done: approved,
                   action: () => navigate("prep"),
                 },
                 {
-                  label: "Know what’s next",
+                  label: clinician ? "Publish care instructions" : "Know what’s next",
                   detail: w.instructions.length
-                    ? "Your care team has shared updates"
+                    ? (clinician ? "Care instructions published" : "Your care team has shared updates")
                     : "Clear, reviewed instructions",
                   done: w.instructions.length > 0,
                   action: () => navigate("instructions"),
@@ -324,23 +327,21 @@ export function Overview({
               <Empty
                 title={tr("No upcoming visit")}
                 description={tr(
-                  "Your next scheduled appointment will appear here.",
+                  clinician ? "The patient’s next scheduled appointment will appear here." : "Your next scheduled appointment will appear here.",
                 )}
               />
             )}
             <button className="text-button appointment-edit" onClick={onAppointment}>{tr(next ? "Edit appointment" : "Add appointment")}</button>
           </section>
-          <section className="questions-card">
-            <span className="question-icon">
-              <MessageSquare size={21} />
-            </span>
-            <h3>{tr("Your questions matter.")}</h3>
-            <p>
-              {tr("A small note now can make a big difference in the room.")}
-            </p>
-            <button className="text-button" onClick={onIntake}>
-              {tr(w.intake ? "Review my questions" : "Add my questions")}
-              <ArrowRight size={15} />
+          <section className="panel appointment-card questions-card">
+            <span className="eyebrow"><MessageSquare size={15} />{tr(clinician ? "Patient questions" : "Your questions")}</span>
+            <div className="empty">
+              <span className="empty-icon"><MessageSquare size={28} /></span>
+              <h3>{tr(clinician ? "Review patient questions" : "Your questions matter.")}</h3>
+              <p>{tr(clinician ? "Review the patient’s concerns and reply before or after the visit." : "Ask your doctor a question and view their reply.")}</p>
+            </div>
+            <button className="text-button appointment-edit" onClick={() => navigate("prep")}>
+              {tr(clinician ? "View & reply" : "Ask a question")}
             </button>
           </section>
           <section className="trust-card">
@@ -351,7 +352,7 @@ export function Overview({
               <h4>{tr("You’re in the loop.")}</h4>
               <p>
                 {tr(
-                  "Every brief keeps its sources. Every care decision stays with your clinician.",
+                  clinician ? "Review source evidence before approving a brief or publishing care instructions." : "Every brief keeps its sources. Every care decision stays with your clinician.",
                 )}
               </p>
             </div>
@@ -462,12 +463,7 @@ export function Records({
           )}
         />
       )}
-      <div className="info-strip">
-        <ShieldCheck size={17} />{" "}
-        {tr(
-          "Records are source information, not AI medical advice. Open any record to see its original text.",
-        )}
-      </div>
+
     </>
   );
 }
@@ -486,7 +482,7 @@ export function Timeline({
         <div>
           <h1>{tr(t.timeline)}</h1>
           <p>
-            {tr("Every record is part of your story. Keep the original close.")}
+            {tr(t.records === "Patient records" ? "Review the patient’s clinical history and original source records." : "Every record is part of your story. Keep the original close.")}
           </p>
         </div>
         <Badge>
@@ -535,12 +531,16 @@ export function VisitPrep({
   clinician,
   generate,
   generating,
+  onNewVisit,
+  adminMode,
   onIntake,
   openRecord,
   refresh,
   notify,
 }: Base & {
   clinician: boolean;
+  adminMode: boolean;
+  onNewVisit: () => void;
   generate: () => void;
   generating: boolean;
   onIntake: () => void;
@@ -561,12 +561,18 @@ export function VisitPrep({
   const [clarUncertaintyId, setClarUncertaintyId] = useState<string | null>(null);
   const [clarBusy, setClarBusy] = useState(false);
 
+  const [briefExpanded, setBriefExpanded] = useState(false);
+  const [visitHistory, setVisitHistory] = useState<(Intake & {conversations:Clarification[]})[] | null>(null);
+  const [historyOpen, setHistoryOpen] = useState(false);
+  useEffect(() => { setVisitHistory(null); }, [w.intake?.id, w.patient.id]);
+  const [questionAnchor, setQuestionAnchor] = useState<string | null>(null);
   const b = w.brief;
   useEffect(() => { setNote(""); setError(""); }, [b?.id]);
 
   const askClarification = (desc?: string, uncId?: string) => {
     setClarQuestion(desc ? `${tr("Clarification regarding:")} ${desc}` : "");
     setClarUncertaintyId(uncId || null);
+    setQuestionAnchor(null);
     setShowClarModal(true);
   };
 
@@ -605,12 +611,10 @@ export function VisitPrep({
   };
 
   const resolveClar = async (clarId: string) => {
-    const reason = window.prompt(tr("Resolution reason"));
-    if (!reason || reason.trim().length < 3) return;
     try {
-      await post(`/clarifications/${clarId}/resolve`, { reason: reason.trim() });
+      await post(`/clarifications/${clarId}/resolve`, {});
       await refresh();
-      notify("Clarification resolved.");
+      notify("Conversation marked resolved.");
     } catch (err) {
       notify((err as Error).message);
     }
@@ -642,34 +646,88 @@ export function VisitPrep({
       setBusy(false);
     }
   };
+  const questionForm = () => (
+<div style={{ margin: "1rem 0", padding: "1rem", borderRadius: "8px", border: "1px solid var(--border)", background: "var(--panel-bg)" }}>
+                      <form onSubmit={submitClarification} style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+                        <textarea
+                          value={clarQuestion}
+                          onChange={(e) => setClarQuestion(e.target.value)}
+                          placeholder={tr("Write your question…")}
+                          rows={3}
+                          required
+                          minLength={3}
+                        />
+                        <div style={{ display: "flex", gap: "0.5rem", justifyContent: "flex-end" }}>
+                          <button type="button" className="button secondary" onClick={() => setShowClarModal(false)}>
+                            {tr("Cancel")}
+                          </button>
+                          <button type="submit" className="button primary" disabled={clarBusy}>
+                            {clarBusy ? <Spinner /> : <Check size={16} />} {tr("Ask a question")}
+                          </button>
+                        </div>
+                      </form>
+                    </div>
+  );
   return (
     <>
       <div className="page-heading no-print">
         <div>
           <h1>
             {tr(
-              clinician ? "A complete story. A considered next step." : t.prep,
+              clinician ? "Patient visit preparation" : "Visit preparation",
             )}
           </h1>
           <p>
             {tr(
-              "Source-linked information, prepared for a conversation with your clinician.",
+              clinician ? "Review patient-reported information, supporting records, and questions requiring your response." : "Source-linked information, prepared for a conversation with your clinician.",
             )}
           </p>
         </div>
+        {!clinician && (
         <button className="button secondary" onClick={onIntake}>
           <MessageSquare size={17} />
-          {tr(w.intake ? "Edit my intake" : "Add my intake")}
+          {tr(clinician ? (w.intake ? "Edit patient intake" : "Record patient intake") : (w.intake ? "Edit visit details" : "Add visit details"))}
         </button>
+        )}
       </div>
       <div className="prep-layout">
         <div>
+          <div className="visit-actions">
+            <button className="button secondary" onClick={onNewVisit}><Plus size={16} />{tr("New visit details")}</button>
+            <button className="text-button" onClick={async () => {
+              if (!historyOpen) {
+                try { setVisitHistory(await api<(Intake & {conversations:Clarification[]})[]>(`/patients/${w.patient.id}/visit-history`)); }
+                catch (err) { notify((err as Error).message); return; }
+              }
+              setHistoryOpen(value => !value);
+            }}>{tr(historyOpen ? "Hide visit history" : "Visit history")}</button>
+          </div>
+          {historyOpen && <section className="panel visit-history">
+            <h3>{tr("Previous visits")}</h3>
+            {!visitHistory?.length && <p>{tr("No previous visits.")}</p>}
+            {visitHistory?.map(visit => <details key={visit.id}>
+              <summary>{date(visit.created_at)} · {visit.reason}</summary>
+              <p><strong>{tr("Duration")}: </strong>{visit.duration || t.notProvided}</p>
+              <p><strong>{tr("Medications")}: </strong>{visit.medications || t.notProvided}</p>
+              <p><strong>{tr("Allergies")}: </strong>{visit.allergies || t.notProvided}</p>
+              <p><strong>{tr("Questions")}: </strong>{visit.questions || t.notProvided}</p>
+              {visit.conversations.map(conversation => <div className="history-conversation" key={conversation.id}>
+                <strong>{conversation.question}</strong> <Badge>{tr(conversation.status === "resolved" ? "Resolved" : "Open")}</Badge>
+                {conversation.messages.slice(1).map(message => <p key={message.id}><strong>{message.author_name}: </strong>{message.text}</p>)}
+              </div>)}
+            </details>)}
+          </section>}
           <section className="panel intake-summary no-print">
             <SectionTitle
-              title={tr("The conversation starts with you")}
-              action={tr("Edit intake")}
-              onAction={onIntake}
+              title={tr("Visit details")}
+              action={w.intake ? tr("Edit details") : undefined}
+              onAction={w.intake ? onIntake : undefined}
             />
+            {adminMode && w.intake && <button className="text-button danger-action" onClick={async () => {
+              if (!window.confirm("Delete this patient’s intake history?")) return;
+              try { await api(`/patients/${w.patient.id}/intake`, {method:"DELETE"}); await refresh(); }
+              catch (err) { notify((err as Error).message); }
+            }}>{tr("Delete intake")}</button>}
             {w.intake ? (
               <>
                 <Badge tone="blue">{tr("Patient provided")}</Badge>
@@ -687,24 +745,117 @@ export function VisitPrep({
               </>
             ) : (
               <Empty
-                title={tr("Tell your care team what matters")}
+                title={tr(clinician ? "No visit details recorded" : "No visit details yet")}
                 description={tr(t.intakeHint)}
                 action={
                   <button className="button primary" onClick={onIntake}>
-                    {tr("Start my intake")}
+                    {tr(clinician ? "Add patient details" : "Add visit details")}
                     <ArrowRight size={16} />
                   </button>
                 }
               />
             )}
+                {/* Questions inside Visit details */}
+                <div className="questions-thread no-print">
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px solid var(--border)", paddingBottom: "0.5rem" }}>
+                    <h3 style={{ margin: 0, display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                      <MessageSquare size={18} />
+                      {tr("Questions & replies")}
+                    </h3>
+                    <button
+                      className="button secondary"
+                      onClick={() => askClarification()}
+                    >
+                      <Plus size={14} /> {tr(clinician ? "Ask patient a question" : "Ask a question")}
+                    </button>
+                  </div>
+                  {showClarModal && !questionAnchor && questionForm()}
+                  {w.clarifications && w.clarifications.length > 0 ? (
+                    <div style={{ display: "flex", flexDirection: "column", gap: "1rem", marginTop: "1rem" }}>
+                      {w.clarifications.map((c) => (
+                        <div key={c.id} style={{ padding: "0.75rem", borderRadius: "8px", background: "var(--panel-bg)", border: "1px solid var(--border)" }}>
+                          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                            <strong>{c.question}</strong>
+                            <Badge tone={c.status === "resolved" ? "green" : "amber"}>
+                              {tr(c.status === "resolved" ? "Resolved" : "Open")}
+                            </Badge>
+                          </div>
+                          <div style={{ fontSize: "0.8rem", color: "var(--muted)", margin: "0.25rem 0" }}>
+                            {c.creator_name} · {date(c.created_at)}
+                          </div>
+                          {c.resolution_reason && (
+                            <div style={{ fontSize: "0.85rem", color: "var(--green, #16a34a)", marginTop: "0.25rem" }}>
+                              <strong>{tr("Resolved by")} {c.resolved_by}:</strong> {c.resolution_reason}
+                            </div>
+                          )}
+                          {adminMode && <button className="text-button danger-action" onClick={async () => {
+                            if (!window.confirm("Delete this conversation and all replies?")) return;
+                            try { await api(`/clarifications/${c.id}`, {method:"DELETE"}); await refresh(); }
+                            catch (err) { notify((err as Error).message); }
+                          }}>{tr("Delete conversation")}</button>}
+                          {/* Messages thread */}
+                          {c.messages && c.messages.length > 1 && (
+                            <div style={{ marginTop: "0.5rem", paddingLeft: "0.5rem", borderLeft: "2px solid var(--border)", display: "flex", flexDirection: "column", gap: "0.25rem" }}>
+                              {c.messages.slice(1).map((m) => (
+                                <div key={m.id} style={{ fontSize: "0.85rem" }}>
+                                  <span style={{ fontWeight: 600 }}>{m.author_name} ({tr(m.role)}): </span>
+                                  <span>{m.text}</span>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                          {c.status === "resolved" && <div style={{marginTop:12}}>
+                            <p>{tr("This conversation is closed. You can start a new question.")}</p>
+                            <button className="text-button" onClick={() => { askClarification(); setQuestionAnchor(c.id); }}>{tr("Ask another question")}</button>
+                          </div>}
+                          {showClarModal && questionAnchor === c.id && questionForm()}
+                          {/* Reply / Resolve controls */}
+                          {c.status === "open" && (
+                            <div style={{ marginTop: "0.5rem", display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
+                              <input
+                                placeholder={tr("Write a reply or follow-up question…")}
+                                value={replyText[c.id] || ""}
+                                onChange={(e) => setReplyText({ ...replyText, [c.id]: e.target.value })}
+                                style={{ flex: 1, minWidth: "150px" }}
+                              />
+                              <button
+                                className="button secondary"
+                                onClick={() => sendReply(c.id)}
+                              >
+                                {tr("Send reply")}
+                              </button>
+                              {clinician && (
+                                <button
+                                  className="button secondary"
+                                  onClick={() => resolveClar(c.id)}
+                                >
+                                  {tr("Mark resolved")}
+                                </button>
+                              )}
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p style={{ color: "var(--muted)", fontSize: "0.9rem", marginTop: "0.75rem" }}>
+                      {tr("No questions yet.")}
+                      {w.intake?.questions && w.intake.questions.trim().length >= 3 && <button className="button secondary" style={{marginTop:12}} onClick={async () => {
+                        try { await post(`/patients/${w.patient.id}/intake-question`); await refresh(); }
+                        catch (err) { notify((err as Error).message); }
+                      }}>{tr(clinician ? "Reply to intake question" : "Discuss my intake question")}</button>}
+                    </p>
+                  )}
+                </div>
           </section>
+
           <section className="panel brief-panel">
             <div className="section-title">
               <div>
                 <span className="eyebrow">
                   {tr("PATIENT HEALTHBRIDGE SUMMARY")}
                 </span>
-                <h2>{tr("Your visit brief")}</h2>
+                <h2>{tr(clinician ? "Patient visit brief" : "Your visit brief")}</h2>
               </div>
               {b && (
                 <Badge
@@ -728,11 +879,24 @@ export function VisitPrep({
                 </Badge>
               )}
             </div>
+            <button className="text-button brief-collapse" aria-expanded={briefExpanded} aria-controls="visit-brief-content" onClick={() => setBriefExpanded(value => !value)}>
+              {briefExpanded ? <ChevronsUp size={20} /> : <ChevronsDown size={20} />}
+              {tr(briefExpanded ? "Hide brief" : "Show brief")}
+            </button>
+            {briefExpanded && <div id="visit-brief-content">
             <p className="brief-patient">
               {w.patient.name} · {w.patient.age != null && <>{w.patient.age} {tr("years ·")}</>}{" "}
               {w.patient.language.toUpperCase()}
             </p>
-            {b ? (
+            {b?.status === "outdated" ? (
+              <div className="empty">
+                <h3>{tr("Brief needs updating")}</h3>
+                <p>{tr("Source information changed or was deleted. Prepare a new brief from the current visit details and records.")}</p>
+                <button className="button primary" onClick={generate} disabled={generating || (!w.intake && !w.records.length)}>
+                  {generating && <Spinner />}{tr("Prepare updated brief")}
+                </button>
+              </div>
+            ) : b ? (
               <>
                 <div className="brief-notice">
                   <ShieldCheck size={17} />
@@ -785,105 +949,6 @@ export function VisitPrep({
                     </div>
                   </div>
                 )}
-                {/* Clarifications Panel */}
-                <div className="section-card no-print" style={{ marginBottom: "1.5rem" }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px solid var(--border)", paddingBottom: "0.5rem" }}>
-                    <h3 style={{ margin: 0, display: "flex", alignItems: "center", gap: "0.5rem" }}>
-                      <MessageSquare size={18} />
-                      {tr("Clarifications")}
-                    </h3>
-                    <button
-                      className="button secondary"
-                      onClick={() => askClarification()}
-                    >
-                      <Plus size={14} /> {tr("Ask clarification")}
-                    </button>
-                  </div>
-                  {showClarModal && (
-                    <div style={{ margin: "1rem 0", padding: "1rem", borderRadius: "8px", border: "1px solid var(--border)", background: "var(--panel-bg)" }}>
-                      <form onSubmit={submitClarification} style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
-                        <textarea
-                          value={clarQuestion}
-                          onChange={(e) => setClarQuestion(e.target.value)}
-                          placeholder={tr("Write a response…")}
-                          rows={3}
-                          required
-                          minLength={3}
-                        />
-                        <div style={{ display: "flex", gap: "0.5rem", justifyContent: "flex-end" }}>
-                          <button type="button" className="button secondary" onClick={() => setShowClarModal(false)}>
-                            {tr("Cancel")}
-                          </button>
-                          <button type="submit" className="button primary" disabled={clarBusy}>
-                            {clarBusy ? <Spinner /> : <Check size={16} />} {tr("Ask clarification")}
-                          </button>
-                        </div>
-                      </form>
-                    </div>
-                  )}
-                  {w.clarifications && w.clarifications.length > 0 ? (
-                    <div style={{ display: "flex", flexDirection: "column", gap: "1rem", marginTop: "1rem" }}>
-                      {w.clarifications.map((c) => (
-                        <div key={c.id} style={{ padding: "0.75rem", borderRadius: "8px", background: "var(--panel-bg)", border: "1px solid var(--border)" }}>
-                          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                            <strong>{c.question}</strong>
-                            <Badge tone={c.status === "resolved" ? "green" : "amber"}>
-                              {tr(c.status === "resolved" ? "Resolved" : "Open clarification")}
-                            </Badge>
-                          </div>
-                          <div style={{ fontSize: "0.8rem", color: "var(--muted)", margin: "0.25rem 0" }}>
-                            {c.creator_name} · {date(c.created_at)}
-                          </div>
-                          {c.resolution_reason && (
-                            <div style={{ fontSize: "0.85rem", color: "var(--green, #16a34a)", marginTop: "0.25rem" }}>
-                              <strong>{tr("Resolved by")} {c.resolved_by}:</strong> {c.resolution_reason}
-                            </div>
-                          )}
-                          {/* Messages thread */}
-                          {c.messages && c.messages.length > 1 && (
-                            <div style={{ marginTop: "0.5rem", paddingLeft: "0.5rem", borderLeft: "2px solid var(--border)", display: "flex", flexDirection: "column", gap: "0.25rem" }}>
-                              {c.messages.slice(1).map((m) => (
-                                <div key={m.id} style={{ fontSize: "0.85rem" }}>
-                                  <span style={{ fontWeight: 600 }}>{m.author_name} ({tr(m.role)}): </span>
-                                  <span>{m.text}</span>
-                                </div>
-                              ))}
-                            </div>
-                          )}
-                          {/* Reply / Resolve controls */}
-                          {c.status === "open" && (
-                            <div style={{ marginTop: "0.5rem", display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
-                              <input
-                                placeholder={tr("Write a response…")}
-                                value={replyText[c.id] || ""}
-                                onChange={(e) => setReplyText({ ...replyText, [c.id]: e.target.value })}
-                                style={{ flex: 1, minWidth: "150px" }}
-                              />
-                              <button
-                                className="button secondary"
-                                onClick={() => sendReply(c.id)}
-                              >
-                                {tr("Reply")}
-                              </button>
-                              {clinician && (
-                                <button
-                                  className="button secondary"
-                                  onClick={() => resolveClar(c.id)}
-                                >
-                                  {tr("Resolve")}
-                                </button>
-                              )}
-                            </div>
-                          )}
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <p style={{ color: "var(--muted)", fontSize: "0.9rem", marginTop: "0.75rem" }}>
-                      {tr("No clarification questions requested yet.")}
-                    </p>
-                  )}
-                </div>
                 {b.content.sections && b.content.sections.length > 0 ? (
                   b.content.sections.map((sec) => (
                     <div className="section-card" key={sec.key} style={{ marginBottom: "1.5rem" }}>
@@ -1003,7 +1068,7 @@ export function VisitPrep({
               <Empty
                 title={tr("A little preparation goes a long way")}
                 description={tr(
-                  "Bring your intake and records together in a source-linked brief. Your clinician reviews it before you rely on it.",
+                  clinician ? "Prepare a source-linked brief from the patient’s intake and records, then complete your clinical review." : "Bring your intake and records together in a source-linked brief. Your clinician reviews it before you rely on it.",
                 )}
                 action={
                   <button
@@ -1015,21 +1080,18 @@ export function VisitPrep({
                     {tr(
                       generating
                         ? "Preparing your brief…"
-                        : "Prepare my visit brief",
+                        : (clinician ? "Prepare patient brief" : "Prepare my visit brief"),
                     )}
                   </button>
                 }
               />
             )}
-          </section>
-        </div>
-        <aside className="prep-aside no-print">
-          {clinician && b && (
-            <section className="panel review-panel">
+          {clinician && b && briefExpanded && (
+            <section className="review-panel brief-review no-print">
               <span className="large-icon">
                 <ClipboardCheck />
               </span>
-              <h3>{tr("Make the handoff yours.")}</h3>
+              <h3>{tr("Clinician review")}</h3>
               <p>
                 {tr(
                   "Check the sources, record corrections, and confirm the brief. Approval applies to this version only.",
@@ -1069,27 +1131,10 @@ export function VisitPrep({
               </button>
             </section>
           )}
-          <section className="questions-card">
-            <ShieldCheck size={25} />
-            <h3>{tr("Clarity, without assumptions.")}</h3>
-            <p>
-              {tr(
-                "Missing details stay missing. Source excerpts remain unchanged. We don’t generate diagnoses or treatment advice.",
-              )}
-            </p>
-            <div className="checklist">
-              <span>
-                <Check size={15} /> {tr("Original sources included")}
-              </span>
-              <span>
-                <Check size={15} /> {tr("Unknowns kept visible")}
-              </span>
-              <span>
-                <Check size={15} /> {tr("Human review required")}
-              </span>
-            </div>
+            </div>}
           </section>
-        </aside>
+        </div>
+
       </div>
     </>
   );
@@ -1158,7 +1203,7 @@ export function Instructions({
         <Empty
           title={tr("Next steps will appear here")}
           description={tr(
-            "Your clinician can publish reviewed instructions after your visit.",
+            clinician ? "Publish reviewed care instructions for this patient after the visit." : "Your clinician can publish reviewed instructions after your visit.",
           )}
         />
       ) : (
@@ -1172,7 +1217,7 @@ export function Instructions({
                   <Heart size={20} />
                 </span>
                 <div>
-                  <h3>{tr("A note from your care team")}</h3>
+                  <h3>{tr(clinician ? "Published care instructions" : "A note from your care team")}</h3>
                   <p>
                     {item.author} · {date(item.created_at)}
                   </p>
@@ -1326,7 +1371,7 @@ export function ActivityLog({ w }: { w: Workspace }) {
                 <Check size={14} />
               </span>
               <div>
-                <h3>{tr(a.action)}</h3>
+                <h3>{tr(a.action === "Demo created" ? "Workspace created" : a.action)}</h3>
                 <p>
                   {[
                     "Brief prepared",
@@ -1334,7 +1379,7 @@ export function ActivityLog({ w }: { w: Workspace }) {
                     "Intake saved",
                     "Instructions published",
                   ].includes(a.action)
-                    ? tr(a.detail)
+                    ? tr(a.action === "Demo created" ? "Workspace initialized." : a.detail)
                     : a.detail}
                 </p>
                 <small>{a.actor}</small>
@@ -1365,9 +1410,13 @@ export function ActivityLog({ w }: { w: Workspace }) {
 export function PatientList({
   patients,
   open,
+  onRefresh,
+  refreshing,
 }: {
   patients: (User & { records: number; pending: number })[];
   open: (id: string) => void;
+  onRefresh: () => void;
+  refreshing: boolean;
 }) {
   const tr = useText();
   const date = useDate();
@@ -1389,6 +1438,10 @@ export function PatientList({
         </Badge>
       </div>
       <section className="panel patient-list">
+        <h3 className="patient-list-label">{tr("Assigned patients")}</h3>
+        <button type="button" className="icon-button patient-list-refresh" onClick={onRefresh} disabled={refreshing} aria-label={tr("Refresh patients")} title={tr("Refresh patients")}>
+          {refreshing ? <Spinner /> : <RefreshCw size={19} />}
+        </button>
         {patients.length ? (
           patients.map((p) => (
             <button

@@ -16,12 +16,14 @@ import { translations } from "./i18n";
 import { Badge, useDate, Spinner } from "./ui";
 export function IntakeForm({
   patientId,
+  newVisit = false,
   initial,
   language,
   t,
   onSaved,
 }: {
   patientId: string;
+  newVisit?: boolean;
   initial: Intake | null;
   language: Language;
   t: typeof translations.en;
@@ -40,7 +42,7 @@ export function IntakeForm({
     setError("");
     const fields = Object.fromEntries(new FormData(e.currentTarget));
     try {
-      await post(`/patients/${patientId}/intake`, { ...fields, language: careLanguage });
+      await post(`/patients/${patientId}/intake`, { ...fields, language: careLanguage, new_visit: newVisit });
       await onSaved();
     } catch (e) {
       setError((e as Error).message);
@@ -52,10 +54,6 @@ export function IntakeForm({
     <form onSubmit={submit} className="form-body">
       <p className="form-intro">{tr(t.intakeHint)}</p>
       <label>{tr("Preferred care language")}<LanguageSelect value={careLanguage} onChange={setCareLanguage} /></label>
-      <small>{tr("Care languages apply to your intake and reviewed instructions. Interface languages are English, Hindi and Kannada.")}</small>
-      <Badge tone="blue">
-        {tr("Patient-provided information · clinician review required")}
-      </Badge>
       <label>
         {tr(t.reason)}
         <textarea
@@ -294,7 +292,7 @@ export function UploadForm({
       <div className="info-strip">
         <ShieldCheck size={18} />{" "}
         {tr(
-          "Synthetic demo records only. Please do not upload real medical data.",
+          "Upload only records you have permission to share.",
         )}
       </div>
       {warningMsg && (

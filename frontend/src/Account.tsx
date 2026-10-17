@@ -29,6 +29,7 @@ export function Account({
           method: "PATCH",
           body: JSON.stringify({
             name: form.get("name"),
+            specialty: user.role === "clinician" ? form.get("specialty") : undefined,
             age: form.get("age") ? Number(form.get("age")) : null,
             language,
           }),
@@ -57,6 +58,7 @@ export function Account({
           maxLength={100}
         />
       </label>
+      {user.role === "clinician" && <label>{tr("Medical specialty")}<input name="specialty" defaultValue={user.specialty || ""} placeholder={tr("e.g. Neurologist, Endocrinologist")} maxLength={120} /></label>}
       <label>
         {tr("Age")}
         <input
@@ -86,7 +88,6 @@ export function Account({
         </p>
       )}
       <div className="form-footer">
-        <small>{tr("Use fictional details in this prototype.")}</small>
         <button className="button primary" disabled={busy}>
           {busy && <Spinner />}
           {tr("Save profile")}
@@ -128,10 +129,10 @@ export function Privacy() {
 
   return (
     <article className="about-content">
-      <h3>{tr("Demo privacy notice")}</h3>
+      <h3>{tr("Privacy notice")}</h3>
       <p>
         {tr(
-          "This prototype is for synthetic information only. Demo accounts are shared: anyone using the same demo login can see and change its information. Do not enter real medical or personal data.",
+          "Keep your account credentials private. Anyone with access to your account can view and change its information.",
         )}
       </p>
       <h3>{tr("What is stored")}</h3>
@@ -155,7 +156,7 @@ export function Privacy() {
       <h3>{tr("Access and limitations")}</h3>
       <p>
         {tr(
-          "Patients access their own workspace; clinicians access assigned patients. These controls are prototype safeguards, not a HIPAA/GDPR certification. This notice describes the current demo, not a production legal policy. Contact the deployment operator before using any real data.",
+          "Patients access their own workspace; clinicians access assigned patients. These controls do not constitute HIPAA/GDPR certification. Contact the deployment operator before using any real data.",
         )}
       </p>
     </article>

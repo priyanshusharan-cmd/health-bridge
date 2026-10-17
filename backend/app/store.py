@@ -10,8 +10,8 @@ FIELDS = {
     'organizations': 'id name created_at',
     'memberships': 'id user_id organization_id',
     'invitations': 'id token organization_id clinician_id email expires accepted_by',
-    'users': 'id name email password role language age initials',
-    'sessions': 'token user_id expires',
+    'users': 'id name email password role language age initials specialty',
+    'sessions': 'token user_id expires admin_mode',
     'assignments': 'clinician_id patient_id',
     'appointments': 'id patient_id clinician specialty location starts_at',
     'records': 'id patient_id title kind date provider text filename media_type created_at status deleted_at',
@@ -23,7 +23,7 @@ FIELDS = {
     'upload_jobs': 'id patient_id user_id idempotency_key filename file_hash ocr_lang attempt_count lease_owner lease_expires_at duplicate_warning state progress error_code error_message record_id created_at updated_at',
     'record_extractions': 'id record_id version pages_json method ocr_lang warnings created_at',
     'record_corrections': 'id record_id version kind date provider text reason reviewer_id reviewer_name created_at previous_version',
-    'clarifications': 'id patient_id brief_id question originating_uncertainty_id creator_id creator_name assigned_owner status resolution_reason created_at resolved_at resolved_by',
+    'clarifications': 'id patient_id brief_id question originating_uncertainty_id creator_id creator_name assigned_owner status resolution_reason created_at resolved_at resolved_by intake_id',
     'clarification_messages': 'id clarification_id author_id author_name role text created_at',
     'brief_reviews': 'id brief_id expected_source_revision reviewer_id reviewer_name outcome note reviewed_uncertainties created_at',
 }
@@ -108,6 +108,8 @@ class SQLiteStore(Store):
                     else:
                         clauses.append(key + {'$gt':'>', '$lt':'<'}[op] + '?')
                         params.append(item)
+            elif value is None:
+                clauses.append(f'{key} IS NULL')
             else:
                 clauses.append(f'{key}=?')
                 params.append(value)

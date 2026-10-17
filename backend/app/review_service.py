@@ -14,9 +14,11 @@ def create_clarification(patient_id: str, brief_id: str | None, question: str, o
     now_ts = db.now()
 
     with db.connection() as con:
+        intake = con.one("intakes", {"patient_id": patient_id}, sort=[("created_at", -1)])
         con.insert("clarifications", {
             "id": cid,
             "patient_id": patient_id,
+            "intake_id": intake["id"] if intake else None,
             "brief_id": brief_id,
             "question": q,
             "originating_uncertainty_id": originating_uncertainty_id,
@@ -54,6 +56,8 @@ def add_clarification_message(clarification_id: str, text: str, user: dict) -> d
         clar = con.one("clarifications", {"id": clarification_id})
         if not clar:
             raise HTTPException(404, "Clarification not found.")
+        if clar['status'] == 'resolved':
+            raise HTTPException(409, 'This conversation is resolved. Start a new question.')
         con.insert("clarification_messages", {
             "id": mid,
             "clarification_id": clarification_id,
@@ -91,11 +95,15 @@ def resolve_clarification(clarification_id: str, reason: str, user: dict) -> dic
     return {"ok": True, "id": clarification_id, "status": "resolved", "resolved_at": now_ts}
 
 
-def get_patient_clarifications(patient_id: str) -> list[dict]:
+def get_patient_clarifications(patient_id: str, intake_id: str | None = None) -> list[dict]:
     with db.connection() as con:
         rows = con.find("clarifications", {"patient_id": patient_id}, sort=[("created_at", -1)])
+        intake = con.one("intakes", {"patient_id": patient_id}, sort=[("created_at", -1)])
+        current_id = intake_id if intake_id is not None else (intake["id"] if intake else None)
         result = []
         for r in rows:
+            if r.get("intake_id") != current_id:
+                continue
             msgs = con.find("clarification_messages", {"clarification_id": r["id"]}, sort=[("created_at", 1)])
             result.append({**dict(r), "messages": [dict(m) for m in msgs]})
         return result

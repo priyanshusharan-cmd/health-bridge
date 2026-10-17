@@ -59,11 +59,12 @@ type Page =
 export type DialogContext =
   | { kind: "appointment"; patientId: string; accountId: string; initial?: Workspace["appointments"][number] }
   | { kind: "upload"; patientId: string; accountId: string }
-  | { kind: "intake"; patientId: string; accountId: string; initial?: Intake | null }
+  | { kind: "intake"; patientId: string; accountId: string; initial?: Intake | null; newVisit?: boolean }
   | { kind: "instructions"; patientId: string; accountId: string; previousInstruction?: Instruction }
   | { kind: "record"; recordId: string; patientId?: string; accountId?: string }
   | { kind: "profile" }
   | { kind: "invite" }
+  | { kind: "join" }
   | { kind: "privacy" }
   | { kind: "about" }
   | null;
@@ -81,7 +82,7 @@ export default function App() {
   const [preLoginLocale, setPreLoginLocale] = useState<Language>(() => {
     try {
       const saved = localStorage.getItem("healthbridge-locale");
-      if (saved === "hi" || saved === "kn" || saved === "en") return saved;
+      if (saved) return saved;
     } catch { }
     return "en";
   });
@@ -99,12 +100,24 @@ export default function App() {
     [mobile, setMobile] = useState(false);
   const [generation, setGeneration] = useState(false);
   const [refreshingPatients, setRefreshingPatients] = useState(false);
+  const [pendingInvitation, setPendingInvitation] = useState<{id:string; hospital:string; doctor:string; specialty:string} | null>(null);
   const activeUser = useRef(user?.id);
   activeUser.current = user?.id;
   const activePatient = useRef(patientId);
   activePatient.current = patientId;
   const tr = useText(user?.language ?? "en");
-  const t = translations[user?.language || "en"];
+  const baseText = translations[user?.language || "en"];
+  const t = user?.role === "clinician" ? {...baseText,
+    records:"Patient records", timeline:"Patient timeline", prep:"Visit brief",
+    recordsTitle:"Patient records", recordsSub:"Review the patient’s source documents and clinical history.",
+    search:"Search patient records…", next:"Patient’s next appointment",
+    journey:"Care workflow", journeySub:"Review intake, source records, and the care plan.",
+    noRecords:"No patient records", noRecordsSub:"Upload a patient record to begin the clinical review.",
+    readySub:"Review the patient’s intake and source records before preparing the visit brief.",
+    intake:"Patient intake", reason:"Reason for visit", medications:"Current medications",
+    allergies:"Known allergies", questions:"Patient questions", save:"Save patient intake",
+    intakeHint:"Record the patient’s reported symptoms and concerns.",
+  } : baseText;
 
   const isPatientMutationDialogOpen =
     dialog !== null &&
@@ -266,9 +279,55 @@ export default function App() {
   }, [patientId, user?.id, refresh]);
 
   useEffect(() => {
-    if (user?.role === "patient" && !user.organization && new URLSearchParams(window.location.search).has("invite"))
-      setDialog({ kind: "profile" });
-  }, [user?.id]);
+    if (!user?.id || !patientId) return;
+    let stopped = false;
+    let fetching = false;
+    const sync = async () => {
+      if (fetching || document.hidden) return;
+      fetching = true;
+      try {
+        const updated = await api<Workspace>(`/patients/${patientId}/workspace`);
+        if (!stopped && activeUser.current === user.id && activePatient.current === patientId) {
+          setWorkspace(updated);
+        }
+      } catch { /* Retry on the next tick without interrupting the current screen. */ }
+      finally { fetching = false; }
+    };
+    const timer = window.setInterval(() => { void sync(); }, 5000);
+    const onVisible = () => { void sync(); };
+    window.addEventListener("focus", onVisible);
+    document.addEventListener("visibilitychange", onVisible);
+    return () => {
+      stopped = true;
+      window.clearInterval(timer);
+      window.removeEventListener("focus", onVisible);
+      document.removeEventListener("visibilitychange", onVisible);
+    };
+  }, [user?.id, patientId]);
+
+  useEffect(() => {
+    setPendingInvitation(null);
+    if (user?.role !== "patient" || user.organization) return;
+    let cancelled=false;
+    const seen=new Set<string>();
+    const check=async () => {
+      try {
+        const invitations=await api<{id:string; hospital:string; doctor:string; specialty:string}[]>("/patient/invitations");
+        if (cancelled) return;
+        const next=invitations.find(item => !seen.has(item.id));
+        if (next) {
+          seen.add(next.id);
+          setPendingInvitation(next);
+          setDialog({kind:"join"});
+        }
+      } catch { /* The next poll retries a temporary connection failure. */ }
+    };
+    void check();
+    const timer=window.setInterval(() => { if (!document.hidden) void check(); },10000);
+    const onFocus=() => { void check(); };
+    window.addEventListener("focus",onFocus);
+    return () => { cancelled=true;window.clearInterval(timer);window.removeEventListener("focus",onFocus); };
+  }, [user?.id, user?.organization?.id]);
 
   useEffect(() => {
     document.documentElement.lang = user?.language || "en";
@@ -475,23 +534,8 @@ export default function App() {
             ))}
           </nav>
           <div className="sidebar-bottom">
-            <div className="care-promise">
-              <span className="small-heart">
-                <Heart size={19} />
-              </span>
-              <h4>{tr("Care is a team effort.")}</h4>
-              <p>
-                {tr("Your story stays connected.")}
-                <br />
-                {tr("Your clinician stays in control.")}
-              </p>
-              <button onClick={() => setDialog({ kind: "about" })}>
-                {tr("Our approach")}
-                <ArrowRight size={14} />
-              </button>
-            </div>
             <button className="help-button" onClick={() => setDialog({ kind: "about" })}>
-              <CircleHelp size={18} /> {tr("About this demo")}
+              <CircleHelp size={18} /> {tr("About HealthBridge")}
             </button>
             <div className="sidebar-profile">
               <button
@@ -544,6 +588,10 @@ export default function App() {
               <strong>{tr(t[page])}</strong>
             </div>
             <div className="topbar-actions">
+              <button className="button secondary admin-mode-toggle" role="switch" aria-checked={!!user.admin_mode} onClick={async () => {
+                try { setUser(await post<User>("/auth/admin-mode", {enabled: !user.admin_mode})); }
+                catch (err) { setErrorState({message:(err as Error).message}); }
+              }}>{tr(user.admin_mode ? "Admin mode: On" : "Admin mode: Off")}</button>
               <ThemeToggle />
               <button
                 className="private-label"
@@ -582,18 +630,6 @@ export default function App() {
               </button>
             </div>
           </header>
-          {health?.demo && (
-            <div className="demo-banner">
-              <span className="demo-dot" />
-              <strong>{tr("Demo workspace")}</strong>
-              <span>
-                {tr(
-                  "Synthetic patients only. Please don’t upload real medical data.",
-                )}
-              </span>
-              <Badge>{tr("PREVIEW")}</Badge>
-            </div>
-          )}
           <main id="main-content">
             <div className="page-topline">
               <span className="eyebrow">
@@ -670,15 +706,14 @@ export default function App() {
               </div>
             ) : page === "patients" ? (
               <><div className="hospital-toolbar">
-                <button className="button secondary" disabled={refreshingPatients} onClick={async () => {
-                  setRefreshingPatients(true); const uid = user.id;
-                  try {
-                    const rows = await api<(User & { records: number; pending: number })[]>("/patients");
-                    if (activeUser.current === uid) { setPatients(rows); setPatientId(current => rows.some(row => row.id === current) ? current : rows[0]?.id || ""); }
-                  } catch (e) { if (activeUser.current === uid) setErrorState({ message: (e as Error).message, retry: () => loadPatients(uid) }); } finally { setRefreshingPatients(false); }
-                }}>{refreshingPatients && <Spinner />}{tr("Refresh patients")}</button>
                 {user.organization && <><h2>{user.organization.name}</h2><button className="button primary" onClick={() => setDialog({ kind: "invite" })}>{tr("Invite a patient")}</button></>}
               </div><PatientList
+                  refreshing={refreshingPatients}
+                  onRefresh={async () => {
+                    setRefreshingPatients(true);
+                    try { await loadPatients(user.id); }
+                    finally { setRefreshingPatients(false); }
+                  }}
                   patients={patients}
                   open={(id) => {
                     setPatientId(id);
@@ -738,6 +773,8 @@ export default function App() {
                 )}
                 {page === "prep" && (
                   <VisitPrep
+                    onNewVisit={() => setDialog({kind:"intake", patientId, accountId:user.id, initial:null, newVisit:true})}
+                    adminMode={!!user.admin_mode}
                     key={patientId}
                     w={workspace}
                     t={t}
@@ -793,14 +830,6 @@ export default function App() {
               >
                 {tr("Privacy notice")}
               </button>
-              <span className="runtime">
-                <span />
-                {tr(
-                  health?.ai_backend === "extractive"
-                    ? "Source-only mode · no AI inference"
-                    : `${health?.ai_backend} ${tr("model configured")}`,
-                )}
-              </span>
             </footer>
           </main>
         </div>
@@ -872,6 +901,16 @@ export default function App() {
             )}
           </Modal>
         )}
+        {dialog?.kind === "join" && user.role === "patient" && (
+          <Modal title={tr("Connect to your care team")} onClose={close}>
+            <JoinHospital invitationId={pendingInvitation?.id} hospital={pendingInvitation?.hospital} doctor={pendingInvitation?.doctor} specialty={pendingInvitation?.specialty} onJoined={(updated) => {
+              setUser(updated);
+              close();
+              setToast("Hospital joined");
+              void refresh();
+            }} />
+          </Modal>
+        )}
         {dialog?.kind === "invite" && user.organization && (
           <Modal title={tr("Invite a patient")} onClose={close}>
             <InvitePatient />
@@ -879,7 +918,7 @@ export default function App() {
         )}
         {dialog?.kind === "privacy" && (
           <Modal
-            title={tr("How this demo handles information")}
+            title={tr("How HealthBridge handles information")}
             onClose={close}
           >
             <Privacy />
@@ -899,6 +938,7 @@ export default function App() {
         {dialog?.kind === "intake" && (
           <Modal title={tr(t.intake)} onClose={close} wide>
             <IntakeForm
+              newVisit={!!dialog.newVisit}
               key={dialog.patientId}
               patientId={dialog.patientId}
               initial={dialog.initial || null}
@@ -974,10 +1014,10 @@ export default function App() {
                   "Source-only mode selects excerpts without an AI model. The model adapter supports Ollama and AMD-hosted vLLM. AMD hardware execution has not been verified in this environment.",
                 )}
               </p>
-              <h3>{tr("Safe demo, honest boundaries")}</h3>
+              <h3>{tr("Care and limitations")}</h3>
               <p>
                 {tr(
-                  "Use synthetic data only. This prototype does not diagnose, prescribe, or claim regulatory certification. Core navigation is multilingual; clinical translations must be checked by a qualified reviewer.",
+                  "HealthBridge does not diagnose, prescribe, or claim regulatory certification. Core navigation is multilingual; clinical translations must be checked by a qualified reviewer.",
                 )}
               </p>
               <Badge tone="green">{tr("Human review stays in the loop")}</Badge>
@@ -1006,25 +1046,15 @@ export function Login({
   const tr = useText();
   const [retrying, setRetrying] = useState(false);
 
-  const [accounts, setAccounts] = useState<
-    { email: string; name: string; role: string; password: string }[]
-  >([]),
-    [busy, setBusy] = useState(""),
+  const [busy, setBusy] = useState(""),
     [message, setMessage] = useState(""),
     [authStep, setAuthStep] = useState<"email" | "password" | "register">("email"),
     [email, setEmail] = useState(""),
     [registeredUser, setRegisteredUser] = useState<{ name: string; role: string } | null>(null),
-    [checkingEmail, setCheckingEmail] = useState(false),
-    [showDemoAccounts, setShowDemoAccounts] = useState(false);
+    [checkingEmail, setCheckingEmail] = useState(false);
 
   useEffect(() => {
-    api<typeof accounts>("/demo-accounts")
-      .then(setAccounts)
-      .catch(() => { });
-  }, [connected]);
-
-  useEffect(() => {
-    if (new URLSearchParams(window.location.search).has("invite") || window.location.hash === "#register") {
+    if (!new URLSearchParams(window.location.search).has("invite") && window.location.hash === "#register") {
       setAuthStep("register");
     }
   }, []);
@@ -1045,7 +1075,11 @@ export function Login({
     e.preventDefault();
     const clean = email.trim().toLowerCase();
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    if (!clean || !emailRegex.test(clean)) {
+    if (!clean) {
+      setMessage(tr("Enter an E-Mail Address."));
+      return;
+    }
+    if (!emailRegex.test(clean)) {
       setMessage(tr("Please enter a valid email address."));
       return;
     }
@@ -1152,9 +1186,9 @@ export function Login({
             {tr("with understanding.")}
           </h2>
           <p>{tr("Step into a connected care journey.")}</p>
-          {(message || error) && (
+          {((authStep !== "email" && message) || error) && (
             <div className="error-banner" role="alert">
-              {message || error}
+              {(authStep !== "email" && message) || error}
             </div>
           )}
           {!connected && (
@@ -1191,10 +1225,12 @@ export function Login({
                   required
                   autoFocus
                   autoComplete="email"
+                  aria-invalid={!!message}
+                  aria-describedby={message ? "signin-email-error" : undefined}
                 />
               </label>
               {message && (
-                <p className="field-error" role="alert" style={{ margin: "2px 0 8px 0" }}>
+                <p id="signin-email-error" className="field-error" role="alert" style={{ margin: "2px 0 8px 0" }}>
                   {message}
                 </p>
               )}
@@ -1246,6 +1282,12 @@ export function Login({
           {authStep === "register" && (
             <RegistrationForm
               initialEmail={email}
+              onExisting={(existingEmail) => {
+                setEmail(existingEmail);
+                setRegisteredUser(null);
+                setMessage("");
+                setAuthStep("password");
+              }}
               onCreated={onLogin}
               connected={connected}
               onBack={() => {
@@ -1255,71 +1297,6 @@ export function Login({
             />
           )}
 
-          {accounts.length > 0 && (
-            <div className="demo-accounts-toggle-wrap">
-              <button
-                type="button"
-                className="text-button demo-toggle-btn"
-                onClick={() => setShowDemoAccounts(!showDemoAccounts)}
-              >
-                <KeyRound size={15} />
-                {tr(showDemoAccounts ? "Hide demo accounts" : "Explore with demo accounts")}
-                <ChevronDown
-                  size={14}
-                  style={{
-                    transform: showDemoAccounts ? "rotate(180deg)" : "none",
-                    transition: "transform 0.2s",
-                  }}
-                />
-              </button>
-            </div>
-          )}
-
-          {showDemoAccounts && accounts.length > 0 && (
-            <div className="demo-accounts-list">
-              <span className="login-caption">{tr("DEMO ACCOUNTS (1-CLICK)")}</span>
-              {accounts.map((a) => (
-                <button
-                  className="account-choice"
-                  disabled={!!busy || !connected}
-                  key={a.email}
-                  onClick={() => login(a.email, a.password)}
-                >
-                  <span
-                    className={`account-icon ${a.role === "clinician" ? "lavender" : "sage"}`}
-                  >
-                    {a.role === "clinician" ? <ClipboardCheck /> : <Heart />}
-                  </span>
-                  <span>
-                    <strong>
-                      {tr(a.role === "clinician" ? "A clinician" : "A patient")}
-                    </strong>
-                    <small>
-                      {a.name} ({a.email})
-                    </small>
-                  </span>
-                  {busy === a.email ? <Spinner /> : <ArrowRight size={19} />}
-                </button>
-              ))}
-            </div>
-          )}
-
-          <div className="login-foot">
-            <ShieldCheck size={17} />
-            <span>
-              {tr(
-                accounts.length
-                  ? "Fictional patients. Real, connected workflows."
-                  : "Secure account access.",
-              )}
-              <br />
-              {tr(
-                connected
-                  ? "Please don’t enter sensitive medical information."
-                  : "Backend connection required.",
-              )}
-            </span>
-          </div>
         </section>
       </div>
       <footer>

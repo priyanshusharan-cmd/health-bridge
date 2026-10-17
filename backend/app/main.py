@@ -105,6 +105,7 @@ class CareLanguage(BaseModel):
         return value
 
 class Intake(CareLanguage):
+    new_visit: bool = False
     reason: str = Field(min_length=5,max_length=3000)
     duration: str = Field(max_length=200,default='')
     medications: str = Field(max_length=1000,default='')
@@ -136,7 +137,7 @@ class ClarificationMessageCreate(BaseModel):
     text: str = Field(min_length=1, max_length=2000)
 
 class ClarificationResolve(BaseModel):
-    reason: str = Field(min_length=3, max_length=2000)
+    reason: str = Field(default='Conversation marked resolved by clinician.', min_length=3, max_length=2000)
 
 class InstructionWithdraw(BaseModel):
     reason: str = Field(min_length=3, max_length=2000)
@@ -145,13 +146,15 @@ class InstructionAcknowledge(BaseModel):
     status: Literal['acknowledged', 'needs_clarification']
     question: str | None = Field(default=None, max_length=2000)
 
-class Profile(BaseModel):
-    language: Literal['en','hi','kn']
+class Profile(CareLanguage):
+    specialty: str | None = Field(default=None,max_length=120)
     name: str | None = Field(default=None,min_length=2,max_length=100)
     age: int | None = Field(default=None,ge=0,le=130)
 
 def public(user):
     result = {key:user[key] for key in ('id','name','email','role','language','age','initials')}
+    result['admin_mode'] = bool(user.get('admin_mode', False))
+    result['specialty'] = user.get('specialty', '')
     result['is_demo'] = user['id'] in ('patient-asha','patient-kabir','doctor-meera')
     with db.connection() as con:
         membership = con.one('memberships', {'user_id': user['id']})
@@ -165,7 +168,7 @@ def current_user(request: Request):
         row = con.one('users', {'id': session['user_id']}) if session else None
     if not row:
         raise HTTPException(401,'Please sign in to continue.')
-    return dict(row)
+    return {**dict(row), "admin_mode": bool(session.get("admin_mode", False))}
 
 def patient_access(patient_id, user):
     if user['role'] == 'patient' and user['id'] == patient_id:
@@ -235,6 +238,44 @@ def login(body: Login, request: Request, response: Response):
         issue_session(con,user['id'],request,response)
     return public(user)
 
+class AdminMode(BaseModel):
+    enabled: bool
+
+@app.post('/api/auth/admin-mode')
+def set_admin_mode(body: AdminMode, request: Request, user=Depends(current_user)):
+    token = hashlib.sha256(request.cookies.get('hb_session', '').encode()).hexdigest()
+    with db.connection() as con:
+        con.update('sessions', {'token': token, 'user_id': user['id']}, {'admin_mode': body.enabled})
+    return public({**user, 'admin_mode': body.enabled})
+
+def require_admin_mode(patient_id, user):
+    patient_access(patient_id, user)
+    if not user.get('admin_mode'):
+        raise HTTPException(403, 'Enable Admin mode to delete items.')
+
+@app.delete('/api/patients/{patient_id}/intake')
+def delete_intake(patient_id: str, user=Depends(current_user)):
+    require_admin_mode(patient_id, user)
+    with db.connection() as con:
+        con.delete('intakes', {'patient_id': patient_id})
+        con.update('briefs', {'patient_id': patient_id}, {'content': '{}', 'status': 'outdated'})
+        con.invalidate(patient_id)
+        db.audit(con, patient_id, user['name'], 'Intake deleted', 'Intake history removed in Admin mode.')
+    return {'ok': True}
+
+@app.delete('/api/clarifications/{clarification_id}')
+def delete_conversation(clarification_id: str, user=Depends(current_user)):
+    with db.connection() as con:
+        item = con.one('clarifications', {'id': clarification_id})
+        if not item:
+            raise HTTPException(404, 'Conversation not found.')
+        require_admin_mode(item['patient_id'], user)
+        con.delete('clarification_messages', {'clarification_id': clarification_id})
+        con.delete('clarifications', {'id': clarification_id})
+        con.invalidate(item['patient_id'])
+        db.audit(con, item['patient_id'], user['name'], 'Conversation deleted', 'Question and replies removed in Admin mode.')
+    return {'ok': True}
+
 @app.post('/api/auth/logout')
 def logout(request: Request, response: Response):
     with db.connection() as con:
@@ -282,10 +323,11 @@ def profile(body: Profile,user=Depends(current_user)):
     if len(name)<2:
         raise HTTPException(422,'Please enter a name of at least two characters.')
     age = body.age if 'age' in body.model_fields_set else user['age']
+    specialty = (body.specialty.strip() if body.specialty is not None else user.get('specialty', '')) if user['role'] == 'clinician' else ''
     initials = ''.join(part[0] for part in name.split()[:2]).upper()
     with db.connection() as con:
-        con.update('users', {'id': user['id']}, dict(language=body.language, name=name, age=age, initials=initials))
-    return {**public(user),'language':body.language,'name':name,'age':age,'initials':initials}
+        con.update('users', {'id': user['id']}, dict(language=body.language, name=name, age=age, initials=initials, specialty=specialty))
+    return {**public(user),'language':body.language,'name':name,'age':age,'initials':initials,'specialty':specialty}
 
 @app.get('/api/patients')
 def patients(user=Depends(current_user)):
@@ -329,13 +371,25 @@ def workspace(patient_id: str,user=Depends(current_user)):
                 'upload_jobs': upload_jobs,
                 'activity':con.find('audit', {'patient_id': patient_id}, sort=[('id', -1)], limit=30)}
 
+@app.get('/api/patients/{patient_id}/visit-history')
+def visit_history(patient_id: str, user=Depends(current_user)):
+    patient_access(patient_id, user)
+    with db.connection() as con:
+        visits = con.find('intakes', {'patient_id': patient_id}, sort=[('created_at', -1)])
+    return [{**visit, 'conversations': get_patient_clarifications(patient_id, visit['id'])} for visit in visits[1:]]
+
 @app.post('/api/patients/{patient_id}/intake')
 def intake(patient_id: str, body: Intake,user=Depends(current_user)):
     patient_access(patient_id,user)
     if not body.reason.strip() or len(body.reason.strip()) < 5:
         raise HTTPException(422,'Please describe your reason for the visit.')
     with db.connection() as con:
-        con.insert_row('intakes',(secrets.token_hex(12),patient_id,body.reason.strip(),body.duration,body.medications,body.allergies,body.questions,body.language,db.now()))
+        previous = con.one('intakes', {'patient_id': patient_id}, sort=[('created_at', -1)])
+        values = dict(reason=body.reason.strip(), duration=body.duration, medications=body.medications, allergies=body.allergies, questions=body.questions, language=body.language)
+        if previous and not body.new_visit:
+            con.update('intakes', {'id': previous['id']}, {**values, 'created_at': db.now()})
+        else:
+            con.insert('intakes', dict(id=secrets.token_hex(12), patient_id=patient_id, created_at=db.now(), **values))
         con.invalidate(patient_id)
         db.audit(con,patient_id,user['name'],'Intake saved','Patient-provided information; review required.')
     return {'ok':True}
@@ -637,9 +691,22 @@ def list_clarifications(patient_id: str, user=Depends(current_user)):
     patient_access(patient_id, user)
     return get_patient_clarifications(patient_id)
 
+@app.post('/api/patients/{patient_id}/intake-question')
+def discuss_intake_question(patient_id: str, user=Depends(current_user)):
+    patient_access(patient_id, user)
+    with db.connection() as con:
+        intake = con.one('intakes', {'patient_id': patient_id}, sort=[('created_at', -1)])
+        question = (intake or {}).get('questions', '').strip()
+        if len(question) < 3:
+            raise HTTPException(422, 'No intake question is available.')
+        existing = con.one('clarifications', {'patient_id': patient_id, 'question': question, 'status': 'open'})
+        if existing:
+            return {'id': existing['id']}
+        patient = con.one('users', {'id': patient_id})
+    return create_clarification(patient_id, None, question, None, patient)
+
 @app.post('/api/patients/{patient_id}/clarifications')
 def create_new_clarification(patient_id: str, body: ClarificationCreate, user=Depends(current_user)):
-    clinician(user)
     patient_access(patient_id, user)
     return create_clarification(patient_id, body.brief_id, body.question, body.originating_uncertainty_id, user)
 

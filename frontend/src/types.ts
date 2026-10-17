@@ -7,6 +7,8 @@ export type User = {
   language: Language;
   age: number | null;
   initials: string;
+  specialty?: string;
+  admin_mode?: boolean;
   is_demo?: boolean;
   organization?: {id:string; name:string; created_at:string} | null;
 };
@@ -41,6 +43,7 @@ export type RecordItem = {
   }[];
 };
 export type Intake = {
+  created_at: string;
   id?: string;
   reason: string;
   duration: string;

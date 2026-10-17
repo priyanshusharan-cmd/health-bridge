@@ -176,6 +176,12 @@ def initialize_sqlite():
             created_at TEXT NOT NULL
         );
         ''')
+        if "specialty" not in {row[1] for row in raw.execute("PRAGMA table_info(users)")} :
+            raw.execute("ALTER TABLE users ADD COLUMN specialty TEXT NOT NULL DEFAULT ''")
+        if "admin_mode" not in {row[1] for row in raw.execute("PRAGMA table_info(sessions)")} :
+            raw.execute("ALTER TABLE sessions ADD COLUMN admin_mode INTEGER NOT NULL DEFAULT 0")
+        if "intake_id" not in {row[1] for row in raw.execute("PRAGMA table_info(clarifications)")} :
+            raw.execute("ALTER TABLE clarifications ADD COLUMN intake_id TEXT")
         # Additive migrations for instructions table
         for col_def in [
             'brief_id TEXT',

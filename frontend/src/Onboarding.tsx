@@ -7,11 +7,13 @@ import { Spinner } from "./ui";
 import type { User } from "./types";
 export function RegistrationForm({
   onCreated,
+  onExisting,
   connected = true,
   initialEmail = "",
   onBack,
 }: {
   onCreated: (user: User) => void;
+  onExisting?: (email: string) => void;
   connected?: boolean;
   initialEmail?: string;
   onBack?: () => void;
@@ -41,18 +43,25 @@ export function RegistrationForm({
     delete fields.confirm_password;
     setBusy(true);
     try {
+      if (onExisting) {
+        const result = await post<{ registered: boolean }>("/auth/check-email", { email: emailStr });
+        if (result.registered) {
+          onExisting(emailStr);
+          return;
+        }
+      }
       const user = await post<User>("/auth/register", {
         ...fields,
         account_type: type,
         language,
-        invitation: type === "patient" ? String(fields.invitation || "") : "",
+        invitation: "",
       });
-      // Remove the invitation secret from the visible URL once consumed.
+      // Keep the invitation until the patient explicitly accepts after signup.
       const hash = user.role === "clinician" ? "#patients" : "#overview";
       window.history.replaceState(
         { ...window.history.state, healthbridgePath: hash },
         "",
-        window.location.pathname + hash,
+        window.location.pathname + (type === "patient" && invitation ? window.location.search : "") + hash,
       );
       onCreated(user);
     } catch (error) {
@@ -99,6 +108,7 @@ export function RegistrationForm({
           />
         </label>
       )}
+      {type === "hospital" && <label>{tr("Medical specialty")}<input name="specialty" placeholder={tr("e.g. Neurologist, Endocrinologist")} maxLength={120} /></label>}
       <label>
         {tr("Email ID")}
         <input
@@ -128,17 +138,6 @@ export function RegistrationForm({
         {tr("Preferred language")}
         <LanguageSelect interfaceOnly value={language} onChange={setLanguage} />
       </label>
-      {type === "patient" && (
-        <label>
-          {tr("Hospital invitation code (optional)")}
-          <input
-            name="invitation"
-            defaultValue={invitation}
-            maxLength={200}
-            autoComplete="off"
-          />
-        </label>
-      )}
       {error && (
         <p className="field-error" role="alert">
           {tr(error)}
@@ -155,27 +154,53 @@ export function RegistrationForm({
 }
 export function InvitePatient() {
   const tr=useText();
-  const [busy,setBusy]=useState(false),[error,setError]=useState(''),[link,setLink]=useState(''),[copied,setCopied]=useState(false);
+  const [busy,setBusy]=useState(false),[error,setError]=useState(''),[link,setLink]=useState(''),[copied,setCopied]=useState(false),[sent,setSent]=useState(false);
   async function submit(event:FormEvent<HTMLFormElement>) {
-    event.preventDefault();setBusy(true);setError('');setLink('');setCopied(false);
+    event.preventDefault();setBusy(true);setError('');setLink('');setCopied(false);setSent(false);
     try {
       const email=new FormData(event.currentTarget).get('email');
-      const result=await post<{invitation:string}>('/hospital/invitations',{email});
-      setLink(`${window.location.origin}/?invite=${encodeURIComponent(result.invitation)}#register`);
+      const result=await post<{invitation:string | null; registered:boolean}>('/hospital/invitations',{email});
+      if (result.registered) setSent(true);
+      else if (result.invitation) setLink(`${window.location.origin}/?invite=${encodeURIComponent(result.invitation)}#overview`);
     }catch(error){setError((error as Error).message);}finally{setBusy(false);}
   }
   return <form className="form-body" onSubmit={submit}>
-    <p>{tr("Create an invitation for a patient email. The patient must accept it before their workspace appears here. Invitations expire after 24 hours.")}</p>
+    <p>{tr("Enter the patient’s email. Existing patients receive a request in their account. For new patients, share the signup link. Requests expire in 24 hours.")}</p>
     <label>{tr("Patient email")}<input type="email" name="email" required maxLength={200} /></label>
     {error&&<p className="field-error" role="alert">{tr(error)}</p>}
-    <button className="button primary" disabled={busy}>{busy&&<Spinner />}{tr("Create invitation")}</button>
+    <button className="button primary" disabled={busy}>{busy&&<Spinner />}{tr("Invite patient")}</button>
+    {sent && <p role="status">{tr("Invitation ready. The patient will see it when they sign in or while their account is open.")}</p>}
     {link&&<div className="invitation-result"><label>{tr("Share this link privately with the patient")}<input readOnly value={link} onFocus={e=>e.currentTarget.select()} /></label><button type="button" className="button secondary" onClick={async()=>{try{await navigator.clipboard.writeText(link);setCopied(true);}catch{setError(tr("Select and copy the link manually."));}}}>{tr(copied?'Copied':'Copy link')}</button></div>}
   </form>;
 }
-export function JoinHospital({onJoined}: {onJoined:(user:User)=>void}) {
-  const tr=useText();const [busy,setBusy]=useState(false),[error,setError]=useState('');
+export function JoinHospital({onJoined, invitationId, hospital, doctor, specialty}: {onJoined:(user:User)=>void; invitationId?:string; hospital?:string; doctor?:string; specialty?:string}) {
+  const tr=useText();
+  const linkCode=new URLSearchParams(window.location.search).get("invite") || "";
+  const [busy,setBusy]=useState(false),[error,setError]=useState('');
   return <form className="form-body join-hospital" onSubmit={async event=>{
-    event.preventDefault();const invitation=new FormData(event.currentTarget).get('invitation');setBusy(true);setError('');
-    try{const user=await post<User>('/hospital/join',{invitation});window.history.replaceState(window.history.state,'',window.location.pathname+window.location.hash);onJoined(user);}catch(e){setError((e as Error).message);}finally{setBusy(false);}
-  }}><h3>{tr("Join your hospital workspace")}</h3><p>{tr("Use the invitation code from your care team. It must match your account email.")}</p><label>{tr("Invitation code")}<input name="invitation" defaultValue={new URLSearchParams(window.location.search).get("invite") || ""} required minLength={20} maxLength={200} /></label>{error&&<p role="alert" className="field-error">{tr(error)}</p>}<button className="button secondary" disabled={busy}>{busy&&<Spinner />}{tr("Accept invitation")}</button></form>;
+    event.preventDefault();
+    let invitation=String(new FormData(event.currentTarget).get('invitation') || '').trim();
+    if (invitation.includes('://')) {
+      try { invitation=new URL(invitation).searchParams.get('invite') || ''; }
+      catch { setError('Enter a valid invitation link.'); return; }
+    }
+    if (!invitation && !invitationId) { setError('Enter your invitation link.'); return; }
+    setBusy(true);setError('');
+    try {
+      const user=await post<User>(invitationId ? `/patient/invitations/${encodeURIComponent(invitationId)}/accept` : '/hospital/join',{invitation});
+      const url=new URL(window.location.href);url.searchParams.delete('invite');url.hash='overview';
+      window.history.replaceState(window.history.state,'',url.pathname+url.search+url.hash);
+      onJoined(user);
+    }catch(e){setError((e as Error).message);}finally{setBusy(false);}
+  }}>
+    {hospital && <h3>{hospital}</h3>}
+    {doctor && <p><strong>{doctor}</strong><br />{specialty || tr("Specialty not provided")}</p>}
+    <p>{tr("This doctor is requesting access to your care workspace. Accepting lets them view your shared records and help manage your care.")}</p>
+    {!linkCode && !invitationId && <h3>{tr("Connect to your care team")}</h3>}
+    <p>{tr("Accept to connect your account with the care team that invited you. Sign in with the email they invited.")}</p>
+    {invitationId ? null : linkCode ? <input type="hidden" name="invitation" value={linkCode} /> :
+      <label>{tr("Invitation link")}<input name="invitation" placeholder={tr("Paste the link from your care team")} required maxLength={2000} /></label>}
+    {error&&<p role="alert" className="field-error">{tr(error)}</p>}
+    <button className="button primary" disabled={busy}>{busy&&<Spinner />}{tr("Accept & connect")}</button>
+  </form>;
 }

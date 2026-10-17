@@ -695,3 +695,130 @@ def test_instruction_publication_policy_and_acknowledgement(client):
     assert w_res.json()['status'] == 'withdrawn'
 
 
+
+
+def test_existing_patient_pending_invitation(client):
+    patient = register_account(client, 'pendingpatient@example.test').json()
+    register_account(client, 'pendingdoctor@example.test', 'hospital', hospital_name='Care Clinic')
+    result = client.post('/api/hospital/invitations', json={'email':'pendingpatient@example.test'})
+    assert result.status_code == 200
+    assert result.json()['registered'] is True
+    assert result.json()['invitation']
+    assert client.get('/api/patient/invitations').status_code == 403
+    client.post('/api/auth/login', json={'email':patient['email'], 'password':'SyntheticPassword123!'})
+    pending = client.get('/api/patient/invitations').json()
+    assert len(pending) == 1 and pending[0]['hospital'] == 'Care Clinic'
+    invitation_id = pending[0]['id']
+    register_account(client, 'otherpending@example.test')
+    assert client.post(f'/api/patient/invitations/{invitation_id}/accept').status_code == 404
+    client.post('/api/auth/login', json={'email':patient['email'], 'password':'SyntheticPassword123!'})
+    accepted = client.post(f'/api/patient/invitations/{invitation_id}/accept')
+    assert accepted.status_code == 200
+    assert accepted.json()['organization']['name'] == 'Care Clinic'
+    assert client.get('/api/patient/invitations').json() == []
+    assert client.post(f'/api/patient/invitations/{invitation_id}/accept').status_code == 422
+
+
+def test_new_patient_invitation_waits_for_acceptance(client):
+    register_account(client, 'signupdoctor@example.test', 'hospital', hospital_name='Signup Clinic')
+    invitation = client.post('/api/hospital/invitations', json={'email':'signuppatient@example.test'}).json()
+    assert invitation['registered'] is False and invitation['invitation']
+    patient = register_account(client, 'signuppatient@example.test').json()
+    assert not patient.get('organization')
+    pending = client.get('/api/patient/invitations').json()
+    assert len(pending) == 1
+    assert client.post(f"/api/patient/invitations/{pending[0]['id']}/accept").status_code == 200
+
+
+def test_patient_questions_and_doctor_followups(client):
+    login(client)
+    created = client.post('/api/patients/patient-asha/clarifications', json={'question':'What should I bring to my visit?'})
+    assert created.status_code == 200
+    cid = created.json()['id']
+    assert client.post('/api/patients/patient-kabir/clarifications', json={'question':'Can I access this patient?'}).status_code == 403
+    login(client, 'clinician')
+    assert client.post(f'/api/clarifications/{cid}/messages', json={'text':'Bring your records. When did your symptoms start?'}).status_code == 200
+    login(client)
+    assert client.post(f'/api/clarifications/{cid}/messages', json={'text':'Two days ago. Should I bring my medication list?'}).status_code == 200
+    intake = client.post('/api/patients/patient-asha/intake', json={'reason':'Persistent symptoms','questions':'What should I do next?', 'language':'en'})
+    assert intake.status_code == 200
+    discussion = client.post('/api/patients/patient-asha/intake-question')
+    assert discussion.status_code == 200
+    assert client.post('/api/patients/patient-asha/intake-question').json()['id'] == discussion.json()['id']
+
+
+def test_admin_mode_deletion_requires_session_and_patient_access(client):
+    login(client)
+    cid = client.post('/api/patients/patient-asha/clarifications', json={'question':'Can we discuss my symptoms?'}).json()['id']
+    assert client.delete(f'/api/clarifications/{cid}').status_code == 403
+    assert client.delete('/api/patients/patient-asha/intake').status_code == 403
+    enabled = client.post('/api/auth/admin-mode', json={'enabled':True})
+    assert enabled.status_code == 200 and enabled.json()['admin_mode'] is True
+    assert client.get('/api/me').json()['admin_mode'] is True
+    assert client.delete('/api/patients/patient-kabir/intake').status_code == 403
+    assert client.delete(f'/api/clarifications/{cid}').status_code == 200
+    assert client.post('/api/patients/patient-asha/brief').status_code == 200
+    assert client.delete('/api/patients/patient-asha/intake').status_code == 200
+    with db.connection() as con:
+        briefs = con.find('briefs', {'patient_id':'patient-asha'})
+        assert briefs and all(row['content'] == '{}' and row['status'] == 'outdated' for row in briefs)
+    workspace = client.get('/api/patients/patient-asha/workspace').json()
+    assert workspace['intake'] is None
+    assert not any(c['id'] == cid for c in workspace['clarifications'])
+    client.post('/api/auth/admin-mode', json={'enabled':False})
+    assert client.delete('/api/patients/patient-asha/intake').status_code == 403
+    login(client, 'clinician')
+    assert client.get('/api/me').json()['admin_mode'] is False
+
+
+def test_one_click_resolve_and_new_question(client):
+    login(client)
+    cid = client.post('/api/patients/patient-asha/clarifications', json={'question':'Is this the right visit date?'}).json()['id']
+    login(client, 'clinician')
+    assert client.post(f'/api/clarifications/{cid}/resolve', json={}).status_code == 200
+    login(client)
+    assert client.post(f'/api/clarifications/{cid}/messages', json={'text':'Another message'}).status_code == 409
+    assert client.post('/api/patients/patient-asha/clarifications', json={'question':'What should I bring instead?'}).status_code == 200
+
+
+def test_conversations_stay_with_visit_details(client):
+    login(client)
+    payload = {'reason':'Symptoms for this visit', 'language':'en'}
+    assert client.post('/api/patients/patient-asha/intake', json=payload).status_code == 200
+    cid = client.post('/api/patients/patient-asha/clarifications', json={'question':'Question about this visit?'}).json()['id']
+    payload['reason'] = 'Updated symptoms for this visit'
+    client.post('/api/patients/patient-asha/intake', json=payload)
+    assert any(c['id'] == cid for c in client.get('/api/patients/patient-asha/clarifications').json())
+    client.post('/api/auth/admin-mode', json={'enabled':True})
+    client.delete('/api/patients/patient-asha/intake')
+    client.post('/api/patients/patient-asha/intake', json={'reason':'A different visit', 'language':'en'})
+    assert not any(c['id'] == cid for c in client.get('/api/patients/patient-asha/clarifications').json())
+
+
+def test_new_visit_preserves_intake_and_conversation_history(client):
+    login(client)
+    client.post('/api/patients/patient-asha/intake', json={'reason':'First visit symptoms', 'language':'en'})
+    first = client.get('/api/patients/patient-asha/workspace').json()['intake']
+    cid = client.post('/api/patients/patient-asha/clarifications', json={'question':'Question for first visit?'}).json()['id']
+    client.post('/api/patients/patient-asha/intake', json={'reason':'Updated first visit', 'language':'en'})
+    assert client.get('/api/patients/patient-asha/workspace').json()['intake']['id'] == first['id']
+    response = client.post('/api/patients/patient-asha/intake', json={'reason':'Second visit symptoms', 'language':'en', 'new_visit':True})
+    assert response.status_code == 200
+    current = client.get('/api/patients/patient-asha/workspace').json()
+    assert current['intake']['id'] != first['id']
+    assert not any(c['id'] == cid for c in current['clarifications'])
+    history = client.get('/api/patients/patient-asha/visit-history').json()
+    old = next(v for v in history if v['id'] == first['id'])
+    assert old['reason'] == 'Updated first visit'
+    assert any(c['id'] == cid for c in old['conversations'])
+    assert client.get('/api/patients/patient-kabir/visit-history').status_code == 403
+
+
+def test_all_catalog_languages_supported_in_account_and_care_settings(client):
+    from app.languages import CODES
+    register_account(client, 'languagepatient@example.test', language='doi')
+    for code in CODES:
+        updated = client.patch('/api/me', json={'language':code})
+        assert updated.status_code == 200 and updated.json()['language'] == code
+    assert client.patch('/api/me', json={'language':'invalid-code'}).status_code == 422
+    assert register_account(client, 'invalidlanguage@example.test', language='invalid-code').status_code == 422

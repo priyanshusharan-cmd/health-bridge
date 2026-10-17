@@ -1169,6 +1169,10 @@ main {
   padding-top: 3px;
 }
 .journey-step {
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  justify-content:flex-start;
   position: relative;
   text-align: left;
   flex: 1;
@@ -1188,6 +1192,7 @@ main {
   display: none;
 }
 .step-circle {
+  flex-shrink:0;
   width: 29px;
   height: 29px;
   background: var(--ink-f7f8f4);
@@ -1644,7 +1649,7 @@ main {
 }
 .prep-layout {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 270px;
+  grid-template-columns: minmax(0, 1fr);
   gap: 23px;
 }
 .intake-summary {
@@ -2318,8 +2323,8 @@ textarea::placeholder {
   font-weight: 500;
   padding: 6px 12px;
   border-radius: 8px;
-  width: 130px;
-  max-width: 130px;
+  width: 105px;
+  max-width: 105px;
   height: 34px;
   text-overflow: ellipsis;
   background-color: var(--ink-fcfdfb);
@@ -3399,12 +3404,31 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 /* Viewport adaptation: keep content readable without fixed-screen assumptions. */
 .login-page { min-height: 100svh; padding: clamp(18px,3vh,30px) clamp(20px,6vw,96px) 20px; }
 .login-page > header { flex-wrap:wrap; gap:16px; }
+.login-page > header {
+  position:sticky;
+  top:clamp(18px,3vh,30px);
+  z-index:10;
+  background:var(--ink-fafbf8);
+}
+.login-page > header::before {
+  content:"";
+  position:absolute;
+  inset:calc(-1 * clamp(18px,3vh,30px)) 0 0;
+  background:inherit;
+  z-index:-1;
+}
 .login-layout { grid-template-columns:minmax(0,1.2fr) minmax(0,1fr); gap:clamp(28px,6vw,100px); margin:clamp(28px,6vh,65px) auto 32px; align-items: flex-start; }
 .login-story,.login-card,.main-shell,.overview-aside,.prep-aside { min-width:0; }
 .login-story h1 { font-size:clamp(36px,4.1vw,58px); }
 .login-card { padding:clamp(24px,3vw,39px); }
 .login-card h2 { font-size:clamp(23px,2.2vw,29px); }
 .login-card .error-banner { overflow-wrap:anywhere; }
+@media (min-width:901px) {
+  .login-story {
+    position:sticky;
+    top:calc(clamp(18px,3vh,30px) + 40px + clamp(28px,6vh,65px));
+  }
+}
 .sidebar { overflow-y:auto; overscroll-behavior:contain; }
 .sidebar .brand,.sidebar-profile { flex-shrink:0; }
 .modal { max-width:100%; max-height:calc(100dvh - 60px); }
@@ -3415,6 +3439,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .source-text { max-width:100%; overflow-wrap:anywhere; }
 @media (min-width:901px) and (max-height:800px) {
   .login-layout { margin-top:28px; margin-bottom:24px; }
+  .login-story { top:calc(clamp(18px,3vh,30px) + 40px + 28px); }
   .login-story h1 { margin-top:24px; margin-bottom:20px; }
   .login-journey { margin-top:26px; margin-bottom:20px; }
   .story-visual { height:140px; transform:scale(.82); transform-origin:left top; }
@@ -3461,7 +3486,30 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 /* Onboarding uses the same surfaces, typography and controls as the care workspace. */
 .onboarding-actions { display:flex; justify-content:center; gap:16px; margin:24px 0; }
 .login-card>.form-body { padding:0; }
+.account-security > h3 { margin-bottom:25px; }
+.account-security > .form-body { padding:0; }
+.main-shell { display:flex; flex-direction:column; min-height:100svh; }
+.main-shell > main {
+  display:flex;
+  flex-direction:column;
+  flex:1;
+  width:100%;
+  margin:0 auto;
+}
+.main-shell > main > .workspace-footer { margin-top:auto; }
 .hospital-toolbar { display:flex; justify-content:space-between; gap:20px; align-items:center; margin-bottom:24px; flex-wrap:wrap; }
+.patient-list { position:relative; padding-top:48px; }
+.patient-list-refresh { position:absolute; top:12px; right:12px; width:36px; height:36px; }
+.overview-aside .questions-card {
+  background:var(--surface);
+  border-color:var(--line);
+  padding:24px 22px;
+  display:flex;
+  flex-direction:column;
+}
+.overview-aside .questions-card .question-icon { background:var(--ink-eef3e8); color:var(--green); }
+.overview-aside .questions-card p { color:var(--muted); }
+.overview-aside .questions-card .text-button { color:var(--accent-text); margin-top:auto; padding-top:20px; align-self:flex-start; }
 .invitation-result { display:grid; gap:16px; border-top:1px solid var(--line); padding-top:20px; }
 .join-hospital { border-top:1px solid var(--line); }
 .organization-label { padding:24px 28px 0; font-weight:650; color:var(--green); }
@@ -3566,3 +3614,26 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   gap: 9px;
   animation: fadeIn 0.2s ease-in;
 }
+
+.overview-aside .questions-card .empty h3 { font-size:15px; margin:0; }
+.overview-aside .questions-card .empty p { line-height:1.6; }
+.overview-aside .questions-card .appointment-edit { padding-top:0; font-size:12px; }
+
+.questions-thread { padding:24px 22px; margin-bottom:24px; }
+.questions-thread > div:first-child { flex-wrap:wrap; gap:12px; }
+
+.intake-summary .questions-thread { padding:24px 0 0; margin:24px 0 0; border-top:1px solid var(--line); }
+.danger-action { color:var(--ink-b97565); margin:12px 0; }
+.admin-mode-toggle[aria-checked="true"] { border-color:var(--accent-text); color:var(--accent-text); }
+
+.patient-list-label { position:absolute; top:20px; left:24px; font-size:14px; color:var(--muted); }
+
+.brief-collapse { display:flex; align-items:center; gap:8px; margin:12px 0; }
+
+.brief-panel .brief-review { border-top:1px solid var(--line); margin-top:24px; padding:24px 0 0; background:transparent; border-radius:0; box-shadow:none; }
+
+.visit-actions { display:flex; flex-wrap:wrap; gap:16px; align-items:center; margin-bottom:20px; }
+.visit-history { padding:24px; margin-bottom:24px; }
+.visit-history details { border-top:1px solid var(--line); padding:16px 0; }
+.visit-history summary { cursor:pointer; font-weight:600; }
+.history-conversation { border-top:1px solid var(--line); padding-top:12px; margin-top:12px; }
